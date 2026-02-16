@@ -1,0 +1,55 @@
+# Python
+*.pyc
+__pycache__/
+
+# Django
+db.sqlite3
+*.log
+media/
+static/CACHE/
+celerybeat-schedule
+
+# Virtual Environment
+.env
+.env.local
+.env.*.local
+.env.example
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Testing
+.coverage
+.pytest_cache/
+htmlcov/
+
+# Documentation
+docs/build/
+
+# Node.js / Frontend
+node_modules/
+.npm/
+.yarn-integrity
+.yarn/cache/
+.yarn/unplugged/
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+.dockerignore
+Dockerfile
+
+# Other
+openapi.json
+.mcp.json
+CLAUDE.md
+TODO.md
+.playwright-mcp

@@ -1,0 +1,67 @@
+# Python
+*.pyc
+*~
+*.swo
+*.swp
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Django
+db.sqlite3
+*.log
+media/
+media-images/
+cache/
+static/CACHE
+staticfiles/
+celerybeat-schedule
+local_settings.py
+.env
+server.log
+dump.rdb
+
+# Virtual Environment
+env/
+venv/
+.venv/
+ENV/
+.openCRM-venv
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Testing
+.coverage
+.pytest_cache/
+htmlcov/
+
+# Documentation
+docs/build/
+
+# Node.js / Frontend
+frontend/node_modules/
+frontend/.svelte-kit/
+frontend/build/
+frontend/.env
+frontend/.env.local
+frontend/package-lock.json
+frontend/pnpm-lock.yaml
+
+# Logs
+logs/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+openapi.json
+.mcp.json
+CLAUDE.md
+TODO.md
+.playwright-mcp
+.github
