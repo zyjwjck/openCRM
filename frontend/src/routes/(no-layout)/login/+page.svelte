@@ -3,11 +3,22 @@
 
   import imgLogo from '$lib/assets/images/logo.png';
   import { ArrowRight } from '@lucide/svelte';
+  import { t, getCurrentLanguage, setCurrentLanguage } from '$lib/utils/i18n.js';
 
   let isLoading = false;
   let email = '';
   let password = '';
   let error = '';
+  let language = getCurrentLanguage();
+
+  const setLanguage = (newLanguage) => {
+    language = newLanguage;
+    setCurrentLanguage(newLanguage);
+    // Trigger a custom event to notify other components of language change
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('languageChange', { detail: { language: newLanguage } }));
+    }
+  };
 
   async function handleEmailLogin() {
     isLoading = true;
@@ -151,14 +162,30 @@
 </script>
 
 <svelte:head>
-  <title>Log in | openCRM</title>
+  <title>{t('login', language)} | openCRM</title>
   <meta
     name="description"
-    content="Log in to openCRM to manage your contacts, deals, and grow your business."
+    content={`${t('login', language)} to openCRM to manage your contacts, deals, and grow your business.`}
   />
 </svelte:head>
 
 <div class="login-page">
+  <!-- Language Switcher (Top Right) -->
+  <div class="language-switcher-top">
+    <button 
+      onclick={() => setLanguage('en')} 
+      class="language-btn {language === 'en' ? 'active' : ''}"
+    >
+      EN
+    </button>
+    <button 
+      onclick={() => setLanguage('zh')} 
+      class="language-btn {language === 'zh' ? 'active' : ''}"
+    >
+      中文
+    </button>
+  </div>
+  
   <!-- Main Container -->
   <div class="login-wrapper">
     <!-- Logo -->
@@ -169,7 +196,7 @@
 
     <!-- Login Card -->
     <div class="login-card">
-      <h1 class="login-title">Log in to your account</h1>
+      <h1 class="login-title">{t('loginToAccount', language)}</h1>
 
       <!-- Email/Password Login Form -->
       <div class="login-form">
@@ -178,25 +205,25 @@
         {/if}
         
         <div class="form-group">
-          <label for="email">Email</label>
+          <label for="email">{t('email', language)}</label>
           <input
             type="email"
             id="email"
             bind:value={email}
             required
-            placeholder="Enter your email"
+            placeholder={t('enterEmail', language)}
             disabled={isLoading}
           />
         </div>
 
         <div class="form-group">
-          <label for="password">Password</label>
+          <label for="password">{t('password', language)}</label>
           <input
             type="password"
             id="password"
             bind:value={password}
             required
-            placeholder="Enter your password"
+            placeholder={t('enterPassword', language)}
             disabled={isLoading}
           />
         </div>
@@ -209,9 +236,9 @@
         >
           {#if isLoading}
             <span class="spinner"></span>
-            <span>Signing in...</span>
+            <span>{t('signingIn', language)}</span>
           {:else}
-            <span>Sign in</span>
+            <span>{t('signIn', language)}</span>
             <ArrowRight size={16} />
           {/if}
         </button>
@@ -221,17 +248,17 @@
     <!-- Help Links -->
     <div class="help-section">
       <p class="help-text">
-        Don't have an account? <a href="#" class="help-link">Sign up for free</a>
+        {t('dontHaveAccount', language)} <a href="#" class="help-link">{t('signUpForFree', language)}</a>
       </p>
     </div>
 
     <!-- Footer -->
     <footer class="login-footer">
-      <a href="https://bottlecrm.io/privacy-policy">Privacy Policy</a>
+      <a href="https://bottlecrm.io/privacy-policy">{t('privacyPolicy', language)}</a>
       <span class="dot"></span>
-      <a href="https://bottlecrm.io/terms">Terms of Service</a>
+      <a href="https://bottlecrm.io/terms">{t('termsOfService', language)}</a>
       <span class="dot"></span>
-      <a href="https://github.com/MicroPyramid/Django-CRM" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://github.com/zyjwjck/openCRM" target="_blank" rel="noopener">GitHub</a>
     </footer>
   </div>
 </div>
@@ -245,6 +272,56 @@
     justify-content: center;
     background: #f5f8fa;
     padding: 2rem;
+    position: relative;
+  }
+
+  /* Language Switcher (Top Right) */
+  .language-switcher-top {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .language-btn {
+    padding: 0.5rem 1rem;
+    border: 1px solid #cbd6e2;
+    border-radius: 6px;
+    background: #fff;
+    color: #33475b;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .language-btn:hover {
+    background: #f8f9fa;
+    border-color: #ff7a59;
+  }
+
+  .language-btn.active {
+    background: #33475b;
+    color: #fff;
+    border-color: #33475b;
+  }
+
+  /* Dark mode support for language switcher */
+  :global(.dark) .language-btn {
+    background: #2d2d2d;
+    border-color: #404040;
+    color: #fff;
+  }
+
+  :global(.dark) .language-btn:hover {
+    background: #3a3a3a;
+    border-color: #ff7a59;
+  }
+
+  :global(.dark) .language-btn.active {
+    background: #516f90;
+    border-color: #516f90;
   }
 
   .login-wrapper {

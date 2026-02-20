@@ -177,9 +177,16 @@
   // HubSpot-style navigation structure with sections
   const aiItems = [
     {
+      href: '/chat',
+      label: '对话',
+      icon: MessageSquare,
+      type: 'link',
+      preload: 'off'
+    },
+    {
       href: '/agent',
       label: t('agent'),
-      icon: MessageSquare,
+      icon: Sparkles,
       type: 'link',
       preload: 'off'
     }
@@ -332,10 +339,10 @@
           {#each aiItems as item}
             <Sidebar.MenuItem>
               <Sidebar.MenuButton
-                isActive={currentPath === item.href}
+                isActive={currentPath === item.href || currentPath.startsWith(item.href + '/')}
                 tooltipContent={item.label}
                 class="nav-item group/item relative h-9 rounded-lg px-2.5 transition-all duration-200
-                  {currentPath === item.href
+                  {(currentPath === item.href || currentPath.startsWith(item.href + '/'))
                   ? 'nav-item-active bg-[var(--color-primary-default)]/[0.08] text-[var(--color-primary-default)] shadow-[inset_0_1px_2px_rgba(0,0,0,0.04)] dark:bg-[var(--color-primary-default)]/15 dark:shadow-none'
                   : 'text-sidebar-foreground/70 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground'}"
               >
@@ -348,16 +355,16 @@
                   >
                     <div
                       class="flex size-6 items-center justify-center rounded-md transition-all duration-200
-                        {currentPath === item.href
+                        {(currentPath === item.href || currentPath.startsWith(item.href + '/'))
                         ? 'bg-[var(--color-primary-default)] text-white shadow-sm shadow-[var(--color-primary-default)]/25'
                         : 'text-current group-hover/item:bg-sidebar-accent'}"
                     >
                       <item.icon
-                        class="size-[15px] transition-transform duration-200 {currentPath === item.href ? 'scale-105' : 'group-hover/item:scale-105'}"
+                        class="size-[15px] transition-transform duration-200 {(currentPath === item.href || currentPath.startsWith(item.href + '/')) ? 'scale-105' : 'group-hover/item:scale-105'}"
                         strokeWidth={2}
                       />
                     </div>
-                    <span class="text-[13px] {currentPath === item.href ? 'font-semibold' : 'font-medium'}">{item.label}</span>
+                    <span class="text-[13px] {(currentPath === item.href || currentPath.startsWith(item.href + '/')) ? 'font-semibold' : 'font-medium'}">{item.label}</span>
                   </a>
                 {/snippet}
               </Sidebar.MenuButton>
