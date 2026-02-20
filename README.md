@@ -300,9 +300,9 @@ We are grateful to all the contributors of these projects for their valuable wor
 
 ## Contributors
 
-This project exists thanks to all the people who contributed.
+This project exists thanks to the following contributors:
 
-![Contributors](https://opencollective.com/django-crm/contributors.svg?width=890&button=false)
+- **zyjwjck** - Project creator and main developer
 
 ## Future Roadmap
 
