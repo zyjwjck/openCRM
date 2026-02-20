@@ -300,9 +300,14 @@ GET/POST       /api/<module>/attachment/<pk>/ # 附件
 
 ## 贡献者
 
-这个项目的存在归功于所有做出贡献的人。
+本项目目前由以下人员开发和维护：
 
-![Contributors](https://opencollective.com/django-crm/contributors.svg?width=890&button=false)
+- **zyjwjck** - 项目创建者和主要开发者
+
+## 语言切换
+
+- [English README](README.md)
+- [中文 README](README_zh.md)
 
 ## 未来路线图
 

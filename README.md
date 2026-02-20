@@ -300,9 +300,14 @@ We are grateful to all the contributors of these projects for their valuable wor
 
 ## Contributors
 
-This project exists thanks to the following contributors:
+This project is currently developed and maintained by:
 
-- **zyjwjck** - Project creator and main developer
+- **zyjwjck** - Project creator and lead developer
+
+## Language Switch
+
+- [English README](README.md)
+- [中文 README](README_zh.md)
 
 ## Future Roadmap
 
