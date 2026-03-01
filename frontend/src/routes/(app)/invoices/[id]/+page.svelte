@@ -17,6 +17,7 @@
   import { formatCurrency, formatDate } from '$lib/utils/formatting.js';
   import { CURRENCY_CODES } from '$lib/constants/filters.js';
   import { orgSettings } from '$lib/stores/org.js';
+  import { t } from '$lib/utils/i18n.js';
   import {
     ArrowLeft,
     Plus,
@@ -67,14 +68,14 @@
 
   // Status options for dropdown
   const INVOICE_STATUS_OPTIONS = [
-    { value: 'Draft', label: 'Draft' },
-    { value: 'Sent', label: 'Sent' },
-    { value: 'Viewed', label: 'Viewed' },
-    { value: 'Paid', label: 'Paid' },
-    { value: 'Partially_Paid', label: 'Partially Paid' },
-    { value: 'Overdue', label: 'Overdue' },
-    { value: 'Pending', label: 'Pending' },
-    { value: 'Cancelled', label: 'Cancelled' }
+    { value: 'Draft', label: t('draft') },
+    { value: 'Sent', label: t('sent') },
+    { value: 'Viewed', label: t('viewed') },
+    { value: 'Paid', label: t('paid') },
+    { value: 'Partially_Paid', label: t('partially_paid') },
+    { value: 'Overdue', label: t('overdue') },
+    { value: 'Pending', label: t('pending') },
+    { value: 'Cancelled', label: t('cancelled') }
   ];
 
   // Form state - synced from data via $effect
@@ -371,7 +372,7 @@
                   invoice.status
                 ] || STATUS_COLORS.Draft}"
               >
-                {(invoice.status || 'Draft').replace('_', ' ')}
+                {INVOICE_STATUS_OPTIONS.find(s => s.value === invoice.status)?.label || (invoice.status || 'Draft').replace('_', ' ')}
               </Select.Trigger>
               <Select.Content>
                 {#each INVOICE_STATUS_OPTIONS as option}
@@ -391,29 +392,29 @@
       </div>
       <div class="flex items-center gap-3">
         {#if isEditing}
-          <Button variant="outline" onclick={cancelEdit} disabled={isSaving}>Cancel</Button>
+          <Button variant="outline" onclick={cancelEdit} disabled={isSaving}>{t('cancel')}</Button>
           <Button onclick={saveChanges} disabled={isSaving}>
             <Save class="mr-2 size-4" />
-            Save Changes
+            {t('saveChanges')}
           </Button>
         {:else}
           <Button variant="outline" onclick={printInvoice}>
             <Printer class="mr-2 size-4" />
-            Print
+            {t('print')}
           </Button>
           <Button variant="outline" onclick={downloadPDF} disabled={isDownloadingPdf}>
             <Download class="mr-2 size-4" />
-            {isDownloadingPdf ? 'Downloading...' : 'PDF'}
+            {isDownloadingPdf ? t('downloading') : 'PDF'}
           </Button>
           {#if invoice.status === 'Draft'}
             <Button variant="outline" onclick={handleSend} disabled={isSaving}>
               <Send class="mr-2 size-4" />
-              Send
+              {t('send')}
             </Button>
           {/if}
           <Button onclick={() => (currentTab = 'edit')}>
             <Pencil class="mr-2 size-4" />
-            Edit
+            {t('edit')}
           </Button>
           {#if invoice.status !== 'Cancelled' && invoice.status !== 'Paid'}
             <AlertDialog.Root bind:open={cancelDialogOpen}>
@@ -432,14 +433,13 @@
               </AlertDialog.Trigger>
               <AlertDialog.Content>
                 <AlertDialog.Header>
-                  <AlertDialog.Title>Cancel Invoice?</AlertDialog.Title>
+                  <AlertDialog.Title>{t('cancelInvoice')}</AlertDialog.Title>
                   <AlertDialog.Description>
-                    This will cancel invoice {invoice.invoiceNumber}. Cancelled invoices cannot be
-                    sent or edited.
+                    {t('cancelInvoiceDescription', { invoiceNumber: invoice.invoiceNumber })}
                   </AlertDialog.Description>
                 </AlertDialog.Header>
                 <AlertDialog.Footer>
-                  <AlertDialog.Cancel>Keep Invoice</AlertDialog.Cancel>
+                  <AlertDialog.Cancel>{t('keepInvoice')}</AlertDialog.Cancel>
                   <Button
                     variant="destructive"
                     onclick={() => {
@@ -447,7 +447,7 @@
                       cancelForm.requestSubmit();
                     }}
                   >
-                    Cancel Invoice
+                    {t('cancelInvoice')}
                   </Button>
                 </AlertDialog.Footer>
               </AlertDialog.Content>

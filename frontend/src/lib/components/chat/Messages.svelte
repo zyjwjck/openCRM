@@ -7,10 +7,19 @@
 	import auto_render from "katex/dist/contrib/auto-render.mjs";
 	import "katex/dist/katex.min.css";
 
-	// 动态加载mermaid库
+	// 导入本地mermaid库
+	import mermaid from "mermaid";
+
+	// 初始化mermaid
+	if (typeof window !== "undefined") {
+		window.mermaid = mermaid;
+		window.mermaid.initialize({ startOnLoad: false });
+	}
+
+	// 动态加载mermaid库（保持兼容）
 	const loadMermaid = async () => {
 		if (typeof window !== "undefined" && !window.mermaid) {
-			await import("https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js");
+			window.mermaid = mermaid;
 			window.mermaid.initialize({ startOnLoad: false });
 		}
 	};
@@ -479,9 +488,9 @@
 {:else}
 	{#each messages as message, messageIdx}
 		<div class=" w-full">
-			<div class="flex px-5 mb-3 max-w-3xl mx-auto rounded-lg group {message.role === 'user' ? 'justify-end' : 'justify-start'}">
+			<div class="flex px-1 mb-3 max-w-6xl mx-auto rounded-lg group {message.role === 'user' ? 'justify-end' : 'justify-start'}">
 				<div class="flex w-full {message.role === 'user' ? 'flex-row-reverse' : 'flex-row'}">
-					<div class="mx-4">
+					<div class="mx-2">
 						{#if message.role === "user"}
 							<img
 								src="/user.png"
@@ -565,7 +574,7 @@
 
 												<div class=" mt-2 mb-1 flex justify-end space-x-2 text-sm font-medium">
 													<button
-														class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-gray-100 transition rounded-lg"
+														class="px-4 py-2 bg-primary hover:bg-primary/90 text-white transition rounded-lg"
 														on:click={() => {
 															confirmEditMessage(message.id);
 														}}
@@ -752,7 +761,7 @@
 
 												<div class=" mt-2 mb-1 flex justify-start space-x-2 text-sm font-medium">
 													<button
-														class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-gray-100 transition rounded-lg"
+														class="px-4 py-2 bg-primary hover:bg-primary/90 text-white transition rounded-lg"
 														on:click={() => {
 															confirmEditResponseMessage(message.id);
 														}}

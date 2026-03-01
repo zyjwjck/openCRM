@@ -27,6 +27,7 @@
   import * as Tabs from '$lib/components/ui/tabs/index.js';
   import { getInitials, formatDate } from '$lib/utils/formatting.js';
   import { TeamCard, TeamFormDialog } from '$lib/components/users/index.js';
+  import { t } from '$lib/utils/i18n.js';
 
   /** @type {{ data: import('./$types').PageData, form: any }} */
   let { data, form } = $props();
@@ -83,19 +84,19 @@
   $effect(() => {
     if (form?.success) {
       if (form.action === 'create_team') {
-        toast.success('Team created successfully');
+        toast.success(t('teamCreatedSuccessfully'));
         teamDialogOpen = false;
         editingTeam = null;
       } else if (form.action === 'update_team') {
-        toast.success('Team updated successfully');
+        toast.success(t('teamUpdatedSuccessfully'));
         teamDialogOpen = false;
         editingTeam = null;
       } else if (form.action === 'delete_team') {
-        toast.success('Team deleted successfully');
+        toast.success(t('teamDeletedSuccessfully'));
       } else if (form.action === 'remove_user') {
-        toast.success('User deactivated');
+        toast.success(t('userDeactivated'));
       } else if (form.action === 'activate_user') {
-        toast.success('User activated');
+        toast.success(t('userActivated'));
       }
       invalidateAll();
     } else if (form?.error) {
@@ -218,10 +219,10 @@
 </script>
 
 <svelte:head>
-  <title>Users & Teams - BottleCRM</title>
+  <title>{t('usersAndTeams')} - BottleCRM</title>
 </svelte:head>
 
-<PageHeader title="Users & Teams" subtitle="Manage users and teams in your organization" />
+<PageHeader title={t('usersAndTeams')} subtitle={t('manageUsersAndTeamsInYourOrganization')} />
 
 <div class="flex-1 space-y-6 p-4 md:p-6">
   <!-- Error Message -->
@@ -244,11 +245,11 @@
         <Tabs.List class="mb-6 grid w-full grid-cols-2 lg:w-[400px]">
           <Tabs.Trigger value="users" class="gap-2">
             <Users class="h-4 w-4" />
-            Users
+            {t('users')}
           </Tabs.Trigger>
           <Tabs.Trigger value="teams" class="gap-2">
             <UsersRound class="h-4 w-4" />
-            Teams
+            {t('teams')}
           </Tabs.Trigger>
         </Tabs.List>
 
@@ -264,9 +265,9 @@
                   <Plus class="h-5 w-5 text-[var(--color-success-default)]" />
                 </div>
                 <div>
-                  <Card.Title class="">Add New Member</Card.Title>
+                  <Card.Title class="">{t('addNewMember')}</Card.Title>
                   <Card.Description class=""
-                    >Invite a user to join your organization</Card.Description
+                    >{t('inviteAUserToJoinYourOrganization')}</Card.Description
                   >
                 </div>
               </div>
@@ -278,30 +279,30 @@
                 class="flex flex-col gap-4 sm:flex-row sm:items-end"
               >
                 <div class="flex-1">
-                  <Label class="" for="add-user-email">Email Address *</Label>
+                  <Label class="" for="add-user-email">{t('emailAddress')} *</Label>
                   <Input
                     id="add-user-email"
                     name="email"
                     type="email"
                     required
-                    placeholder="user@example.com"
+                    placeholder={t('userExampleCom')}
                     class="mt-1.5"
                   />
                 </div>
                 <div class="sm:w-40">
-                  <Label class="" for="add-user-role">Role</Label>
+                  <Label class="" for="add-user-role">{t('role')}</Label>
                   <select
                     id="add-user-role"
                     name="role"
                     class="border-input bg-background ring-offset-background focus-visible:ring-ring mt-1.5 flex h-10 w-full rounded-md border px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
                   >
-                    <option value="USER">User</option>
-                    <option value="ADMIN">Admin</option>
+                    <option value="USER">{t('user')}</option>
+                    <option value="ADMIN">{t('admin')}</option>
                   </select>
                 </div>
                 <Button type="submit">
                   <Plus class="mr-2 h-4 w-4" />
-                  Add Member
+                  {t('addMember')}
                 </Button>
               </form>
             </Card.Content>
@@ -317,9 +318,9 @@
                   <Users class="h-5 w-5 text-[var(--color-primary-default)]" />
                 </div>
                 <div>
-                  <Card.Title class="">Team Members</Card.Title>
+                  <Card.Title class="">{t('teamMembers')}</Card.Title>
                   <Card.Description class=""
-                    >{users.length} member{users.length !== 1 ? 's' : ''} in your organization</Card.Description
+                    >{t('membersInYourOrganization', { count: users.length })}</Card.Description
                   >
                 </div>
               </div>
@@ -329,10 +330,10 @@
                 <Table.Root>
                   <Table.Header>
                     <Table.Row>
-                      <Table.Head class="w-[300px]">Member</Table.Head>
-                      <Table.Head>Role</Table.Head>
-                      <Table.Head>Joined</Table.Head>
-                      <Table.Head class="w-[80px]">Actions</Table.Head>
+                      <Table.Head class="w-[300px]">{t('member')}</Table.Head>
+                      <Table.Head>{t('role')}</Table.Head>
+                      <Table.Head>{t('joined')}</Table.Head>
+                      <Table.Head class="w-[80px]">{t('actions')}</Table.Head>
                     </Table.Row>
                   </Table.Header>
                   <Table.Body>
@@ -354,11 +355,11 @@
                               <div class="flex items-center gap-2">
                                 <span class="text-foreground font-medium">{user.name}</span>
                                 {#if user.isSelf}
-                                  <Badge variant="secondary" class="text-xs">You</Badge>
+                                  <Badge variant="secondary" class="text-xs">{t('you')}</Badge>
                                 {/if}
                                 {#if !user.isActive}
                                   <Badge variant="outline" class="text-muted-foreground text-xs"
-                                    >Inactive</Badge
+                                    >{t('inactive')}</Badge
                                   >
                                 {/if}
                               </div>
@@ -400,8 +401,8 @@
                                 name="role"
                                 class="border-input bg-background h-8 rounded-md border px-2 text-sm"
                               >
-                                <option value="USER" selected={user.role === 'USER'}>User</option>
-                                <option value="ADMIN" selected={user.role === 'ADMIN'}>Admin</option
+                                <option value="USER" selected={user.role === 'USER'}>{t('user')}</option>
+                                <option value="ADMIN" selected={user.role === 'ADMIN'}>{t('admin')}</option
                                 >
                               </select>
                               <Button type="submit" size="icon" class="h-7 w-7" variant="default">
@@ -434,7 +435,7 @@
                               size="icon"
                               class="h-8 w-8 text-[var(--color-success-default)] hover:bg-[var(--color-success-light)]"
                               onclick={() => handleActivateUser(user.id)}
-                              title="Activate user"
+                              title={t('activateUser')}
                             >
                               <UserCheck class="h-4 w-4" />
                             </Button>
@@ -443,25 +444,24 @@
                             <AlertDialog.Root>
                               <AlertDialog.Trigger
                                 class="text-destructive hover:bg-destructive/10 inline-flex h-8 w-8 items-center justify-center rounded-md"
-                                title="Deactivate user"
+                                title={t('deactivateUser')}
                               >
                                 <Trash2 class="h-4 w-4" />
                               </AlertDialog.Trigger>
                               <AlertDialog.Content>
                                 <AlertDialog.Header>
-                                  <AlertDialog.Title>Deactivate Team Member</AlertDialog.Title>
+                                  <AlertDialog.Title>{t('deactivateTeamMember')}</AlertDialog.Title>
                                   <AlertDialog.Description>
-                                    Are you sure you want to deactivate <strong>{user.name}</strong
-                                    >? They will no longer be able to access the organization.
+                                    {t('areYouSureYouWantToDeactivate', { name: user.name })}
                                   </AlertDialog.Description>
                                 </AlertDialog.Header>
                                 <AlertDialog.Footer>
-                                  <AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
+                                  <AlertDialog.Cancel>{t('cancel')}</AlertDialog.Cancel>
                                   <Button
                                     variant="destructive"
                                     onclick={() => handleRemoveUser(user.id)}
                                   >
-                                    Deactivate
+                                    {t('deactivate')}
                                   </Button>
                                 </AlertDialog.Footer>
                               </AlertDialog.Content>
@@ -475,7 +475,7 @@
                       <Table.Row>
                         <Table.Cell colspan={4} class="py-8 text-center">
                           <Users class="text-muted-foreground/50 mx-auto h-8 w-8" />
-                          <p class="text-muted-foreground mt-2 text-sm">No team members found</p>
+                          <p class="text-muted-foreground mt-2 text-sm">{t('noTeamMembersFound')}</p>
                         </Table.Cell>
                       </Table.Row>
                     {/if}
@@ -491,14 +491,14 @@
           <!-- Header with Create Button -->
           <div class="flex items-center justify-between">
             <div>
-              <h2 class="text-lg font-semibold">Teams</h2>
+              <h2 class="text-lg font-semibold">{t('teams')}</h2>
               <p class="text-muted-foreground text-sm">
-                Create teams to group users for assignments and access control.
+                {t('createTeamsToGroupUsersForAssignmentsAndAccessControl')}
               </p>
             </div>
             <Button onclick={openCreateTeamDialog}>
               <Plus class="mr-2 h-4 w-4" />
-              Create Team
+              {t('createTeam')}
             </Button>
           </div>
 
@@ -518,14 +518,13 @@
                 >
                   <UsersRound class="h-8 w-8 text-[var(--color-primary-default)]" />
                 </div>
-                <h3 class="mb-2 text-lg font-semibold">No teams yet</h3>
+                <h3 class="mb-2 text-lg font-semibold">{t('noTeamsYet')}</h3>
                 <p class="text-muted-foreground mx-auto mb-6 max-w-sm text-sm">
-                  Teams help you organize users and manage access to records. Create your first team
-                  to get started.
+                  {t('teamsHelpYouOrganizeUsersAndManageAccessToRecords')}
                 </p>
                 <Button onclick={openCreateTeamDialog}>
                   <Plus class="mr-2 h-4 w-4" />
-                  Create Your First Team
+                  {t('createYourFirstTeam')}
                 </Button>
               </Card.Content>
             </Card.Root>

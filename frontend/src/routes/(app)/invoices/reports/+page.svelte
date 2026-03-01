@@ -5,6 +5,8 @@
   import { PageHeader } from '$lib/components/layout';
   import { Button } from '$lib/components/ui/button';
   import { formatCurrency, formatDate } from '$lib/utils/formatting.js';
+  import { t } from '$lib/utils/i18n.js';
+import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 
   /** @type {{ data: import('./$types').PageData }} */
   let { data } = $props();
@@ -16,10 +18,10 @@
 
   // Group by options
   const GROUP_BY_OPTIONS = [
-    { value: 'day', label: 'Daily' },
-    { value: 'week', label: 'Weekly' },
-    { value: 'month', label: 'Monthly' },
-    { value: 'year', label: 'Yearly' }
+    { value: 'day', label: t('daily') },
+    { value: 'week', label: t('weekly') },
+    { value: 'month', label: t('monthly') },
+    { value: 'year', label: t('yearly') }
   ];
 
   // Filter handlers
@@ -50,7 +52,7 @@
 
 <div class="flex flex-col gap-6 p-6">
   <!-- Header -->
-  <PageHeader title="Invoice Reports">
+  <PageHeader title={t('invoiceReports')}>
     {#snippet actions()}
       <Button variant="ghost" size="sm" onclick={() => goto('/invoices')}>
         <svg
@@ -67,7 +69,7 @@
         >
           <path d="M19 12H5M12 19l-7-7 7-7" />
         </svg>
-        Invoices
+        {t('invoices')}
       </Button>
     {/snippet}
   </PageHeader>
@@ -78,7 +80,7 @@
     <div class="rounded-xl border border-[var(--border-default)] bg-[var(--surface-default)] p-6 shadow-sm">
       <div class="flex items-center justify-between">
         <div>
-          <p class="text-sm text-[var(--text-secondary)]">Total Invoiced</p>
+          <p class="text-sm text-[var(--text-secondary)]">{t('total_invoiced')}</p>
           <p class="mt-1 text-2xl font-bold text-[var(--text-primary)]">
             {formatCurrency(Number(dashboard.summary?.total_invoiced || 0), 'USD')}
           </p>
@@ -109,7 +111,7 @@
     <div class="rounded-xl border border-[var(--border-default)] bg-[var(--surface-default)] p-6 shadow-sm">
       <div class="flex items-center justify-between">
         <div>
-          <p class="text-sm text-[var(--text-secondary)]">Total Collected</p>
+          <p class="text-sm text-[var(--text-secondary)]">{t('total_collected')}</p>
           <p class="mt-1 text-2xl font-bold text-[var(--color-success-default)]">
             {formatCurrency(Number(dashboard.summary?.total_paid || 0), 'USD')}
           </p>
@@ -138,7 +140,7 @@
     <div class="rounded-xl border border-[var(--border-default)] bg-[var(--surface-default)] p-6 shadow-sm">
       <div class="flex items-center justify-between">
         <div>
-          <p class="text-sm text-[var(--text-secondary)]">Outstanding</p>
+          <p class="text-sm text-[var(--text-secondary)]">{t('outstanding')}</p>
           <p class="mt-1 text-2xl font-bold text-[var(--color-primary-default)]">
             {formatCurrency(Number(dashboard.summary?.total_due || 0), 'USD')}
           </p>
@@ -167,7 +169,7 @@
     <div class="rounded-xl border border-[var(--border-default)] bg-[var(--surface-default)] p-6 shadow-sm">
       <div class="flex items-center justify-between">
         <div>
-          <p class="text-sm text-[var(--text-secondary)]">Overdue ({dashboard.overdue?.count || 0})</p>
+          <p class="text-sm text-[var(--text-secondary)]">{t('overdue')} ({dashboard.overdue?.count || 0})</p>
           <p class="mt-1 text-2xl font-bold text-[var(--color-negative-default)]">
             {formatCurrency(Number(dashboard.overdue?.amount || 0), 'USD')}
           </p>
@@ -200,24 +202,24 @@
   <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
     <!-- Recent Activity -->
     <div class="rounded-xl border border-[var(--border-default)] bg-[var(--surface-default)] p-6 shadow-sm">
-      <h3 class="mb-4 text-lg font-semibold text-[var(--text-primary)]">Last 30 Days</h3>
+      <h3 class="mb-4 text-lg font-semibold text-[var(--text-primary)]">{t('last_30_days')}</h3>
       <div class="space-y-4">
         <div class="flex items-center justify-between">
-          <span class="text-[var(--text-secondary)]">Revenue Collected</span>
+          <span class="text-[var(--text-secondary)]">{t('revenue_collected')}</span>
           <span class="font-medium text-[var(--color-success-default)]">
             {formatCurrency(Number(dashboard.recent_activity?.revenue_30d || 0), 'USD')}
           </span>
         </div>
         <div class="flex items-center justify-between">
-          <span class="text-[var(--text-secondary)]">Invoices Created</span>
+          <span class="text-[var(--text-secondary)]">{t('invoices_created')}</span>
           <span class="font-medium text-[var(--text-primary)]">{dashboard.recent_activity?.invoices_created_30d || 0}</span>
         </div>
         <div class="flex items-center justify-between">
-          <span class="text-[var(--text-secondary)]">Invoices Paid</span>
+          <span class="text-[var(--text-secondary)]">{t('invoices_paid')}</span>
           <span class="font-medium text-[var(--text-primary)]">{dashboard.recent_activity?.invoices_paid_30d || 0}</span>
         </div>
         <div class="flex items-center justify-between">
-          <span class="text-[var(--text-secondary)]">Total Invoiced</span>
+          <span class="text-[var(--text-secondary)]">{t('total_invoiced')}</span>
           <span class="font-medium text-[var(--text-primary)]">
             {formatCurrency(Number(dashboard.recent_activity?.invoiced_30d || 0), 'USD')}
           </span>
@@ -227,7 +229,7 @@
 
     <!-- Status Breakdown -->
     <div class="rounded-xl border border-[var(--border-default)] bg-[var(--surface-default)] p-6 shadow-sm">
-      <h3 class="mb-4 text-lg font-semibold text-[var(--text-primary)]">Invoice Status</h3>
+      <h3 class="mb-4 text-lg font-semibold text-[var(--text-primary)]">{t('invoice_status')}</h3>
       <div class="space-y-3">
         {#each Object.entries(dashboard.status_counts || {}) as [status, count]}
           <div class="flex items-center gap-3">
@@ -243,7 +245,7 @@
   <!-- Revenue Chart Section -->
   <div class="rounded-xl border border-[var(--border-default)] bg-[var(--surface-default)] p-6 shadow-sm">
     <div class="mb-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-      <h3 class="text-lg font-semibold text-[var(--text-primary)]">Revenue Over Time</h3>
+      <h3 class="text-lg font-semibold text-[var(--text-primary)]">{t('revenue_over_time')}</h3>
       <div class="flex flex-wrap gap-3">
         <input
           type="date"
@@ -286,9 +288,9 @@
         <table class="w-full text-sm">
           <thead>
             <tr class="border-b border-[var(--border-default)]">
-              <th class="py-2 text-left font-medium text-[var(--text-secondary)]">Period</th>
-              <th class="py-2 text-right font-medium text-[var(--text-secondary)]">Invoices</th>
-              <th class="py-2 text-right font-medium text-[var(--text-secondary)]">Revenue</th>
+              <th class="py-2 text-left font-medium text-[var(--text-secondary)]">{t('period')}</th>
+              <th class="py-2 text-right font-medium text-[var(--text-secondary)]">{t('invoices')}</th>
+              <th class="py-2 text-right font-medium text-[var(--text-secondary)]">{t('revenue')}</th>
             </tr>
           </thead>
           <tbody>
@@ -304,7 +306,7 @@
           </tbody>
           <tfoot>
             <tr class="border-t border-[var(--border-default)] bg-[var(--surface-sunken)]">
-              <td class="py-3 font-medium text-[var(--text-primary)]">Total</td>
+              <td class="py-3 font-medium text-[var(--text-primary)]">{t('total')}</td>
               <td class="py-3 text-right font-medium text-[var(--text-primary)]">{revenue.total?.count || 0}</td>
               <td class="py-3 text-right font-bold text-[var(--color-success-default)]">
                 {formatCurrency(Number(revenue.total?.revenue || 0), 'USD')}
@@ -314,18 +316,18 @@
         </table>
       </div>
     {:else}
-      <div class="py-8 text-center text-[var(--text-secondary)]">No revenue data for the selected period</div>
+      <div class="py-8 text-center text-[var(--text-secondary)]">{t('no_revenue_data')}</div>
     {/if}
   </div>
 
   <!-- Aging Report -->
   <div class="rounded-xl border border-[var(--border-default)] bg-[var(--surface-default)] p-6 shadow-sm">
-    <h3 class="mb-6 text-lg font-semibold text-[var(--text-primary)]">Accounts Receivable Aging</h3>
+    <h3 class="mb-6 text-lg font-semibold text-[var(--text-primary)]">{t('accounts_receivable_aging')}</h3>
 
     <div class="mb-6 grid grid-cols-1 gap-4 md:grid-cols-5">
       <!-- Current -->
       <div class="rounded-lg bg-[var(--color-success-light)] p-4">
-        <p class="text-sm font-medium text-[var(--color-success-default)]">Current</p>
+        <p class="text-sm font-medium text-[var(--color-success-default)]">{t('current')}</p>
         <p class="mt-1 text-xl font-bold text-[var(--color-success-default)]">
           {formatCurrency(Number(aging.current?.amount || 0), 'USD')}
         </p>
@@ -334,7 +336,7 @@
 
       <!-- 1-30 Days -->
       <div class="rounded-lg bg-[var(--stage-negotiation-bg)] p-4">
-        <p class="text-sm font-medium text-[var(--stage-negotiation)]">1-30 Days</p>
+        <p class="text-sm font-medium text-[var(--stage-negotiation)]">{t('days_1_30')}</p>
         <p class="mt-1 text-xl font-bold text-[var(--stage-negotiation)]">
           {formatCurrency(Number(aging['1_30_days']?.amount || 0), 'USD')}
         </p>
@@ -343,7 +345,7 @@
 
       <!-- 31-60 Days -->
       <div class="rounded-lg bg-[var(--color-primary-light)] p-4">
-        <p class="text-sm font-medium text-[var(--color-primary-default)]">31-60 Days</p>
+        <p class="text-sm font-medium text-[var(--color-primary-default)]">{t('days_31_60')}</p>
         <p class="mt-1 text-xl font-bold text-[var(--color-primary-default)]">
           {formatCurrency(Number(aging['31_60_days']?.amount || 0), 'USD')}
         </p>
@@ -352,7 +354,7 @@
 
       <!-- 61-90 Days -->
       <div class="rounded-lg bg-[var(--color-negative-light)] p-4">
-        <p class="text-sm font-medium text-[var(--color-negative-default)]">61-90 Days</p>
+        <p class="text-sm font-medium text-[var(--color-negative-default)]">{t('days_61_90')}</p>
         <p class="mt-1 text-xl font-bold text-[var(--color-negative-default)]">
           {formatCurrency(Number(aging['61_90_days']?.amount || 0), 'USD')}
         </p>
@@ -361,7 +363,7 @@
 
       <!-- Over 90 Days -->
       <div class="rounded-lg bg-[var(--color-negative-default)]/20 p-4">
-        <p class="text-sm font-medium text-[var(--color-negative-default)]">Over 90 Days</p>
+        <p class="text-sm font-medium text-[var(--color-negative-default)]">{t('over_90_days')}</p>
         <p class="mt-1 text-xl font-bold text-[var(--color-negative-default)]">
           {formatCurrency(Number(aging['over_90_days']?.amount || 0), 'USD')}
         </p>
@@ -371,7 +373,7 @@
 
     <!-- Total Outstanding -->
     <div class="flex items-center justify-between border-t border-[var(--border-default)] pt-4">
-      <span class="font-medium text-[var(--text-secondary)]">Total Outstanding</span>
+      <span class="font-medium text-[var(--text-secondary)]">{t('total_outstanding')}</span>
       <div class="text-right">
         <p class="text-2xl font-bold text-[var(--text-primary)]">
           {formatCurrency(Number(aging.total?.amount || 0), 'USD')}
@@ -383,20 +385,23 @@
 
   <!-- Estimates Summary -->
   <div class="rounded-xl border border-[var(--border-default)] bg-[var(--surface-default)] p-6 shadow-sm">
-    <h3 class="mb-4 text-lg font-semibold text-[var(--text-primary)]">Estimates Overview</h3>
+    <h3 class="mb-4 text-lg font-semibold text-[var(--text-primary)]">{t('estimates_overview')}</h3>
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
       <div class="rounded-lg bg-[var(--color-primary-light)] p-4 text-center">
         <p class="text-3xl font-bold text-[var(--color-primary-default)]">{dashboard.estimates?.pending || 0}</p>
-        <p class="mt-1 text-sm text-[var(--color-primary-default)]">Pending</p>
+        <p class="mt-1 text-sm text-[var(--color-primary-default)]">{t('pending')}</p>
       </div>
       <div class="rounded-lg bg-[var(--color-success-light)] p-4 text-center">
         <p class="text-3xl font-bold text-[var(--color-success-default)]">{dashboard.estimates?.accepted || 0}</p>
-        <p class="mt-1 text-sm text-[var(--color-success-default)]">Accepted</p>
+        <p class="mt-1 text-sm text-[var(--color-success-default)]">{t('accepted')}</p>
       </div>
       <div class="rounded-lg bg-[var(--color-negative-light)] p-4 text-center">
         <p class="text-3xl font-bold text-[var(--color-negative-default)]">{dashboard.estimates?.declined || 0}</p>
-        <p class="mt-1 text-sm text-[var(--color-negative-default)]">Declined</p>
+        <p class="mt-1 text-sm text-[var(--color-negative-default)]">{t('declined')}</p>
       </div>
     </div>
   </div>
 </div>
+
+<!-- 自动刷新组件 -->
+<AutoRefresh interval={3000} enabled={true} />

@@ -6,7 +6,20 @@
   import * as AlertDialog from '$lib/components/ui/alert-dialog/index.js';
   import { Separator } from '$lib/components/ui/separator/index.js';
   import { formatRelativeDate, getInitials } from '$lib/utils/formatting.js';
+  import { t, getCurrentLanguage } from '$lib/utils/i18n.js';
   import * as api from '$lib/api.js';
+  
+  // Reactive language tracking
+  let currentLang = $state(getCurrentLanguage());
+  
+  // Update language when it changes in localStorage
+  if (typeof window !== 'undefined') {
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'language') {
+        currentLang = e.newValue || 'en';
+      }
+    });
+  }
 
   /**
    * @type {{
@@ -135,9 +148,9 @@
       const result = await apiModule.addComment(entityId, commentText);
 
       // Replace temp comment with real one if response contains it
-      if (result?.id) {
+      if (result?.comment?.id) {
         comments = comments.map(c =>
-          c.id === tempId ? { ...result, comment: commentText } : c
+          c.id === tempId ? result.comment : c
         );
       }
 
@@ -202,7 +215,7 @@
   <div class="flex items-center justify-between">
     <div class="flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-400">
       <MessageSquare class="h-4 w-4" />
-      <span>Comments</span>
+      <span>{t('comments', currentLang)}</span>
       {#if comments.length > 0}
         <span class="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600 dark:bg-gray-800 dark:text-gray-400">
           {comments.length}
@@ -217,7 +230,7 @@
       <div class="relative">
         <Textarea
           bind:value={newComment}
-          placeholder="Write a comment..."
+          placeholder={t('write_a_comment', currentLang)}
           onkeydown={handleKeyDown}
           class="min-h-[80px] resize-none pr-4 pb-8"
           disabled={isSubmitting}
@@ -239,7 +252,7 @@
             {:else}
               <Send class="h-3 w-3" />
             {/if}
-            Send
+            {t('send', currentLang)}
           </Button>
         </div>
       </div>
@@ -252,8 +265,8 @@
       <div class="flex h-12 w-12 items-center justify-center rounded-full bg-gray-50 dark:bg-gray-900">
         <MessageSquare class="h-5 w-5 text-gray-400 dark:text-gray-600" />
       </div>
-      <p class="mt-3 text-sm font-medium text-gray-500 dark:text-gray-400">No comments yet</p>
-      <p class="mt-1 text-xs text-gray-400 dark:text-gray-500">Be the first to comment</p>
+      <p class="mt-3 text-sm font-medium text-gray-500 dark:text-gray-400">{t('no_comments_yet', currentLang)}</p>
+      <p class="mt-1 text-xs text-gray-400 dark:text-gray-500">{t('be_the_first_to_comment', currentLang)}</p>
     </div>
   {:else}
     <div class="space-y-1">
@@ -315,10 +328,10 @@
       >
         {#if showAllComments}
           <ChevronUp class="h-4 w-4" />
-          Show less
-        {:else}
-          <ChevronDown class="h-4 w-4" />
-          View all {comments.length} comments
+          {t('show_less', currentLang)}
+          {:else}
+            <ChevronDown class="h-4 w-4" />
+            {t('view_all', currentLang)} {comments.length} {t('comments', currentLang)}
         {/if}
       </button>
     {/if}

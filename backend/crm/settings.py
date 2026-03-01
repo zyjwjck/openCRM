@@ -52,7 +52,8 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "crum.CurrentRequestUserMiddleware",
-    "common.middleware.get_company.GetProfileAndOrg"
+    "common.middleware.get_company.GetProfileAndOrg",
+    "common.middleware.logging_middleware.LoggingMiddleware"
 ]
 
 ROOT_URLCONF = "crm.urls"
@@ -152,27 +153,36 @@ LOGGING = {
         "require_debug_true": {
             "()": "django.utils.log.RequireDebugTrue",
         },
+        "user_filter": {
+            "()": "common.middleware.logging_middleware.UserFilter",
+        },
     },
     "formatters": {
         "django.server": {
             "()": "django.utils.log.ServerFormatter",
             "format": "[%(server_time)s] %(message)s",
         },
+        "standard": {
+            "format": "%(asctime)s | %(levelname)s | User: %(user)s | %(message)s",
+            "datefmt": "%Y-%m-%d %H:%M:%S",
+        },
         "security": {
-            "format": "%(asctime)s | %(levelname)s | %(message)s",
+            "format": "%(asctime)s | %(levelname)s | User: %(user)s | %(message)s",
             "datefmt": "%Y-%m-%d %H:%M:%S",
         },
     },
     "handlers": {
         "console": {
             "level": "INFO",
-            "filters": ["require_debug_true"],
+            "filters": ["require_debug_true", "user_filter"],
             "class": "logging.StreamHandler",
+            "formatter": "standard",
         },
         "console_debug_false": {
             "level": "ERROR",
-            "filters": ["require_debug_false"],
+            "filters": ["require_debug_false", "user_filter"],
             "class": "logging.StreamHandler",
+            "formatter": "standard",
         },
         "django.server": {
             "level": "INFO",
@@ -185,13 +195,20 @@ LOGGING = {
             "class": "django.utils.log.AdminEmailHandler",
         },
         "logfile": {
-            "class": "logging.FileHandler",
-            "filename": "server.log",
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": os.path.join(BASE_DIR, "logs", "server.log"),
+            "maxBytes": 10485760,  # 10MB
+            "backupCount": 5,
+            "formatter": "standard",
+            "filters": ["user_filter"],
         },
         "security_audit": {
-            "class": "logging.FileHandler",
-            "filename": "security_audit.log",
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": os.path.join(BASE_DIR, "logs", "security_audit.log"),
+            "maxBytes": 10485760,  # 10MB
+            "backupCount": 5,
             "formatter": "security",
+            "filters": ["user_filter"],
         },
     },
     "loggers": {

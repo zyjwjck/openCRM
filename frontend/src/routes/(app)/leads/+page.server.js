@@ -105,93 +105,131 @@ export async function load({ url, cookies, locals }) {
       leads = response;
     }
 
-    // Transform Django leads to match Prisma structure
-    const transformedLeads = leads.map((lead) => ({
-      id: lead.id,
-      // Core Information
-      firstName: lead.first_name,
-      lastName: lead.last_name,
-      title: lead.title,
-      salutation: lead.salutation,
-      jobTitle: lead.job_title,
-      company: lead.company_name,
-      email: lead.email,
-      phone: lead.phone,
-      website: lead.website,
-      linkedinUrl: lead.linkedin_url,
+    // Transform Django leads to match Prisma structure - optimized
+    const transformedLeads = [];
+    for (const lead of leads) {
+      // Pre-calculate common values
+      const leadStatus = lead.status;
+      const statusValue = leadStatus ? leadStatus.toUpperCase().replace(/ /g, '_') : 'ASSIGNED';
+      
+      transformedLeads.push({
+        id: lead.id,
+        // Core Information
+        firstName: lead.first_name,
+        lastName: lead.last_name,
+        title: lead.title,
+        salutation: lead.salutation,
+        jobTitle: lead.job_title,
+        company: lead.company_name,
+        email: lead.email,
+        phone: lead.phone,
+        website: lead.website,
+        linkedinUrl: lead.linkedin_url,
 
-      // Sales Pipeline
-      status: lead.status ? lead.status.toUpperCase().replace(/ /g, '_') : 'ASSIGNED',
-      leadSource: lead.source,
-      industry: lead.industry,
-      rating: lead.rating,
-      opportunityAmount: lead.opportunity_amount,
-      currency: lead.currency || null,
-      probability: lead.probability,
-      closeDate: lead.close_date,
+        // Sales Pipeline
+        status: statusValue,
+        leadSource: lead.source,
+        industry: lead.industry,
+        rating: lead.rating,
+        opportunityAmount: lead.opportunity_amount,
+        currency: lead.currency || null,
+        probability: lead.probability,
+        closeDate: lead.close_date,
 
-      // Address
-      addressLine: lead.address_line,
-      city: lead.city,
-      state: lead.state,
-      postcode: lead.postcode,
-      country: lead.country,
+        // Address
+        addressLine: lead.address_line,
+        city: lead.city,
+        state: lead.state,
+        postcode: lead.postcode,
+        country: lead.country,
 
-      // Activity Tracking
-      lastContacted: lead.last_contacted,
-      nextFollowUp: lead.next_follow_up,
-      description: lead.description,
+        // Activity Tracking
+        lastContacted: lead.last_contacted,
+        nextFollowUp: lead.next_follow_up,
+        description: lead.description,
 
-      // System
-      isConverted: lead.status === 'converted',
-      isActive: lead.is_active,
-      createdAt: lead.created_at,
-      updatedAt: lead.updated_at || lead.created_at,
+        // System
+        isConverted: leadStatus === 'converted',
+        isActive: lead.is_active,
+        createdAt: lead.created_at,
+        updatedAt: lead.updated_at || lead.created_at,
 
-      // Assignment - Owner info
-      owner:
-        lead.assigned_to && lead.assigned_to.length > 0
-          ? {
-              id: lead.assigned_to[0].id,
-              name:
-                lead.assigned_to[0].user?.email ||
-                lead.assigned_to[0].user_details?.email ||
-                'Unknown',
-              email: lead.assigned_to[0].user?.email || lead.assigned_to[0].user_details?.email
-            }
-          : lead.created_by
+        // Assignment - Owner info
+        owner:
+          lead.assigned_to && lead.assigned_to.length > 0
             ? {
-                id: lead.created_by.id,
-                name: lead.created_by.email,
-                email: lead.created_by.email
+                id: lead.assigned_to[0].id,
+                name:
+                  lead.assigned_to[0].user?.email ||
+                  lead.assigned_to[0].user_details?.email ||
+                  'Unknown',
+                email: lead.assigned_to[0].user?.email || lead.assigned_to[0].user_details?.email
               }
-            : null,
+            : lead.created_by
+              ? {
+                  id: lead.created_by.id,
+                  name: lead.created_by.email,
+                  email: lead.created_by.email
+                }
+              : null,
 
-      // Assignment arrays (IDs for form editing)
-      assignedTo: (lead.assigned_to || []).map((u) => u.id),
-      teams: (lead.teams || []).map((t) => t.id),
+        // Assignment arrays (IDs for form editing)
+        assignedTo: lead.assigned_to ? lead.assigned_to.map((u) => u.id) : [],
+        teams: lead.teams ? lead.teams.map((t) => t.id) : [],
 
-      // Related data
-      contacts: (lead.contacts || []).map((c) => c.id),
-      tags: (lead.tags || []).map((t) => t.id),
-      comments: lead.lead_comments || [],
-      attachments: lead.lead_attachment || []
-    }));
+        // Related data
+        contacts: lead.contacts ? lead.contacts.map((c) => c.id) : [],
+        tags: lead.tags ? lead.tags.map((t) => t.id) : [],
+        comments: lead.lead_comments || [],
+        attachments: lead.lead_attachment || []
+      });
+    }
 
     // Get total count from response
     const total = response.open_leads?.leads_count || response.count || transformedLeads.length;
 
-    // Extract tags from response
-    const tags = (tagsResponse.tags || []).map((/** @type {any} */ t) => ({
-      id: t.id,
-      name: t.name,
-      color: t.color || 'blue'
-    }));
+    // Extract tags from response - optimized
+    const tags = [];
+    const tagsData = tagsResponse.tags || [];
+    for (const t of tagsData) {
+      tags.push({
+        id: t.id,
+        name: t.name,
+        color: t.color || 'blue'
+      });
+    }
 
     // Extract form options from responses
     const users = usersResponse?.active_users?.active_users || usersResponse?.users || [];
     const teams = teamsResponse?.teams || [];
     const contacts = contactsResponse?.contact_obj_list || contactsResponse?.results || [];
+
+    // Pre-loaded form options for drawer (avoids client-side auth issues) - optimized
+    const formUsers = [];
+    for (const u of users) {
+      formUsers.push({
+        id: u.id,
+        email: u.user?.email || u.email,
+        name: u.user?.email || u.email
+      });
+    }
+
+    const formTeams = [];
+    for (const t of teams) {
+      formTeams.push({
+        id: t.id,
+        name: t.name
+      });
+    }
+
+    const formContacts = [];
+    for (const c of contacts) {
+      formContacts.push({
+        id: c.id,
+        name: `${c.first_name || ''} ${c.last_name || ''}`.trim() || c.email,
+        email: c.email
+      });
+    }
 
     return {
       leads: transformedLeads,
@@ -230,20 +268,9 @@ export async function load({ url, cookies, locals }) {
       },
       // Pre-loaded form options for drawer (avoids client-side auth issues)
       formOptions: {
-        users: users.map((/** @type {any} */ u) => ({
-          id: u.id,
-          email: u.user?.email || u.email,
-          name: u.user?.email || u.email
-        })),
-        teams: teams.map((/** @type {any} */ t) => ({
-          id: t.id,
-          name: t.name
-        })),
-        contacts: contacts.map((/** @type {any} */ c) => ({
-          id: c.id,
-          name: `${c.first_name || ''} ${c.last_name || ''}`.trim() || c.email,
-          email: c.email
-        }))
+        users: formUsers,
+        teams: formTeams,
+        contacts: formContacts
       }
     };
   } catch (err) {

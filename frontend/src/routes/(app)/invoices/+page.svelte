@@ -11,6 +11,7 @@
   import { formatCurrency, formatDate } from '$lib/utils/formatting.js';
   import { Plus, Filter, Columns3 } from '@lucide/svelte';
   import { t } from '$lib/utils/i18n.js';
+import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 
   /** @type {{ data: import('./$types').PageData }} */
   let { data } = $props();
@@ -19,37 +20,37 @@
   const INVOICE_STATUSES = [
     {
       value: 'Draft',
-      label: 'Draft',
+      label: t('draft'),
       color: 'bg-[var(--surface-sunken)] text-[var(--text-secondary)]'
     },
     {
       value: 'Sent',
-      label: 'Sent',
+      label: t('sent'),
       color: 'bg-[var(--stage-contacted-bg)] text-[var(--stage-contacted)] dark:bg-[var(--stage-contacted)]/15'
     },
     {
       value: 'Viewed',
-      label: 'Viewed',
+      label: t('viewed'),
       color: 'bg-[var(--stage-qualified-bg)] text-[var(--stage-qualified)] dark:bg-[var(--stage-qualified)]/15'
     },
     {
       value: 'Partially_Paid',
-      label: 'Partially Paid',
+      label: t('partially_paid'),
       color: 'bg-[var(--stage-negotiation-bg)] text-[var(--stage-negotiation)] dark:bg-[var(--stage-negotiation)]/15'
     },
     {
       value: 'Paid',
-      label: 'Paid',
+      label: t('paid'),
       color: 'bg-[var(--color-success-light)] text-[var(--color-success-default)] dark:bg-[var(--color-success-default)]/15'
     },
     {
       value: 'Overdue',
-      label: 'Overdue',
+      label: t('overdue'),
       color: 'bg-[var(--color-negative-light)] text-[var(--color-negative-default)] dark:bg-[var(--color-negative-default)]/15'
     },
     {
       value: 'Cancelled',
-      label: 'Cancelled',
+      label: t('cancelled'),
       color: 'bg-[var(--surface-sunken)] text-[var(--text-tertiary)]'
     }
   ];
@@ -63,7 +64,7 @@
   const columns = [
     {
       key: 'invoiceNumber',
-      label: 'Invoice #',
+      label: t('invoice_number'),
       type: 'text',
       width: 'w-28',
       editable: false,
@@ -71,7 +72,7 @@
     },
     {
       key: 'clientName',
-      label: 'Client',
+      label: t('client'),
       type: 'text',
       width: 'w-40',
       editable: false,
@@ -79,7 +80,7 @@
     },
     {
       key: 'account',
-      label: 'Account',
+      label: t('account'),
       type: 'relation',
       width: 'w-36',
       relationIcon: 'building',
@@ -88,7 +89,7 @@
     },
     {
       key: 'status',
-      label: 'Status',
+      label: t('status'),
       type: 'select',
       width: 'w-28',
       options: INVOICE_STATUSES,
@@ -97,7 +98,7 @@
     },
     {
       key: 'issueDate',
-      label: 'Issue Date',
+      label: t('issue_date'),
       type: 'date',
       width: 'w-28',
       canHide: true,
@@ -105,7 +106,7 @@
     },
     {
       key: 'dueDate',
-      label: 'Due Date',
+      label: t('due_date'),
       type: 'date',
       width: 'w-28',
       canHide: true,
@@ -113,14 +114,14 @@
     },
     {
       key: 'totalAmount',
-      label: 'Total',
+      label: t('total'),
       type: 'number',
       width: 'w-28',
       canHide: false
     },
     {
       key: 'amountDue',
-      label: 'Amount Due',
+      label: t('amount_due'),
       type: 'number',
       width: 'w-28',
       canHide: true
@@ -139,11 +140,11 @@
 
   // Status chip filter definitions
   const STATUS_CHIPS = [
-    { key: 'ALL', label: 'All' },
-    { key: 'OPEN', label: 'Open', statuses: ['Draft', 'Sent', 'Viewed'] },
-    { key: 'PAID', label: 'Paid', statuses: ['Paid', 'Partially_Paid'] },
-    { key: 'OVERDUE', label: 'Overdue', statuses: ['Overdue'] },
-    { key: 'CANCELLED', label: 'Cancelled', statuses: ['Cancelled'] }
+    { key: 'ALL', label: t('all') },
+    { key: 'OPEN', label: t('open'), statuses: ['Draft', 'Sent', 'Viewed'] },
+    { key: 'PAID', label: t('paid'), statuses: ['Paid', 'Partially_Paid'] },
+    { key: 'OVERDUE', label: t('overdue'), statuses: ['Overdue'] },
+    { key: 'CANCELLED', label: t('cancelled'), statuses: ['Cancelled'] }
   ];
 
   // State
@@ -435,7 +436,7 @@
             row.status
           )}"
         >
-          {row.status.replace('_', ' ')}
+          {INVOICE_STATUSES.find(s => s.value === row.status)?.label || row.status.replace('_', ' ')}
         </span>
       {:else if column.key === 'issueDate' || column.key === 'dueDate'}
         {row[column.key] ? formatDate(row[column.key]) : '-'}
@@ -466,4 +467,7 @@
       onLimitChange={handleLimitChange}
     />
   {/if}
+
+  <!-- 自动刷新组件 -->
+  <AutoRefresh interval={3000} enabled={true} />
 </div>

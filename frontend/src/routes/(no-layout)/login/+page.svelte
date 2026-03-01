@@ -126,6 +126,34 @@
         
         console.log('Tokens stored in cookies');
 
+        // Preload common data to reduce first load time
+        console.log('Preloading common data...');
+        try {
+          // Preload dashboard data
+          const dashboardResponse = await fetch('/api/dashboard/', {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${data.access_token}`
+            },
+            credentials: 'include'
+          });
+          
+          if (dashboardResponse.ok) {
+            const dashboardData = await dashboardResponse.json();
+            console.log('Dashboard data preloaded successfully');
+            
+            // Store preloaded data in sessionStorage for quick access
+            sessionStorage.setItem('preloaded_dashboard_data', JSON.stringify(dashboardData));
+            console.log('Dashboard data stored in sessionStorage');
+          } else {
+            console.log('Failed to preload dashboard data:', dashboardResponse.status);
+          }
+        } catch (preloadError) {
+          console.log('Error preloading data:', preloadError);
+          // Continue with redirect even if preloading fails
+        }
+
         // 强制重定向，使用setTimeout确保所有代码都执行完毕
         console.log('Redirecting to dashboard...');
         setTimeout(() => {
@@ -248,15 +276,15 @@
     <!-- Help Links -->
     <div class="help-section">
       <p class="help-text">
-        {t('dontHaveAccount', language)} <a href="#" class="help-link">{t('signUpForFree', language)}</a>
+        {t('dontHaveAccount', language)} <a href="/signup" class="help-link">{t('signUpForFree', language)}</a>
       </p>
     </div>
 
     <!-- Footer -->
     <footer class="login-footer">
-      <a href="https://bottlecrm.io/privacy-policy">{t('privacyPolicy', language)}</a>
+      <a href="/privacy">{t('privacyPolicy', language)}</a>
       <span class="dot"></span>
-      <a href="https://bottlecrm.io/terms">{t('termsOfService', language)}</a>
+      <a href="/terms">{t('termsOfService', language)}</a>
       <span class="dot"></span>
       <a href="https://github.com/zyjwjck/openCRM" target="_blank" rel="noopener">GitHub</a>
     </footer>

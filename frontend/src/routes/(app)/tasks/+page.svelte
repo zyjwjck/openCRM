@@ -51,6 +51,7 @@
   import { CrmTable } from '$lib/components/ui/crm-table';
   import { formatRelativeDate } from '$lib/utils/formatting.js';
   import { t } from '$lib/utils/i18n.js';
+import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 
   // Account from URL param (for quick action from account page)
   let accountFromUrl = $state(false);
@@ -141,21 +142,21 @@
 
   /** @type {TaskColumn[]} */
   const taskColumns = [
-    { key: 'subject', label: 'Task', type: 'text', width: 'w-64', canHide: false },
+    { key: 'subject', label: t('task'), type: 'text', width: 'w-64', canHide: false },
     {
       key: 'relatedTo',
-      label: 'Related To',
+      label: t('related_to'),
       type: 'relation',
       width: 'w-48',
       relationIcon: 'link',
       getValue: getRelatedEntity
     },
-    { key: 'dueDate', label: 'Due Date', type: 'date', width: 'w-36' },
-    { key: 'priority', label: 'Priority', type: 'select', options: priorityOptions, width: 'w-28' },
-    { key: 'status', label: 'Status', type: 'select', options: statusOptions, width: 'w-36' },
+    { key: 'dueDate', label: t('due_date'), type: 'date', width: 'w-36' },
+    { key: 'priority', label: t('priority'), type: 'select', options: priorityOptions, width: 'w-28' },
+    { key: 'status', label: t('status'), type: 'select', options: statusOptions, width: 'w-36' },
     {
       key: 'assignedTo',
-      label: 'Assigned To',
+      label: t('assigned_to'),
       type: 'relation',
       width: 'w-36',
       relationIcon: 'user',
@@ -169,7 +170,7 @@
     // Hidden by default
     {
       key: 'account',
-      label: 'Account',
+      label: t('account'),
       type: 'relation',
       width: 'w-40',
       relationIcon: 'building',
@@ -178,7 +179,7 @@
     },
     {
       key: 'contacts',
-      label: 'Contacts',
+      label: t('contacts'),
       type: 'relation',
       width: 'w-36',
       relationIcon: 'contact',
@@ -192,7 +193,7 @@
     },
     {
       key: 'teams',
-      label: 'Teams',
+      label: t('teams'),
       type: 'relation',
       width: 'w-36',
       relationIcon: 'users',
@@ -206,7 +207,7 @@
     },
     {
       key: 'tags',
-      label: 'Tags',
+      label: t('tags'),
       type: 'relation',
       width: 'w-32',
       relationIcon: 'tag',
@@ -1510,7 +1511,7 @@
   columns={drawerColumns}
   titleKey="subject"
   titlePlaceholder="Task title"
-  headerLabel={isCreateMode ? 'New Task' : 'Task'}
+  headerLabel={isCreateMode ? 'new_task' : 'task'}
   mode={isCreateMode ? 'create' : 'view'}
   onFieldChange={handleDrawerFieldChange}
   onDelete={deleteSelectedTask}
@@ -1520,17 +1521,17 @@
     <!-- Task metadata (only for existing tasks) -->
     {#if selectedTask && !isCreateMode}
       <div class="space-y-2 text-sm">
-        <div class="mb-3 text-[13px] font-medium text-[var(--text-tertiary)]">Details</div>
+        <div class="mb-3 text-[13px] font-medium text-[var(--text-tertiary)]">{t('details')}</div>
         {#if selectedTask.createdBy}
           <div class="flex items-center gap-2 text-[var(--text-secondary)]">
             <User class="size-3.5" />
-            <span>Created by {selectedTask.createdBy.name}</span>
+            <span>{t('created_by')} {selectedTask.createdBy.name}</span>
           </div>
         {/if}
         {#if selectedTask.createdAt}
           <div class="flex items-center gap-2 text-[var(--text-secondary)]">
             <Clock class="size-3.5" />
-            <span>Created {formatRelativeDate(selectedTask.createdAt)}</span>
+            <span>{t('created')} {formatRelativeDate(selectedTask.createdAt)}</span>
           </div>
         {/if}
       </div>
@@ -1550,22 +1551,22 @@
 
   {#snippet footerActions()}
     {#if isCreateMode}
-      <Button variant="outline" size="sm" onclick={closeTaskSheet}>Cancel</Button>
-      <Button size="sm" onclick={handleDrawerSave}>Create Task</Button>
+      <Button variant="outline" size="sm" onclick={closeTaskSheet}>{t('cancel')}</Button>
+      <Button size="sm" onclick={handleDrawerSave}>{t('create_task')}</Button>
     {:else if selectedTask}
-      <Button variant="outline" size="sm" onclick={closeTaskSheet}>Cancel</Button>
+      <Button variant="outline" size="sm" onclick={closeTaskSheet}>{t('cancel')}</Button>
       {#if isCompleted}
         <Button variant="outline" size="sm" onclick={reopenSelectedTask}>
           <RotateCcw class="mr-2 h-4 w-4" />
-          Reopen
+          {t('reopen')}
         </Button>
       {:else}
         <Button variant="outline" size="sm" onclick={completeSelectedTask}>
           <CheckCircle2 class="mr-2 h-4 w-4" />
-          Complete
+          {t('complete')}
         </Button>
       {/if}
-      <Button size="sm" onclick={handleDrawerUpdate}>Save</Button>
+      <Button size="sm" onclick={handleDrawerUpdate}>{t('save')}</Button>
     {/if}
   {/snippet}
 </CrmDrawer>
@@ -1659,3 +1660,6 @@
   <input type="hidden" name="aboveTaskId" value={kanbanFormState.aboveTaskId} />
   <input type="hidden" name="belowTaskId" value={kanbanFormState.belowTaskId} />
 </form>
+
+<!-- 自动刷新组件 -->
+<AutoRefresh interval={3000} enabled={true} />

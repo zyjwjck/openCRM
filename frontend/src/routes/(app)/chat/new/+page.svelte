@@ -426,7 +426,7 @@
 	<!-- Main Content Area -->
 	<div class="flex-1 flex flex-col h-screen">
 		<!-- Messages Area -->
-			<div class="flex-1 overflow-y-auto py-10 px-4">
+			<div class="flex-1 overflow-y-auto py-10 px-2">
 				<Messages
 					{selectedModels}
 					bind:history
@@ -439,7 +439,7 @@
 			</div>
 		
 		<!-- Input Area -->
-			<div class="py-3 px-4 bg-white dark:bg-gray-800 border-t dark:border-gray-700">
+			<div class="py-3 px-2 bg-white dark:bg-gray-800 border-t dark:border-gray-700">
 				<MessageInput
 					bind:prompt
 					bind:autoScroll

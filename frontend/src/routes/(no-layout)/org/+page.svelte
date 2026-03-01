@@ -3,6 +3,7 @@
   import imgLogo from '$lib/assets/images/logo.png';
   import { Building2, LogOut, Plus, ChevronRight, Users, Shield } from '@lucide/svelte';
   import { enhance } from '$app/forms';
+  import { t } from '$lib/utils/i18n.js';
 
   let { data } = $props();
   let orgs = $derived(data.orgs);
@@ -12,7 +13,7 @@
 </script>
 
 <svelte:head>
-  <title>Select Organization | BottleCRM</title>
+  <title>{t('selectOrganization')} | BottleCRM</title>
 </svelte:head>
 
 <div class="flex min-h-screen flex-col bg-[var(--surface-sunken)]">
@@ -28,7 +29,7 @@
         class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-[var(--text-secondary)] transition-colors hover:bg-[var(--surface-raised)] hover:text-[var(--text-primary)]"
       >
         <LogOut class="h-4 w-4" />
-        <span class="hidden sm:inline">Sign out</span>
+        <span class="hidden sm:inline">{t('signOut')}</span>
       </a>
     </div>
   </header>
@@ -38,8 +39,8 @@
     <div class="w-full max-w-2xl">
       <!-- Page Header -->
       <div class="mb-8 text-center">
-        <h1 class="text-2xl font-bold text-[var(--text-primary)]">Select an organization</h1>
-        <p class="mt-2 text-[var(--text-secondary)]">Choose which organization you'd like to work in</p>
+        <h1 class="text-2xl font-bold text-[var(--text-primary)]">{t('selectAnOrganization')}</h1>
+        <p class="mt-2 text-[var(--text-secondary)]">{t('chooseWhichOrganizationYouWouldLikeToWorkIn')}</p>
       </div>
 
       <!-- Organizations List -->
@@ -110,7 +111,7 @@
             class="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-[var(--border-default)] bg-[var(--surface-sunken)] px-5 py-4 text-sm font-medium text-[var(--text-secondary)] transition-all hover:border-[var(--color-primary-default)] hover:bg-[var(--color-primary-light)] hover:text-[var(--color-primary-default)]"
           >
             <Plus class="h-4 w-4" />
-            Create new organization
+            {t('createNewOrganization')}
           </a>
         </div>
       {:else}
@@ -121,16 +122,16 @@
           >
             <Building2 class="h-8 w-8 text-[var(--text-tertiary)]" />
           </div>
-          <h3 class="text-lg font-semibold text-[var(--text-primary)]">No organizations yet</h3>
+          <h3 class="text-lg font-semibold text-[var(--text-primary)]">{t('noOrganizationsYet')}</h3>
           <p class="mt-2 text-[var(--text-secondary)]">
-            Create your first organization to get started with BottleCRM
+            {t('createYourFirstOrganizationToGetStartedWithBottleCRM')}
           </p>
           <a
             href="/org/new"
             class="mt-6 inline-flex items-center gap-2 rounded-lg bg-[var(--color-primary-default)] px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-[var(--color-primary-dark)]"
           >
             <Plus class="h-4 w-4" />
-            Create organization
+            {t('createOrganization')}
           </a>
         </div>
       {/if}
@@ -138,7 +139,7 @@
       <!-- Trust Signal -->
       <div class="mt-8 flex items-center justify-center gap-2 text-sm text-[var(--text-secondary)]">
         <Shield class="h-4 w-4" />
-        <span>Your data stays private and secure</span>
+        <span>{t('yourDataStaysPrivateAndSecure')}</span>
       </div>
     </div>
   </main>

@@ -1,6 +1,6 @@
 <script>
   import { page } from '$app/stores';
-  import { afterNavigate } from '$app/navigation';
+  import { afterNavigate, goto } from '$app/navigation';
   import imgLogo from '$lib/assets/images/logo.png';
   import { t } from '$lib/utils/i18n.js';
 
@@ -251,12 +251,12 @@
       icon: FileText,
       type: 'dropdown',
       children: [
-        { href: '/invoices', label: 'All Invoices', icon: FileText, preload: 'off' },
-        { href: '/invoices/estimates', label: 'Estimates', icon: FileEdit, preload: 'off' },
-        { href: '/invoices/products', label: 'Products', icon: Package, preload: 'off' },
-        { href: '/invoices/recurring', label: 'Recurring', icon: RefreshCw, preload: 'off' },
-        { href: '/invoices/templates', label: 'Templates', icon: FileCode, preload: 'off' },
-        { href: '/invoices/reports', label: 'Reports', icon: BarChart3, preload: 'off' }
+        { href: '/invoices', label: t('allInvoices'), icon: FileText, preload: 'off' },
+        { href: '/invoices/estimates', label: t('estimates'), icon: FileEdit, preload: 'off' },
+        { href: '/invoices/products', label: t('products'), icon: Package, preload: 'off' },
+        { href: '/invoices/recurring', label: t('recurring'), icon: RefreshCw, preload: 'off' },
+        { href: '/invoices/templates', label: t('templates'), icon: FileCode, preload: 'off' },
+        { href: '/invoices/reports', label: t('reports'), icon: BarChart3, preload: 'off' }
       ]
     }
   ];
@@ -289,7 +289,7 @@
    * @param {string} url
    */
   const navigateTo = (url) => {
-    window.location.href = url;
+    goto(url);
   };
 </script>
 
@@ -559,13 +559,13 @@
       <Sidebar.MenuItem class="group-data-[collapsible=icon]:hidden">
         <Sidebar.MenuButton
           onclick={() => sidebar.toggle()}
-          tooltipContent="Collapse sidebar"
+          tooltipContent={t('collapseSidebar')}
           class="text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-foreground h-8 rounded-lg px-3 transition-all duration-150"
         >
           {#snippet child({ props })}
             <button {...props} class="flex w-full items-center gap-3">
               <PanelLeftClose class="size-4" strokeWidth={1.75} />
-              <span class="text-[12px] font-medium">Collapse</span>
+              <span class="text-[12px] font-medium">{t('collapse')}</span>
             </button>
           {/snippet}
         </Sidebar.MenuButton>
@@ -635,7 +635,7 @@
             <DropdownMenu.Label
               class="text-muted-foreground text-[10px] font-bold tracking-wider uppercase"
             >
-              My Account
+              {t('myAccount')}
             </DropdownMenu.Label>
             <DropdownMenu.Separator />
             <DropdownMenu.Group>
@@ -676,7 +676,7 @@
             <DropdownMenu.Label
               class="text-muted-foreground text-[10px] font-bold tracking-wider uppercase"
             >
-              Theme
+              {t('theme')}
             </DropdownMenu.Label>
             <DropdownMenu.Group class="flex gap-1 px-2 py-1.5">
               <button
@@ -684,28 +684,28 @@
                 class="flex flex-1 flex-col items-center gap-1 rounded-md px-2 py-2 transition-colors {theme === 'light' ? 'bg-[#ff7a59]/10 text-[#ff7a59]' : 'hover:bg-sidebar-accent text-muted-foreground hover:text-foreground'}"
               >
                 <Sun class="size-4" />
-                <span class="text-[10px] font-medium">Light</span>
+                <span class="text-[10px] font-medium">{t('light')}</span>
               </button>
               <button
                 onclick={() => setTheme('dark')}
                 class="flex flex-1 flex-col items-center gap-1 rounded-md px-2 py-2 transition-colors {theme === 'dark' ? 'bg-[#ff7a59]/10 text-[#ff7a59]' : 'hover:bg-sidebar-accent text-muted-foreground hover:text-foreground'}"
               >
                 <Moon class="size-4" />
-                <span class="text-[10px] font-medium">Dark</span>
+                <span class="text-[10px] font-medium">{t('dark')}</span>
               </button>
               <button
                 onclick={() => setTheme('system')}
                 class="flex flex-1 flex-col items-center gap-1 rounded-md px-2 py-2 transition-colors {theme === 'system' ? 'bg-[#ff7a59]/10 text-[#ff7a59]' : 'hover:bg-sidebar-accent text-muted-foreground hover:text-foreground'}"
               >
                 <Monitor class="size-4" />
-                <span class="text-[10px] font-medium">System</span>
+                <span class="text-[10px] font-medium">{t('system')}</span>
               </button>
             </DropdownMenu.Group>
             <DropdownMenu.Separator />
             <DropdownMenu.Label
               class="text-muted-foreground text-[10px] font-bold tracking-wider uppercase"
             >
-              Language
+              {t('language')}
             </DropdownMenu.Label>
             <DropdownMenu.Group class="flex gap-1 px-2 py-1.5">
               <button

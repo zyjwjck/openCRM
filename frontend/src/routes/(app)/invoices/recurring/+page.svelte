@@ -13,6 +13,8 @@
   import { Button } from '$lib/components/ui/button';
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
   import { formatCurrency, formatDate } from '$lib/utils/formatting.js';
+  import { t } from '$lib/utils/i18n.js';
+import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 
   /** @type {{ data: import('./$types').PageData }} */
   let { data } = $props();
@@ -54,7 +56,7 @@
   const columns = [
     {
       key: 'title',
-      label: 'Title',
+      label: t('title'),
       type: 'text',
       width: 'w-48',
       editable: false,
@@ -62,7 +64,7 @@
     },
     {
       key: 'clientName',
-      label: 'Client',
+      label: t('client'),
       type: 'text',
       width: 'w-40',
       canHide: false,
@@ -70,7 +72,7 @@
     },
     {
       key: 'frequency',
-      label: 'Frequency',
+      label: t('frequency'),
       type: 'select',
       width: 'w-28',
       options: FREQUENCIES,
@@ -79,7 +81,7 @@
     },
     {
       key: 'nextGenerationDate',
-      label: 'Next Invoice',
+      label: t('next_invoice'),
       type: 'date',
       width: 'w-28',
       canHide: true,
@@ -87,7 +89,7 @@
     },
     {
       key: 'totalAmount',
-      label: 'Amount',
+      label: t('amount'),
       type: 'number',
       width: 'w-28',
       canHide: false,
@@ -95,7 +97,7 @@
     },
     {
       key: 'invoicesGenerated',
-      label: 'Generated',
+      label: t('generated'),
       type: 'number',
       width: 'w-24',
       canHide: true,
@@ -103,7 +105,7 @@
     },
     {
       key: 'account',
-      label: 'Account',
+      label: t('account'),
       type: 'relation',
       width: 'w-36',
       relationIcon: 'building',
@@ -549,7 +551,7 @@
 <!-- Page Content -->
 <div class="flex flex-col gap-4 p-6">
   <!-- Header -->
-  <PageHeader title="Recurring Invoices">
+  <PageHeader title={t('recurringInvoices')}>
     {#snippet actions()}
       <!-- Back to Invoices -->
       <Button variant="ghost" size="sm" onclick={() => goto('/invoices')}>
@@ -567,7 +569,7 @@
         >
           <path d="M19 12H5M12 19l-7-7 7-7" />
         </svg>
-        Invoices
+        {t('invoices')}
       </Button>
 
       <!-- Filters Toggle -->
@@ -729,8 +731,8 @@
   data={drawerFormData}
   columns={drawerFields}
   titleKey="title"
-  titlePlaceholder="New Recurring Invoice"
-  headerLabel="Recurring Invoice"
+  titlePlaceholder={t('create_recurring')}
+  headerLabel="recurring_invoice"
   mode={drawerMode}
   onFieldChange={handleFieldChange}
   onDelete={handleDelete}
@@ -763,7 +765,7 @@
                 <rect x="6" y="4" width="4" height="16" />
                 <rect x="14" y="4" width="4" height="16" />
               </svg>
-              Pause
+              {t('pause')}
             {:else}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -779,16 +781,16 @@
               >
                 <polygon points="5 3 19 12 5 21 5 3" />
               </svg>
-              Activate
+              {t('activate')}
             {/if}
           </Button>
         {/if}
       </div>
 
       <div class="flex gap-2">
-        <Button variant="outline" onclick={closeDrawer}>Cancel</Button>
+        <Button variant="outline" onclick={closeDrawer}>{t('cancel')}</Button>
         <Button onclick={handleDrawerSave}>
-          {drawerMode === 'create' ? 'Create Recurring' : 'Save Changes'}
+          {drawerMode === 'create' ? t('create_recurring') : t('save_changes')}
         </Button>
       </div>
     </div>
@@ -797,26 +799,26 @@
   {#snippet activitySection()}
     {#if selectedRecurring}
       <div class="border-t pt-4">
-        <h4 class="text-muted-foreground mb-2 text-sm font-medium">Statistics</h4>
+        <h4 class="text-muted-foreground mb-2 text-sm font-medium">{t('statistics')}</h4>
         <div class="space-y-2 text-sm">
           <div class="flex justify-between">
-            <span class="text-muted-foreground">Created</span>
+            <span class="text-muted-foreground">{t('created')}</span>
             <span>{formatDate(selectedRecurring.createdAt)}</span>
           </div>
           <div class="flex justify-between">
-            <span class="text-muted-foreground">Start Date</span>
+            <span class="text-muted-foreground">{t('start_date')}</span>
             <span
               >{selectedRecurring.startDate ? formatDate(selectedRecurring.startDate) : '-'}</span
             >
           </div>
           {#if selectedRecurring.endDate}
             <div class="flex justify-between">
-              <span class="text-muted-foreground">End Date</span>
+              <span class="text-muted-foreground">{t('end_date')}</span>
               <span>{formatDate(selectedRecurring.endDate)}</span>
             </div>
           {/if}
           <div class="flex justify-between">
-            <span class="text-muted-foreground">Next Invoice</span>
+            <span class="text-muted-foreground">{t('next_invoice')}</span>
             <span
               >{selectedRecurring.nextGenerationDate
                 ? formatDate(selectedRecurring.nextGenerationDate)
@@ -824,7 +826,7 @@
             >
           </div>
           <div class="flex justify-between">
-            <span class="text-muted-foreground">Invoices Generated</span>
+            <span class="text-muted-foreground">{t('invoices_generated')}</span>
             <span class="font-medium">{selectedRecurring.invoicesGenerated}</span>
           </div>
         </div>
@@ -832,3 +834,6 @@
     {/if}
   {/snippet}
 </CrmDrawer>
+
+<!-- 自动刷新组件 -->
+<AutoRefresh interval={3000} enabled={true} />

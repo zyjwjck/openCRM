@@ -24,6 +24,7 @@ export async function load({ locals, cookies }) {
 
   try {
     // Fetch dashboard data from Django API
+    console.log('Fetching dashboard data from API');
     const dashboardResponse = await apiRequest('/dashboard/', {}, { cookies, org });
 
     // Django returns:
@@ -32,86 +33,111 @@ export async function load({ locals, cookies }) {
     //   accounts: [], contacts: [], leads: [], opportunities: []
     // }
 
-    // Transform recent leads
-    const recentLeads = (dashboardResponse.leads || []).slice(0, 5).map((lead) => ({
-      id: lead.id,
-      firstName: lead.first_name,
-      lastName: lead.last_name,
-      company: lead.company?.name || null,
-      status: lead.status,
-      createdAt: lead.created_on
-    }));
+    // Transform recent leads - optimized
+    const recentLeads = [];
+    const leads = dashboardResponse.leads || [];
+    for (let i = 0; i < Math.min(5, leads.length); i++) {
+      const lead = leads[i];
+      recentLeads.push({
+        id: lead.id,
+        firstName: lead.first_name,
+        lastName: lead.last_name,
+        company: lead.company?.name || null,
+        status: lead.status,
+        createdAt: lead.created_on
+      });
+    }
 
-    // Transform recent opportunities
-    const recentOpportunities = (dashboardResponse.opportunities || []).slice(0, 5).map((opp) => ({
-      id: opp.id,
-      name: opp.name,
-      amount: opp.amount ? parseFloat(opp.amount) : null,
-      currency: opp.currency || null,
-      stage: opp.stage,
-      probability: opp.probability ? parseFloat(opp.probability) : null,
-      createdAt: opp.created_on,
-      closed_on: opp.closed_on,
-      account: opp.account
-        ? {
-            name: opp.account.name
-          }
-        : null
-    }));
-
-    // Calculate opportunity revenue (sum of all opportunity amounts)
-    const opportunityRevenue = (dashboardResponse.opportunities || []).reduce(
-      (sum, opp) => sum + (opp.amount ? parseFloat(opp.amount) : 0),
-      0
-    );
+    // Transform recent opportunities - optimized
+    const recentOpportunities = [];
+    const opportunities = dashboardResponse.opportunities || [];
+    let opportunityRevenue = 0;
+    for (let i = 0; i < opportunities.length; i++) {
+      const opp = opportunities[i];
+      // Calculate revenue while iterating
+      if (opp.amount) {
+        opportunityRevenue += parseFloat(opp.amount);
+      }
+      // Add to recent opportunities if within limit
+      if (i < 5) {
+        recentOpportunities.push({
+          id: opp.id,
+          name: opp.name,
+          amount: opp.amount ? parseFloat(opp.amount) : null,
+          currency: opp.currency || null,
+          stage: opp.stage,
+          probability: opp.probability ? parseFloat(opp.probability) : null,
+          createdAt: opp.created_on,
+          closed_on: opp.closed_on,
+          account: opp.account
+            ? {
+                name: opp.account.name
+              }
+            : null
+        });
+      }
+    }
 
     // Tasks and activities now come from dashboard response (no separate API calls)
-    // Transform tasks from dashboard response
-    const upcomingTasks = (dashboardResponse.tasks || [])
-      .filter((task) => {
-        const isAssignedToUser = task.assigned_to && task.assigned_to.some((id) => id === userId);
-        const isNotCompleted = task.status !== 'Completed';
-        return isAssignedToUser && isNotCompleted;
-      })
-      .slice(0, 5)
-      .map((task) => ({
-        id: task.id,
-        subject: task.title,
-        status: task.status,
-        priority: task.priority,
-        dueDate: task.due_date
-      }));
+    // Transform tasks from dashboard response - optimized
+    const upcomingTasks = [];
+    const tasks = dashboardResponse.tasks || [];
+    for (const task of tasks) {
+      const isAssignedToUser = task.assigned_to && task.assigned_to.some((id) => id === userId);
+      const isNotCompleted = task.status !== 'Completed';
+      if (isAssignedToUser && isNotCompleted) {
+        upcomingTasks.push({
+          id: task.id,
+          subject: task.title,
+          status: task.status,
+          priority: task.priority,
+          dueDate: task.due_date
+        });
+        // Limit to 5 tasks
+        if (upcomingTasks.length >= 5) {
+          break;
+        }
+      }
+    }
 
-    // Transform activities from dashboard response
-    const recentActivities = (dashboardResponse.activities || []).map((activity) => ({
-      id: activity.id,
-      user: {
-        name: activity.user?.name || activity.user?.email?.split('@')[0] || 'Unknown'
-      },
-      action: activity.action,
-      entityType: activity.entity_type,
-      entityId: activity.entity_id,
-      entityName: activity.entity_name,
-      description:
-        activity.description ||
-        `${activity.action_display} ${activity.entity_type}: ${activity.entity_name}`,
-      timestamp: activity.timestamp,
-      humanizedTime: activity.humanized_time
-    }));
+    // Transform activities from dashboard response - optimized
+    const recentActivities = [];
+    const activities = dashboardResponse.activities || [];
+    for (const activity of activities) {
+      recentActivities.push({
+        id: activity.id,
+        user: {
+          name: activity.user?.name || activity.user?.email?.split('@')[0] || 'Unknown'
+        },
+        action: activity.action,
+        entityType: activity.entity_type,
+        entityId: activity.entity_id,
+        entityName: activity.entity_name,
+        description:
+          activity.description ||
+          `${activity.action_display} ${activity.entity_type}: ${activity.entity_name}`,
+        timestamp: activity.timestamp,
+        humanizedTime: activity.humanized_time
+      });
+    }
 
     // Count pending tasks for the user
     const pendingTasks = upcomingTasks.length;
 
-    // Transform hot leads from new API response
-    const hotLeads = (dashboardResponse.hot_leads || []).map((lead) => ({
-      id: lead.id,
-      first_name: lead.first_name,
-      last_name: lead.last_name,
-      company: lead.company,
-      rating: lead.rating,
-      next_follow_up: lead.next_follow_up,
-      last_contacted: lead.last_contacted
-    }));
+    // Transform hot leads from new API response - optimized
+    const hotLeads = [];
+    const hotLeadsData = dashboardResponse.hot_leads || [];
+    for (const lead of hotLeadsData) {
+      hotLeads.push({
+        id: lead.id,
+        first_name: lead.first_name,
+        last_name: lead.last_name,
+        company: lead.company,
+        rating: lead.rating,
+        next_follow_up: lead.next_follow_up,
+        last_contacted: lead.last_contacted
+      });
+    }
 
     return {
       metrics: {

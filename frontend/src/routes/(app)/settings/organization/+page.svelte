@@ -18,6 +18,7 @@
   import { Input } from '$lib/components/ui/input/index.js';
   import { Label } from '$lib/components/ui/label/index.js';
   import { CURRENCY_CODES } from '$lib/constants/filters.js';
+  import { t } from '$lib/utils/i18n.js';
 
   /** @type {{ data: any, form: any }} */
   let { data, form } = $props();
@@ -68,7 +69,7 @@
   // Handle form result
   $effect(() => {
     if (form?.success) {
-      toast.success('Organization settings updated');
+      toast.success(t('organizationSettingsUpdated'));
       invalidateAll();
     } else if (form?.error) {
       toast.error(form.error);
@@ -104,7 +105,7 @@
 </script>
 
 <svelte:head>
-  <title>Organization Settings - BottleCRM</title>
+  <title>{t('organizationSettings')} - BottleCRM</title>
 </svelte:head>
 
 <style>
@@ -199,15 +200,15 @@
   .delay-2 { animation-delay: 0.2s; }
 </style>
 
-<PageHeader title="Organization Settings" subtitle="Manage your organization preferences">
+<PageHeader title={t('organizationSettings')} subtitle={t('manageYourOrganizationPreferences')}>
   {#snippet actions()}
     <Button type="submit" form="org-settings-form" disabled={isLoading} class="gap-2">
       {#if isLoading}
         <Loader2 class="h-4 w-4 animate-spin" />
-        Saving...
+        {t('saving')}
       {:else}
         <Check class="h-4 w-4" />
-        Save Changes
+        {t('saveChanges')}
       {/if}
     </Button>
   {/snippet}
@@ -256,7 +257,7 @@
               <div class="space-y-1">
                 <div class="text-muted-foreground mb-2 flex items-center gap-2 text-xs font-medium uppercase tracking-wider">
                   <Building2 class="h-3.5 w-3.5" />
-                  Organization Identity
+                  {t('organizationIdentity')}
                 </div>
               </div>
 
@@ -265,7 +266,7 @@
                 <div class="space-y-2">
                   <Label for="name" class="text-muted-foreground flex items-center gap-2 text-sm">
                     <Hash class="h-3.5 w-3.5" />
-                    Organization Name
+                    {t('organizationName')}
                   </Label>
                   <div class="input-glow rounded-lg transition-shadow duration-300">
                     <Input
@@ -273,7 +274,7 @@
                       name="name"
                       type="text"
                       bind:value={formName}
-                      placeholder="Acme Corporation"
+                      placeholder={t('organizationNamePlaceholder')}
                       class="h-11 border-[var(--border-default)] bg-[var(--bg-subtle)] text-base transition-colors focus:border-[var(--accent-primary)] focus:bg-transparent"
                     />
                   </div>
@@ -283,7 +284,7 @@
                 <div class="space-y-2">
                   <Label for="domain" class="text-muted-foreground flex items-center gap-2 text-sm">
                     <Globe class="h-3.5 w-3.5" />
-                    Company Domain
+                    {t('companyDomain')}
                   </Label>
                   <div class="input-glow rounded-lg transition-shadow duration-300">
                     <div class="relative flex items-center">
@@ -295,7 +296,7 @@
                         name="domain"
                         type="text"
                         bind:value={formDomain}
-                        placeholder="yourcompany.com"
+                        placeholder={t('companyDomainPlaceholder')}
                         class="h-11 border-[var(--border-default)] bg-[var(--bg-subtle)] pl-10 text-base transition-colors focus:border-[var(--accent-primary)] focus:bg-transparent"
                       />
                     </div>
@@ -307,7 +308,7 @@
               <div class="space-y-2">
                 <Label for="description" class="text-muted-foreground flex items-center gap-2 text-sm">
                   <FileText class="h-3.5 w-3.5" />
-                  About Your Organization
+                  {t('aboutYourOrganization')}
                 </Label>
                 <div class="input-glow rounded-lg transition-shadow duration-300">
                   <textarea
@@ -315,7 +316,7 @@
                     name="description"
                     rows="3"
                     bind:value={formDescription}
-                    placeholder="Brief description of your organization, industry, and what you do..."
+                    placeholder={t('aboutYourOrganizationPlaceholder')}
                     class="border-input bg-[var(--bg-subtle)] ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex min-h-[100px] w-full resize-none rounded-lg border px-4 py-3 text-base transition-colors focus:border-[var(--accent-primary)] focus:bg-transparent focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
                   ></textarea>
                 </div>
@@ -341,10 +342,10 @@
               <div class="space-y-1">
                 <div class="text-muted-foreground mb-2 flex items-center gap-2 text-xs font-medium uppercase tracking-wider">
                   <Globe class="h-3.5 w-3.5" />
-                  Regional Settings
+                  {t('regionalSettings')}
                 </div>
-                <h3 class="text-lg font-semibold">Currency & Locale</h3>
-                <p class="text-muted-foreground text-sm">Configure default currency and regional preferences</p>
+                <h3 class="text-lg font-semibold">{t('currencyAndLocale')}</h3>
+                <p class="text-muted-foreground text-sm">{t('configureDefaultCurrencyAndRegionalPreferences')}</p>
               </div>
             </div>
 
@@ -353,7 +354,7 @@
               <div class="space-y-3">
                 <Label for="default_currency" class="text-muted-foreground flex items-center gap-2 text-sm">
                   <Banknote class="h-3.5 w-3.5" />
-                  Default Currency
+                  {t('defaultCurrency')}
                 </Label>
                 <div class="input-glow rounded-lg transition-shadow duration-300">
                   <div class="relative">
@@ -370,7 +371,7 @@
                   </div>
                 </div>
                 <p class="text-muted-foreground text-xs">
-                  Applied to opportunities, invoices, and financial reports
+                  {t('appliedToOpportunitiesInvoicesAndFinancialReports')}
                 </p>
               </div>
 
@@ -378,7 +379,7 @@
               <div class="space-y-3">
                 <Label for="default_country" class="text-muted-foreground flex items-center gap-2 text-sm">
                   <MapPin class="h-3.5 w-3.5" />
-                  Default Country
+                  {t('defaultCountry')}
                 </Label>
                 <div class="input-glow rounded-lg transition-shadow duration-300">
                   <div class="relative">
@@ -395,7 +396,7 @@
                   </div>
                 </div>
                 <p class="text-muted-foreground text-xs">
-                  Used for addresses, date formats, and locale settings
+                  {t('usedForAddressesDateFormatsAndLocaleSettings')}
                 </p>
               </div>
             </div>
@@ -407,7 +408,7 @@
                 <div class="relative">
                   <div class="mb-3 flex items-center gap-2">
                     <Sparkles class="h-4 w-4 text-[var(--accent-secondary)]" />
-                    <span class="text-muted-foreground text-sm font-medium">Currency Preview</span>
+                    <span class="text-muted-foreground text-sm font-medium">{t('currencyPreview')}</span>
                   </div>
                   <div class="flex items-baseline gap-3">
                     <span class="text-gradient text-4xl font-bold tracking-tight md:text-5xl">
@@ -423,7 +424,7 @@
                     </span>
                   </div>
                   <div class="text-muted-foreground mt-2 text-sm">
-                    Sample: {new Intl.NumberFormat('en-US', {
+                    {t('sample')}: {new Intl.NumberFormat('en-US', {
                       style: 'currency',
                       currency: formCurrency
                     }).format(12345.67)}
@@ -442,10 +443,10 @@
         <div class="flex items-center gap-6">
           <div class="flex items-center gap-2">
             <div class="h-2 w-2 rounded-full bg-[var(--status-success)]"></div>
-            <span class="text-muted-foreground text-sm">Settings synced</span>
+            <span class="text-muted-foreground text-sm">{t('settingsSynced')}</span>
           </div>
           <div class="text-muted-foreground text-sm">
-            Last updated: {new Date().toLocaleDateString('en-US', {
+            {t('lastUpdated')}: {new Date().toLocaleDateString('en-US', {
               month: 'short',
               day: 'numeric',
               year: 'numeric'
@@ -460,10 +461,10 @@
         >
           {#if isLoading}
             <Loader2 class="h-4 w-4 animate-spin" />
-            Saving...
+            {t('saving')}
           {:else}
             <Check class="h-4 w-4" />
-            Save All Changes
+            {t('saveAllChanges')}
           {/if}
         </Button>
       </div>

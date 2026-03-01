@@ -10,6 +10,7 @@
   import { Input } from '$lib/components/ui/input/index.js';
   import { Label } from '$lib/components/ui/label/index.js';
   import { TAG_COLORS } from '$lib/constants/colors.js';
+  import { t } from '$lib/utils/i18n.js';
 
   /** @type {{ data: any, form: any }} */
   let { data, form } = $props();
@@ -74,12 +75,12 @@
   $effect(() => {
     if (form?.success) {
       const messages = {
-        create: 'Tag created successfully',
-        update: 'Tag updated successfully',
-        archive: 'Tag archived successfully',
-        restore: 'Tag restored successfully'
+        create: t('tagCreatedSuccessfully'),
+        update: t('tagUpdatedSuccessfully'),
+        archive: t('tagArchivedSuccessfully'),
+        restore: t('tagRestoredSuccessfully')
       };
-      toast.success(messages[form.action] || 'Operation successful');
+      toast.success(messages[form.action] || t('operationSuccessful'));
       closeDialogs();
       invalidateAll();
     } else if (form?.error) {
@@ -144,7 +145,7 @@
 </script>
 
 <svelte:head>
-  <title>Tags - BottleCRM</title>
+  <title>{t('tags')} - BottleCRM</title>
 </svelte:head>
 
 <!-- HubSpot-style header -->
@@ -152,14 +153,14 @@
   <div class="px-6 py-5">
     <div class="flex items-center justify-between">
       <div>
-        <h1 class="text-2xl font-semibold tracking-tight text-foreground">Tags</h1>
+        <h1 class="text-2xl font-semibold tracking-tight text-foreground">{t('tags')}</h1>
         <p class="mt-1 text-sm text-muted-foreground">
-          Create and manage tags to organize contacts, companies, deals, and tickets.
+          {t('createAndManageTags')}
         </p>
       </div>
       <Button onclick={openCreate} class="bg-[var(--color-primary-default)] hover:bg-[var(--color-primary-dark)] text-white border-0">
         <Plus class="mr-2 h-4 w-4" />
-        Create tag
+        {t('createTag')}
       </Button>
     </div>
   </div>
@@ -173,7 +174,7 @@
         <Search class="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
         <Input
           type="text"
-          placeholder="Search tags..."
+          placeholder={t('searchTags')}
           bind:value={searchQuery}
           class="pl-9 h-9 bg-background"
         />
@@ -185,7 +186,7 @@
             ? 'bg-secondary text-foreground'
             : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'}"
         >
-          Active ({activeTags.length})
+          {t('active')} ({activeTags.length})
         </button>
         <button
           onclick={() => (showArchived = true)}
@@ -193,7 +194,7 @@
             ? 'bg-secondary text-foreground'
             : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50'}"
         >
-          Archived ({archivedTags.length})
+          {t('archived')} ({archivedTags.length})
         </button>
       </div>
     </div>
@@ -229,13 +230,13 @@
             <thead>
               <tr class="border-b border-border bg-muted/50">
                 <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                  Tag name
+                  {t('tagName')}
                 </th>
                 <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                  Description
+                  {t('description')}
                 </th>
                 <th class="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                  Actions
+                  {t('actions')}
                 </th>
               </tr>
             </thead>
@@ -264,7 +265,7 @@
                         class="h-8 px-2 text-muted-foreground hover:text-foreground"
                       >
                         <Pencil class="h-4 w-4" />
-                        <span class="ml-1.5">Edit</span>
+                        <span class="ml-1.5">{t('edit')}</span>
                       </Button>
                       <DropdownMenu.Root>
                         <DropdownMenu.Trigger>
@@ -278,7 +279,7 @@
                             <DropdownMenu.Item class="text-destructive focus:text-destructive">
                               <button type="submit" class="flex w-full items-center gap-2">
                                 <Archive class="h-4 w-4" />
-                                Archive tag
+                                {t('archiveTag')}
                               </button>
                             </DropdownMenu.Item>
                           </form>
@@ -292,7 +293,7 @@
           </table>
         </div>
         <p class="mt-3 text-xs text-muted-foreground">
-          Showing {filteredActiveTags.length} of {activeTags.length} active tags
+          {t('showing', { count: filteredActiveTags.length, total: activeTags.length })} {t('activeTags')}
         </p>
       {/if}
     {:else}
@@ -319,13 +320,13 @@
             <thead>
               <tr class="border-b border-border bg-muted/50">
                 <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                  Tag name
+                  {t('tagName')}
                 </th>
                 <th class="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                  Description
+                  {t('description')}
                 </th>
                 <th class="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                  Actions
+                  {t('actions')}
                 </th>
               </tr>
             </thead>
@@ -355,7 +356,7 @@
                         class="h-8 gap-1.5 text-muted-foreground hover:text-foreground opacity-0 group-hover:opacity-100"
                       >
                         <RotateCcw class="h-4 w-4" />
-                        Restore
+                        {t('restore')}
                       </Button>
                     </form>
                   </td>
@@ -365,7 +366,7 @@
           </table>
         </div>
         <p class="mt-3 text-xs text-muted-foreground">
-          Showing {filteredArchivedTags.length} of {archivedTags.length} archived tags
+          {t('showing', { count: filteredArchivedTags.length, total: archivedTags.length })} {t('archivedTags')}
         </p>
       {/if}
     {/if}
@@ -376,9 +377,9 @@
 <Dialog.Root bind:open={createDialogOpen}>
   <Dialog.Content class="sm:max-w-md p-0 gap-0 overflow-hidden">
     <div class="border-b border-border px-6 py-4">
-      <Dialog.Title class="text-lg font-semibold">Create a tag</Dialog.Title>
+      <Dialog.Title class="text-lg font-semibold">{t('createTag')}</Dialog.Title>
       <Dialog.Description class="text-sm text-muted-foreground mt-1">
-        Tags help you organize and segment your records.
+        {t('tagsHelpOrganize')}
       </Dialog.Description>
     </div>
     <form
@@ -395,19 +396,19 @@
       <div class="px-6 py-5 space-y-5">
         <div class="space-y-2">
           <Label for="name" class="text-sm font-medium">
-            Tag name <span class="text-destructive">*</span>
+            {t('tagName')} <span class="text-destructive">*</span>
           </Label>
           <Input
             id="name"
             name="name"
             bind:value={formName}
-            placeholder="e.g., VIP Customer, Hot Lead"
+            placeholder={t('tagNamePlaceholder')}
             class="h-10"
           />
         </div>
 
         <div class="space-y-2">
-          <Label class="text-sm font-medium">Color</Label>
+          <Label class="text-sm font-medium">{t('color')}</Label>
           <div class="flex flex-wrap gap-2">
             {#each TAG_COLORS as color}
               <button
@@ -427,24 +428,24 @@
 
         <div class="space-y-2">
           <Label for="description" class="text-sm font-medium">
-            Description <span class="text-muted-foreground font-normal">(optional)</span>
+            {t('description')} <span class="text-muted-foreground font-normal">(optional)</span>
           </Label>
           <Input
             id="description"
             name="description"
             bind:value={formDescription}
-            placeholder="Describe what this tag is for..."
+            placeholder={t('tagDescriptionPlaceholder')}
             class="h-10"
           />
         </div>
 
         <!-- Preview -->
         <div class="pt-2">
-          <Label class="text-sm font-medium text-muted-foreground">Preview</Label>
+          <Label class="text-sm font-medium text-muted-foreground">{t('preview')}</Label>
           <div class="mt-2 flex items-center">
             <span class="inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-sm font-medium {getHubspotBadgeClass(formColor)}">
               <span class="h-2 w-2 rounded-full {getColorDotClass(formColor)}"></span>
-              {formName || 'Tag name'}
+              {formName || t('tagName')}
             </span>
           </div>
         </div>
@@ -452,14 +453,14 @@
 
       <div class="flex justify-end gap-2 border-t border-border bg-muted/30 px-6 py-4">
         <Button variant="outline" type="button" onclick={() => (createDialogOpen = false)}>
-          Cancel
+          {t('cancel')}
         </Button>
         <Button
           type="submit"
           disabled={!formName.trim() || isLoading}
           class="bg-[var(--color-primary-default)] hover:bg-[var(--color-primary-dark)] text-white border-0"
         >
-          {isLoading ? 'Creating...' : 'Create tag'}
+          {isLoading ? t('creating') : t('createTag')}
         </Button>
       </div>
     </form>
@@ -470,9 +471,9 @@
 <Dialog.Root bind:open={editDialogOpen}>
   <Dialog.Content class="sm:max-w-md p-0 gap-0 overflow-hidden">
     <div class="border-b border-border px-6 py-4">
-      <Dialog.Title class="text-lg font-semibold">Edit tag</Dialog.Title>
+      <Dialog.Title class="text-lg font-semibold">{t('editTag')}</Dialog.Title>
       <Dialog.Description class="text-sm text-muted-foreground mt-1">
-        Update the tag name, color, or description.
+        {t('updateTagNameColorDescription')}
       </Dialog.Description>
     </div>
     <form
@@ -490,13 +491,13 @@
       <div class="px-6 py-5 space-y-5">
         <div class="space-y-2">
           <Label for="edit-name" class="text-sm font-medium">
-            Tag name <span class="text-destructive">*</span>
+            {t('tagName')} <span class="text-destructive">*</span>
           </Label>
           <Input id="edit-name" name="name" bind:value={formName} class="h-10" />
         </div>
 
         <div class="space-y-2">
-          <Label class="text-sm font-medium">Color</Label>
+          <Label class="text-sm font-medium">{t('color')}</Label>
           <div class="flex flex-wrap gap-2">
             {#each TAG_COLORS as color}
               <button
@@ -516,18 +517,18 @@
 
         <div class="space-y-2">
           <Label for="edit-description" class="text-sm font-medium">
-            Description <span class="text-muted-foreground font-normal">(optional)</span>
+            {t('description')} <span class="text-muted-foreground font-normal">(optional)</span>
           </Label>
           <Input id="edit-description" name="description" bind:value={formDescription} class="h-10" />
         </div>
 
         <!-- Preview -->
         <div class="pt-2">
-          <Label class="text-sm font-medium text-muted-foreground">Preview</Label>
+          <Label class="text-sm font-medium text-muted-foreground">{t('preview')}</Label>
           <div class="mt-2 flex items-center">
             <span class="inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-sm font-medium {getHubspotBadgeClass(formColor)}">
               <span class="h-2 w-2 rounded-full {getColorDotClass(formColor)}"></span>
-              {formName || 'Tag name'}
+              {formName || t('tagName')}
             </span>
           </div>
         </div>
@@ -535,14 +536,14 @@
 
       <div class="flex justify-end gap-2 border-t border-border bg-muted/30 px-6 py-4">
         <Button variant="outline" type="button" onclick={() => (editDialogOpen = false)}>
-          Cancel
+          {t('cancel')}
         </Button>
         <Button
           type="submit"
           disabled={!formName.trim() || isLoading}
           class="bg-[var(--color-primary-default)] hover:bg-[var(--color-primary-dark)] text-white border-0"
         >
-          {isLoading ? 'Saving...' : 'Save'}
+          {isLoading ? t('saving') : t('save')}
         </Button>
       </div>
     </form>

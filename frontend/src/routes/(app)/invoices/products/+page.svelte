@@ -13,6 +13,8 @@
   import { Button } from '$lib/components/ui/button';
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
   import { formatCurrency } from '$lib/utils/formatting.js';
+  import { t } from '$lib/utils/i18n.js';
+import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 
   /** @type {{ data: import('./$types').PageData }} */
   let { data } = $props();
@@ -32,7 +34,7 @@
   const columns = [
     {
       key: 'name',
-      label: 'Name',
+      label: t('name'),
       type: 'text',
       width: 'w-48',
       editable: false,
@@ -40,7 +42,7 @@
     },
     {
       key: 'sku',
-      label: 'SKU',
+      label: t('sku'),
       type: 'text',
       width: 'w-28',
       canHide: true,
@@ -48,7 +50,7 @@
     },
     {
       key: 'category',
-      label: 'Category',
+      label: t('category'),
       type: 'text',
       width: 'w-32',
       canHide: true,
@@ -56,7 +58,7 @@
     },
     {
       key: 'price',
-      label: 'Price',
+      label: t('price'),
       type: 'number',
       width: 'w-28',
       canHide: false,
@@ -64,7 +66,7 @@
     },
     {
       key: 'description',
-      label: 'Description',
+      label: t('description'),
       type: 'text',
       width: 'w-64',
       canHide: true,
@@ -368,7 +370,7 @@
 <!-- Page Content -->
 <div class="flex flex-col gap-4 p-6">
   <!-- Header -->
-  <PageHeader title="Products">
+  <PageHeader title={t('products')}>
     {#snippet actions()}
       <!-- Back to Invoices -->
       <Button variant="ghost" size="sm" onclick={() => goto('/invoices')}>
@@ -386,7 +388,7 @@
         >
           <path d="M19 12H5M12 19l-7-7 7-7" />
         </svg>
-        Invoices
+        {t('invoices')}
       </Button>
 
       <!-- Filters Toggle -->
@@ -468,9 +470,9 @@
           stroke-linejoin="round"
         >
           <line x1="12" y1="5" x2="12" y2="19" />
-          <line x1="5" y1="12" x2="19" y2="12" />
+        <line x1="5" y1="12" x2="19" y2="12" />
         </svg>
-        New Product
+        New {t('products')}
       </Button>
     {/snippet}
   </PageHeader>
@@ -558,3 +560,6 @@
     </div>
   {/snippet}
 </CrmDrawer>
+
+<!-- 自动刷新组件 -->
+<AutoRefresh interval={3000} enabled={true} />

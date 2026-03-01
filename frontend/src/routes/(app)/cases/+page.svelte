@@ -46,6 +46,7 @@
   } from '$lib/utils/table-helpers.js';
   import { useDrawerState } from '$lib/hooks';
   import { t } from '$lib/utils/i18n.js';
+import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 
   // Account from URL param (for quick action from account page)
   let accountFromUrl = $state(false);
@@ -68,10 +69,10 @@
   // NotionTable column configuration - reordered for scanning priority
   /** @type {ColumnDef[]} */
   const columns = [
-    { key: 'subject', label: 'Case', type: 'text', width: 'w-[250px]', canHide: false },
+    { key: 'subject', label: t('case'), type: 'text', width: 'w-[250px]', canHide: false },
     {
       key: 'account',
-      label: 'Account',
+      label: t('account'),
       type: 'relation',
       relationIcon: 'building',
       width: 'w-40',
@@ -79,22 +80,22 @@
     },
     {
       key: 'priority',
-      label: 'Priority',
+      label: t('priority'),
       type: 'select',
       options: casePriorityOptions,
       width: 'w-28'
     },
-    { key: 'status', label: 'Status', type: 'select', options: caseStatusOptions, width: 'w-28' },
-    { key: 'caseType', label: 'Type', type: 'select', options: caseTypeOptions, width: 'w-28' },
+    { key: 'status', label: t('status'), type: 'select', options: caseStatusOptions, width: 'w-28' },
+    { key: 'caseType', label: t('type'), type: 'select', options: caseTypeOptions, width: 'w-28' },
     {
       key: 'owner',
-      label: 'Assigned To',
+      label: t('assigned_to'),
       type: 'relation',
       relationIcon: 'user',
       width: 'w-36',
       getValue: (/** @type {any} */ row) => row.owner
     },
-    { key: 'createdAt', label: 'Created', type: 'date', width: 'w-32', editable: false }
+    { key: 'createdAt', label: t('created'), type: 'date', width: 'w-32', editable: false }
   ];
 
   // Column visibility state
@@ -1152,3 +1153,6 @@
   <input type="hidden" name="aboveCaseId" value={kanbanFormState.aboveCaseId} />
   <input type="hidden" name="belowCaseId" value={kanbanFormState.belowCaseId} />
 </form>
+
+<!-- 自动刷新组件 -->
+<AutoRefresh interval={3000} enabled={true} />

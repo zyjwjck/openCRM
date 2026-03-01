@@ -230,11 +230,16 @@ class LeadListView(APIView, LimitOffsetPagination):
                 lead_obj.contacts.add(*obj_contact)
 
             recipients = list(lead_obj.assigned_to.all().values_list("id", flat=True))
-            send_email_to_assigned_user.delay(
-                recipients,
-                lead_obj.id,
-                str(request.profile.org.id),
-            )
+            try:
+                send_email_to_assigned_user.delay(
+                    recipients,
+                    lead_obj.id,
+                    str(request.profile.org.id),
+                )
+            except Exception as e:
+                # Silently handle Celery/Redis connection errors
+                # Email notifications will be skipped but lead creation will succeed
+                pass
 
             if request.FILES.get("lead_attachment"):
                 attachment = Attachments()
@@ -578,11 +583,16 @@ class LeadDetailView(APIView):
                 lead_obj.assigned_to.all().values_list("id", flat=True)
             )
             recipients = list(set(assigned_to_list) - set(previous_assigned_to_users))
-            send_email_to_assigned_user.delay(
-                recipients,
-                lead_obj.id,
-                str(request.profile.org.id),
-            )
+            try:
+                send_email_to_assigned_user.delay(
+                    recipients,
+                    lead_obj.id,
+                    str(request.profile.org.id),
+                )
+            except Exception as e:
+                # Silently handle Celery/Redis connection errors
+                # Email notifications will be skipped but lead update will succeed
+                pass
             if request.FILES.get("lead_attachment"):
                 attachment = Attachments()
                 attachment.created_by = request.profile.user

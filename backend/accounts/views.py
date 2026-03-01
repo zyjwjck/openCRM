@@ -393,11 +393,37 @@ class AccountDetailView(APIView):
                     },
                     status=status.HTTP_403_FORBIDDEN,
                 )
-        self.object.delete()
-        return Response(
-            {"error": False, "message": "Account Deleted Successfully."},
-            status=status.HTTP_200_OK,
-        )
+        
+        # Handle related data before deletion
+        from invoices.models import Invoice, Estimate, RecurringInvoice
+        from cases.models import Case
+        from tasks.models import Task
+        
+        # Delete or update related records
+        try:
+            # Delete related cases (they cascade, but let's be explicit)
+            Case.objects.filter(account=self.object).delete()
+            
+            # Update related tasks to set account to NULL
+            Task.objects.filter(account=self.object).update(account=None)
+            
+            # Delete related invoices, estimates, and recurring invoices
+            Invoice.objects.filter(account=self.object).delete()
+            Estimate.objects.filter(account=self.object).delete()
+            RecurringInvoice.objects.filter(account=self.object).delete()
+            
+            # Now delete the account
+            self.object.delete()
+            
+            return Response(
+                {"error": False, "message": "Account Deleted Successfully."},
+                status=status.HTTP_200_OK,
+            )
+        except Exception as e:
+            return Response(
+                {"error": True, "errors": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
 
     @extend_schema(
         tags=["Accounts"],

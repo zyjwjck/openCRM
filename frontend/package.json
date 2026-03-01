@@ -55,6 +55,7 @@
     "katex": "^0.16.11",
     "libphonenumber-js": "^1.12.33",
     "marked": "^11.1.0",
+    "mermaid": "^11.12.3",
     "svelte-dnd-action": "^0.9.68",
     "svelte-french-toast": "^1.2.0",
     "tailwind-merge": "^3.4.0",

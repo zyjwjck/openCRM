@@ -182,6 +182,65 @@ class LeadCommentView(APIView):
             status=status.HTTP_403_FORBIDDEN,
         )
 
+    @extend_schema(
+        tags=["Leads"],
+        parameters=swagger_params.organization_params,
+        request=LeadCommentEditSwaggerSerializer,
+        responses={
+            200: inline_serializer(
+                name="LeadCommentCreateResponse",
+                fields={
+                    "error": serializers.BooleanField(),
+                    "message": serializers.CharField(),
+                    "comment": LeadCommentSerializer(),
+                },
+            )
+        },
+    )
+    def post(self, request, pk, format=None):
+        """Create a new comment for a lead"""
+        params = request.data
+        from django.contrib.contenttypes.models import ContentType
+        from leads.models import Lead
+        
+        # Get the lead object
+        lead_obj = Lead.objects.get(pk=pk, org=request.profile.org)
+        
+        # Create the comment
+        lead_content_type = ContentType.objects.get_for_model(Lead)
+        comment_obj = Comment.objects.create(
+            content_type=lead_content_type,
+            object_id=lead_obj.id,
+            comment=params.get("comment"),
+            commented_by=request.profile,
+            org=request.profile.org,
+        )
+        
+        # Handle attachment if provided
+        if request.FILES.get("lead_attachment"):
+            from common.models import Attachments
+            from django.contrib.auth.models import User
+            
+            attachment = Attachments()
+            attachment.created_by = User.objects.get(id=request.profile.user.id)
+            attachment.file_name = request.FILES.get("lead_attachment").name
+            attachment.content_object = lead_obj
+            attachment.attachment = request.FILES.get("lead_attachment")
+            attachment.org = request.profile.org
+            attachment.save()
+        
+        # Serialize the created comment
+        comment_serializer = LeadCommentSerializer(comment_obj)
+        
+        return Response(
+            {
+                "error": False, 
+                "message": "Comment Created Successfully",
+                "comment": comment_serializer.data
+            },
+            status=status.HTTP_200_OK,
+        )
+
 
 class LeadAttachmentView(APIView):
     model = Attachments

@@ -12,6 +12,77 @@ const API_BASE_URL = env.PUBLIC_DJANGO_API_URL
   : 'http://localhost:8000/api';
 
 /**
+ * Simple in-memory cache for API responses
+ * This helps reduce duplicate API calls for frequently accessed data
+ */
+class ApiCache {
+  constructor() {
+    /** @type {Map<string, { data: any, timestamp: number }>} */
+    this.cache = new Map();
+    this.defaultTTL = 5 * 60 * 1000; // 5 minutes default TTL
+  }
+
+  /**
+   * Generate cache key from endpoint and options
+   * @param {string} endpoint
+   * @param {{ method?: string, body?: Record<string, unknown> }} options
+   * @returns {string}
+   */
+  generateKey(endpoint, options = {}) {
+    const { method = 'GET', body } = options;
+    // Only cache GET requests
+    if (method !== 'GET') return null;
+    // For GET requests, include endpoint and query params in key
+    return endpoint;
+  }
+
+  /**
+   * Get data from cache
+   * @param {string} key
+   * @returns {any | null}
+   */
+  get(key) {
+    if (!key) return null;
+    const item = this.cache.get(key);
+    if (!item) return null;
+    // Check if item is expired
+    if (Date.now() - item.timestamp > this.defaultTTL) {
+      this.cache.delete(key);
+      return null;
+    }
+    return item.data;
+  }
+
+  /**
+   * Set data in cache
+   * @param {string} key
+   * @param {any} data
+   */
+  set(key, data) {
+    if (!key) return;
+    this.cache.set(key, {
+      data,
+      timestamp: Date.now()
+    });
+  }
+
+  /**
+   * Clear cache
+   * @param {string} [key]
+   */
+  clear(key) {
+    if (key) {
+      this.cache.delete(key);
+    } else {
+      this.cache.clear();
+    }
+  }
+}
+
+// Create singleton instance
+const apiCache = new ApiCache();
+
+/**
  * @typedef {import('@sveltejs/kit').Cookies} Cookies
  */
 
@@ -29,6 +100,14 @@ const API_BASE_URL = env.PUBLIC_DJANGO_API_URL
  */
 export async function apiRequest(endpoint, options = {}, locals) {
   const { method = 'GET', body, headers = {} } = options;
+
+  // Check cache for GET requests
+  const cacheKey = apiCache.generateKey(endpoint, options);
+  const cachedData = apiCache.get(cacheKey);
+  if (cachedData) {
+    console.log(`Cache hit for ${endpoint}`);
+    return cachedData;
+  }
 
   // Get access token from cookies (server-side)
   // In server load functions, cookies is passed directly
@@ -119,7 +198,15 @@ export async function apiRequest(endpoint, options = {}, locals) {
     }
 
     // Return JSON response
-    return await response.json();
+    const data = await response.json();
+    
+    // Cache GET responses
+    if (cacheKey) {
+      console.log(`Caching response for ${endpoint}`);
+      apiCache.set(cacheKey, data);
+    }
+    
+    return data;
   } catch (error) {
     console.error(`API request failed: ${method} ${endpoint}`, error);
     throw error;

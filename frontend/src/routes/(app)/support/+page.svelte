@@ -45,11 +45,13 @@
   <!-- Mission Card - Featured -->
   <section class="content-area">
     <div class="mission-card glass-card animate-in-up stagger-3">
-      <div class="mission-icon-wrap">
-        <Heart class="h-7 w-7" />
-      </div>
       <div class="mission-content">
-        <h2>{t('ourMission')}</h2>
+        <div class="flex items-center gap-2 mb-2">
+          <div class="mission-icon-wrap">
+            <Heart class="h-5 w-5" />
+          </div>
+          <h2>{t('ourMission')}</h2>
+        </div>
         <p>
           {t('missionDescription', { product: 'BottleCRM' })}
         </p>
@@ -63,11 +65,11 @@
       <article class="bento-card bento-featured hover-lift animate-in-up stagger-4">
         <div class="card-header">
           <div class="icon-box icon-github">
-            <Github class="h-6 w-6" />
+            <Github class="h-5 w-5" />
           </div>
+          <h3>{t('joinTheCommunity')}</h3>
           <div class="card-badge">{t('community')}</div>
       </div>
-      <h3>{t('joinTheCommunity')}</h3>
       <p>
         {t('communityDescription')}
       </p>
@@ -83,7 +85,7 @@
       </div>
       <Button
         class="card-action"
-        onclick={() => window.open('https://github.com/MicroPyramid/Django-CRM', '_blank')}
+        onclick={() => window.open('https://github.com/zyjwjck/openCRM/tree/main', '_blank')}
       >
         <Github class="h-4 w-4" />
         {t('visitGitHub')}
@@ -97,8 +99,8 @@
           <div class="icon-box icon-pro">
             <Zap class="h-5 w-5" />
           </div>
+          <h3>{t('professionalSupport')}</h3>
         </div>
-        <h3>{t('professionalSupport')}</h3>
         <p>
           {t('professionalSupportDescription')}
         </p>
@@ -118,8 +120,8 @@
           <div class="icon-box icon-idea">
             <Lightbulb class="h-5 w-5" />
           </div>
+          <h3>{t('featureRequests')}</h3>
         </div>
-        <h3>{t('featureRequests')}</h3>
         <p>
           {t('featureRequestsDescription', { product: 'BottleCRM' })}
         </p>
@@ -128,7 +130,7 @@
           class="card-action-outline"
           onclick={() =>
             window.open(
-              'https://github.com/MicroPyramid/Django-CRM/issues/new?template=feature_request.md',
+              'https://github.com/zyjwjck/openCRM/tree/main/issues/new?template=feature_request.md',
               '_blank'
             )}
         >
@@ -144,8 +146,8 @@
           <div class="icon-box icon-bug">
             <Bug class="h-5 w-5" />
           </div>
+          <h3>{t('bugReports')}</h3>
         </div>
-        <h3>{t('bugReports')}</h3>
         <p>
           {t('bugReportsDescription')}
         </p>
@@ -154,7 +156,7 @@
           class="card-action-outline"
           onclick={() =>
             window.open(
-              'https://github.com/MicroPyramid/Django-CRM/issues/new?template=bug_report.md',
+              'https://github.com/zyjwjck/openCRM/tree/main/issues/new?template=bug_report.md',
               '_blank'
             )}
         >
@@ -171,9 +173,9 @@
           <div class="icon-box icon-security">
             <Shield class="h-5 w-5" />
           </div>
+          <h3>{t('securityIssues')}</h3>
           <div class="card-badge badge-security">{t('critical')}</div>
         </div>
-        <h3>{t('securityIssues')}</h3>
         <p>
           <strong>{t('securityIsOurPriority')}</strong> {t('reportVulnerabilitiesPrivately')}
           {t('neverCreatePublicIssuesForSecurityConcerns')}
@@ -194,11 +196,13 @@
     <!-- Custom Development Banner -->
     <div class="custom-dev-banner animate-in-up stagger-6">
       <div class="banner-content">
-        <div class="banner-icon">
-          <Wrench class="h-8 w-8" />
-        </div>
         <div class="banner-text">
-            <h3>{t('needCustomCrmDevelopment')}</h3>
+            <div class="flex items-center gap-2 mb-2">
+              <div class="banner-icon">
+                <Wrench class="h-5 w-5" />
+              </div>
+              <h3>{t('needCustomCrmDevelopment')}</h3>
+            </div>
             <p>
               {t('customDevelopmentDescription')}
             </p>
@@ -357,13 +361,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 52px;
-    height: 52px;
+    width: 32px;
+    height: 32px;
     flex-shrink: 0;
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-md);
     background: linear-gradient(135deg, var(--accent-primary) 0%, color-mix(in oklch, var(--accent-primary) 80%, var(--accent-secondary)) 100%);
     color: white;
-    box-shadow: 0 4px 12px -2px color-mix(in oklch, var(--accent-primary) 30%, transparent);
+    box-shadow: 0 2px 8px -1px color-mix(in oklch, var(--accent-primary) 30%, transparent);
   }
 
   :global(.dark) .mission-icon-wrap {
@@ -492,6 +496,14 @@
     align-items: center;
     gap: 0.75rem;
     margin-bottom: 0.875rem;
+  }
+
+  .card-header h3 {
+    flex: 1;
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-primary);
   }
 
   .icon-box {
@@ -642,9 +654,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 56px;
-    height: 56px;
-    border-radius: var(--radius-lg);
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-md);
     background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
     color: white;
     flex-shrink: 0;

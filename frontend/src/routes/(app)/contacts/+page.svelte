@@ -34,6 +34,7 @@ import { goto } from '$app/navigation';
 import { COUNTRIES, getCountryName } from '$lib/constants/countries.js';
 import { browser } from '$app/environment';
 import { t } from '$lib/utils/i18n.js';
+import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 
   // Column visibility configuration
   const STORAGE_KEY = 'contacts-column-config';
@@ -47,7 +48,7 @@ import { t } from '$lib/utils/i18n.js';
   const columns = [
     {
       key: 'name',
-      label: 'Contact',
+      label: t('contact'),
       type: 'text',
       width: 'w-48',
       editable: false,
@@ -57,17 +58,17 @@ import { t } from '$lib/utils/i18n.js';
     },
     {
       key: 'organization',
-      label: 'Company',
+      label: t('company'),
       type: 'text',
       width: 'w-40',
       emptyText: ''
     },
-    { key: 'title', label: 'Title', type: 'text', width: 'w-36', emptyText: '' },
-    { key: 'email', label: 'Email', type: 'email', width: 'w-52', emptyText: '' },
-    { key: 'phone', label: 'Phone', type: 'text', width: 'w-36', emptyText: '' },
+    { key: 'title', label: t('title'), type: 'text', width: 'w-36', emptyText: '' },
+    { key: 'email', label: t('email'), type: 'email', width: 'w-52', emptyText: '' },
+    { key: 'phone', label: t('phone'), type: 'text', width: 'w-36', emptyText: '' },
     {
       key: 'createdAt',
-      label: 'Created',
+      label: t('created'),
       type: 'date',
       width: 'w-32',
       editable: false
@@ -75,7 +76,7 @@ import { t } from '$lib/utils/i18n.js';
     // Hidden by default
     {
       key: 'owner',
-      label: 'Owner',
+      label: t('owner'),
       type: 'relation',
       width: 'w-36',
       relationIcon: 'user',
@@ -633,26 +634,31 @@ import { t } from '$lib/utils/i18n.js';
     if (drawerMode !== 'view' || !selectedContact) return;
 
     isSubmitting = true;
-    formState.contactId = selectedContact.id;
-    formState.firstName = drawerFormData.firstName || '';
-    formState.lastName = drawerFormData.lastName || '';
-    formState.email = drawerFormData.email || '';
-    formState.phone = drawerFormData.phone || '';
-    formState.organization = drawerFormData.organization || '';
-    formState.title = drawerFormData.title || '';
-    formState.department = drawerFormData.department || '';
-    formState.doNotCall = drawerFormData.doNotCall || false;
-    formState.linkedInUrl = drawerFormData.linkedInUrl || '';
-    formState.addressLine = drawerFormData.addressLine || '';
-    formState.city = drawerFormData.city || '';
-    formState.state = drawerFormData.state || '';
-    formState.postcode = drawerFormData.postcode || '';
-    formState.country = drawerFormData.country || '';
-    formState.description = drawerFormData.description || '';
-    formState.tags = drawerFormData.tags || [];
+    try {
+      formState.contactId = selectedContact.id;
+      formState.firstName = drawerFormData.firstName || '';
+      formState.lastName = drawerFormData.lastName || '';
+      formState.email = drawerFormData.email || '';
+      formState.phone = drawerFormData.phone || '';
+      formState.organization = drawerFormData.organization || '';
+      formState.title = drawerFormData.title || '';
+      formState.department = drawerFormData.department || '';
+      formState.doNotCall = drawerFormData.doNotCall || false;
+      formState.linkedInUrl = drawerFormData.linkedInUrl || '';
+      formState.addressLine = drawerFormData.addressLine || '';
+      formState.city = drawerFormData.city || '';
+      formState.state = drawerFormData.state || '';
+      formState.postcode = drawerFormData.postcode || '';
+      formState.country = drawerFormData.country || '';
+      formState.description = drawerFormData.description || '';
+      formState.tags = drawerFormData.tags || [];
 
-    await tick();
-    updateForm.requestSubmit();
+      await tick();
+      updateForm.requestSubmit();
+    } catch (error) {
+      isSubmitting = false;
+      toast.error('Failed to submit form');
+    }
   }
 
   /**
@@ -662,26 +668,31 @@ import { t } from '$lib/utils/i18n.js';
     if (drawerMode !== 'create') return;
 
     isSubmitting = true;
-    formState.accountId = accountFromUrl ? accountId : '';
-    formState.firstName = drawerFormData.firstName || '';
-    formState.lastName = drawerFormData.lastName || '';
-    formState.email = drawerFormData.email || '';
-    formState.phone = drawerFormData.phone || '';
-    formState.organization = drawerFormData.organization || '';
-    formState.title = drawerFormData.title || '';
-    formState.department = drawerFormData.department || '';
-    formState.doNotCall = drawerFormData.doNotCall || false;
-    formState.linkedInUrl = drawerFormData.linkedInUrl || '';
-    formState.addressLine = drawerFormData.addressLine || '';
-    formState.city = drawerFormData.city || '';
-    formState.state = drawerFormData.state || '';
-    formState.postcode = drawerFormData.postcode || '';
-    formState.country = drawerFormData.country || '';
-    formState.description = drawerFormData.description || '';
-    formState.tags = drawerFormData.tags || [];
+    try {
+      formState.accountId = accountFromUrl ? accountId : '';
+      formState.firstName = drawerFormData.firstName || '';
+      formState.lastName = drawerFormData.lastName || '';
+      formState.email = drawerFormData.email || '';
+      formState.phone = drawerFormData.phone || '';
+      formState.organization = drawerFormData.organization || '';
+      formState.title = drawerFormData.title || '';
+      formState.department = drawerFormData.department || '';
+      formState.doNotCall = drawerFormData.doNotCall || false;
+      formState.linkedInUrl = drawerFormData.linkedInUrl || '';
+      formState.addressLine = drawerFormData.addressLine || '';
+      formState.city = drawerFormData.city || '';
+      formState.state = drawerFormData.state || '';
+      formState.postcode = drawerFormData.postcode || '';
+      formState.country = drawerFormData.country || '';
+      formState.description = drawerFormData.description || '';
+      formState.tags = drawerFormData.tags || [];
 
-    await tick();
-    createForm.requestSubmit();
+      await tick();
+      createForm.requestSubmit();
+    } catch (error) {
+      isSubmitting = false;
+      toast.error('Failed to submit form');
+    }
   }
 
   /**
@@ -704,17 +715,22 @@ import { t } from '$lib/utils/i18n.js';
   function createEnhanceHandler(successMessage, closeOnSuccess = true) {
     return () => {
       return async ({ result }) => {
-        isSubmitting = false;
-        if (result.type === 'success') {
-          toast.success(successMessage);
-          if (closeOnSuccess) {
-            await closeDrawer();
+        try {
+          isSubmitting = false;
+          if (result.type === 'success') {
+            toast.success(successMessage);
+            if (closeOnSuccess) {
+              await closeDrawer();
+            }
+            await invalidateAll();
+          } else if (result.type === 'failure') {
+            toast.error(result.data?.error || 'Operation failed');
+          } else if (result.type === 'error') {
+            toast.error('An unexpected error occurred');
           }
-          await invalidateAll();
-        } else if (result.type === 'failure') {
-          toast.error(result.data?.error || 'Operation failed');
-        } else if (result.type === 'error') {
-          toast.error('An unexpected error occurred');
+        } catch (error) {
+          isSubmitting = false;
+          toast.error('An error occurred while processing the response');
         }
       };
     };
@@ -992,3 +1008,6 @@ import { t } from '$lib/utils/i18n.js';
 >
   <input type="hidden" name="contactId" value={formState.contactId} />
 </form>
+
+<!-- 自动刷新组件 -->
+<AutoRefresh interval={3000} enabled={true} />

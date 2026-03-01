@@ -5,7 +5,20 @@
   import { Skeleton } from '$lib/components/ui/skeleton/index.js';
   import { Separator } from '$lib/components/ui/separator/index.js';
   import { cn } from '$lib/utils.js';
+  import { t, getCurrentLanguage } from '$lib/utils/i18n.js';
   import CrmPropertyRow from './CrmPropertyRow.svelte';
+  
+  // Reactive language tracking
+  let currentLang = $state(getCurrentLanguage());
+  
+  // Update language when it changes in localStorage
+  if (typeof window !== 'undefined') {
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'language') {
+        currentLang = e.newValue || 'en';
+      }
+    });
+  }
 
   /**
    * @type {{
@@ -168,7 +181,7 @@
 <Sheet.Root bind:open onOpenChange={(value) => onOpenChange?.(value)}>
   <Sheet.Content
     side="right"
-    class={cn('w-[480px] overflow-hidden border-l border-border/50 bg-background/95 p-0 backdrop-blur-xl sm:max-w-[480px]', className)}
+    class={cn('w-[800px] overflow-hidden border-l border-border/50 bg-background/95 p-0 backdrop-blur-xl sm:max-w-[800px]', className)}
   >
     {#if loading}
       <!-- Loading skeleton with premium styling -->
@@ -209,10 +222,10 @@
           <div class="relative flex items-center justify-between px-6 py-4">
             <div class="flex items-center gap-2">
               <span class="rounded-md bg-primary/10 px-2 py-1 text-xs font-semibold uppercase tracking-wider text-primary">
-                {headerLabel}
+                {t(headerLabel, currentLang)}
               </span>
               {#if mode === 'create'}
-                <span class="text-xs text-muted-foreground">New</span>
+                <span class="text-xs text-muted-foreground">{t('new', currentLang)}</span>
               {/if}
             </div>
             <button
@@ -251,7 +264,7 @@
           <div class="px-6 pb-8">
             {#if enableProgressiveDisclosure && essentialColumns.length > 0}
               <!-- Essential fields section -->
-              <div class="space-y-1">
+              <div class="grid gap-1 sm:grid-cols-1 md:grid-cols-2">
                 {#each essentialColumns as col (col.key)}
                   <CrmPropertyRow
                     label={col.label}
@@ -283,16 +296,16 @@
                     {/if}
                   </div>
                   {#if showAllFields}
-                    <span>Hide additional fields</span>
+                    <span>{t('hide_additional_fields', currentLang)}</span>
                   {:else}
-                    <span>Show {hiddenFieldsCount} more {hiddenFieldsCount === 1 ? 'field' : 'fields'}</span>
+                    <span>{t('show', currentLang)} {hiddenFieldsCount} {t('more', currentLang)} {hiddenFieldsCount === 1 ? t('field', currentLang) : t('fields', currentLang)}</span>
                   {/if}
                 </button>
               {/if}
 
               <!-- Additional fields -->
               {#if visibleAdditionalColumns.length > 0}
-                <div class="space-y-1">
+                <div class="grid gap-1 sm:grid-cols-1 md:grid-cols-2">
                   {#each visibleAdditionalColumns as col (col.key)}
                     <CrmPropertyRow
                       label={col.label}
@@ -311,7 +324,7 @@
               {/if}
             {:else}
               <!-- Original behavior: show all fields when no essential fields defined -->
-              <div class="space-y-1">
+              <div class="grid gap-1 sm:grid-cols-1 md:grid-cols-2">
                 {#each columns as col (col.key)}
                   {#if col.key !== titleKey}
                     <CrmPropertyRow
@@ -351,7 +364,7 @@
                 class="group flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-destructive transition-all duration-150 hover:bg-destructive/10"
               >
                 <Trash2 class="h-4 w-4 transition-transform group-hover:scale-110" />
-                Delete
+                {t('delete', currentLang)}
               </button>
             {:else}
               <div></div>

@@ -13,18 +13,20 @@
   import { Button } from '$lib/components/ui/button';
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
   import { formatCurrency, formatDate } from '$lib/utils/formatting.js';
+  import { t } from '$lib/utils/i18n.js';
+import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 
   /** @type {{ data: import('./$types').PageData }} */
   let { data } = $props();
 
   // Estimate status options - using design system tokens
   const ESTIMATE_STATUSES = [
-    { value: 'Draft', label: 'Draft', color: 'bg-[var(--surface-sunken)] text-[var(--text-secondary)]' },
-    { value: 'Sent', label: 'Sent', color: 'bg-[var(--stage-contacted-bg)] text-[var(--stage-contacted)] dark:bg-[var(--stage-contacted)]/15' },
-    { value: 'Viewed', label: 'Viewed', color: 'bg-[var(--stage-qualified-bg)] text-[var(--stage-qualified)] dark:bg-[var(--stage-qualified)]/15' },
-    { value: 'Accepted', label: 'Accepted', color: 'bg-[var(--color-success-light)] text-[var(--color-success-default)] dark:bg-[var(--color-success-default)]/15' },
-    { value: 'Declined', label: 'Declined', color: 'bg-[var(--color-negative-light)] text-[var(--color-negative-default)] dark:bg-[var(--color-negative-default)]/15' },
-    { value: 'Expired', label: 'Expired', color: 'bg-[var(--color-primary-light)] text-[var(--color-primary-default)] dark:bg-[var(--color-primary-default)]/15' }
+    { value: 'Draft', label: t('draft'), color: 'bg-[var(--surface-sunken)] text-[var(--text-secondary)]' },
+    { value: 'Sent', label: t('sent'), color: 'bg-[var(--stage-contacted-bg)] text-[var(--stage-contacted)] dark:bg-[var(--stage-contacted)]/15' },
+    { value: 'Viewed', label: t('viewed'), color: 'bg-[var(--stage-qualified-bg)] text-[var(--stage-qualified)] dark:bg-[var(--stage-qualified)]/15' },
+    { value: 'Accepted', label: t('accepted'), color: 'bg-[var(--color-success-light)] text-[var(--color-success-default)] dark:bg-[var(--color-success-default)]/15' },
+    { value: 'Declined', label: t('declined'), color: 'bg-[var(--color-negative-light)] text-[var(--color-negative-default)] dark:bg-[var(--color-negative-default)]/15' },
+    { value: 'Expired', label: t('expired'), color: 'bg-[var(--color-primary-light)] text-[var(--color-primary-default)] dark:bg-[var(--color-primary-default)]/15' }
   ];
 
   /**
@@ -36,7 +38,7 @@
   const columns = [
     {
       key: 'estimateNumber',
-      label: 'Estimate #',
+      label: t('estimate_number'),
       type: 'text',
       width: 'w-32',
       editable: false,
@@ -44,7 +46,7 @@
     },
     {
       key: 'clientName',
-      label: 'Client',
+      label: t('client'),
       type: 'text',
       width: 'w-40',
       editable: false,
@@ -52,7 +54,7 @@
     },
     {
       key: 'title',
-      label: 'Title',
+      label: t('title'),
       type: 'text',
       width: 'w-44',
       canHide: true,
@@ -60,7 +62,7 @@
     },
     {
       key: 'account',
-      label: 'Account',
+      label: t('account'),
       type: 'relation',
       width: 'w-36',
       relationIcon: 'building',
@@ -69,7 +71,7 @@
     },
     {
       key: 'status',
-      label: 'Status',
+      label: t('status'),
       type: 'select',
       width: 'w-28',
       options: ESTIMATE_STATUSES,
@@ -78,7 +80,7 @@
     },
     {
       key: 'issueDate',
-      label: 'Issue Date',
+      label: t('issue_date'),
       type: 'date',
       width: 'w-28',
       canHide: true,
@@ -86,7 +88,7 @@
     },
     {
       key: 'expiryDate',
-      label: 'Valid Until',
+      label: t('valid_until'),
       type: 'date',
       width: 'w-28',
       canHide: true,
@@ -94,7 +96,7 @@
     },
     {
       key: 'totalAmount',
-      label: 'Total',
+      label: t('total'),
       type: 'number',
       width: 'w-28',
       canHide: false,
@@ -102,7 +104,7 @@
     },
     {
       key: 'owner',
-      label: 'Owner',
+      label: t('owner'),
       type: 'relation',
       width: 'w-32',
       relationIcon: 'user',
@@ -176,11 +178,11 @@
 
   // Status chip filter definitions
   const STATUS_CHIPS = [
-    { key: 'ALL', label: 'All' },
-    { key: 'OPEN', label: 'Open', statuses: ['Draft', 'Sent', 'Viewed'] },
-    { key: 'ACCEPTED', label: 'Accepted', statuses: ['Accepted'] },
-    { key: 'DECLINED', label: 'Declined', statuses: ['Declined'] },
-    { key: 'EXPIRED', label: 'Expired', statuses: ['Expired'] }
+    { key: 'ALL', label: t('all') },
+    { key: 'OPEN', label: t('open'), statuses: ['Draft', 'Sent', 'Viewed'] },
+    { key: 'ACCEPTED', label: t('accepted'), statuses: ['Accepted'] },
+    { key: 'DECLINED', label: t('declined'), statuses: ['Declined'] },
+    { key: 'EXPIRED', label: t('expired'), statuses: ['Expired'] }
   ];
 
   // State
@@ -667,7 +669,7 @@
 <!-- Page Content -->
 <div class="flex flex-col gap-4 p-6">
   <!-- Header -->
-  <PageHeader title="Estimates">
+  <PageHeader title={t('estimates')}>
     {#snippet actions()}
       <div class="flex items-center gap-2">
         <!-- Status Filter Chips -->
@@ -711,7 +713,7 @@
           >
             <path d="M19 12H5M12 19l-7-7 7-7" />
           </svg>
-          Invoices
+          {t('invoices')}
         </Button>
 
         <!-- Filters Toggle -->
@@ -734,7 +736,7 @@
           >
             <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
           </svg>
-          Filters
+          {t('filters')}
           {#if activeFiltersCount() > 0}
             <span class="rounded-full bg-[var(--color-primary-light)] px-2 py-0.5 text-xs text-[var(--color-primary-default)]">
               {activeFiltersCount()}
@@ -761,7 +763,7 @@
                   <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
                   <line x1="9" y1="3" x2="9" y2="21" />
                 </svg>
-                Columns
+                {t('columns')}
               </Button>
             {/snippet}
           </DropdownMenu.Trigger>
@@ -795,7 +797,7 @@
             <line x1="12" y1="5" x2="12" y2="19" />
             <line x1="5" y1="12" x2="19" y2="12" />
           </svg>
-          New Estimate
+          {t('newEstimate')}
         </Button>
       </div>
     {/snippet}
@@ -810,19 +812,19 @@
   >
     <SearchInput
       value={filters.search}
-      placeholder="Search estimates..."
+      placeholder={t('searchEstimates')}
       onchange={(value) => updateFilters({ ...filters, search: value })}
     />
 
     <SelectFilter
-      label="Status"
+      label={t('status')}
       value={filters.status}
       options={ESTIMATE_STATUSES}
       onchange={(value) => updateFilters({ ...filters, status: value })}
     />
 
     <DateRangeFilter
-      label="Issue Date"
+      label={t('issue_date')}
       startDate={filters.issue_date_gte}
       endDate={filters.issue_date_lte}
       onchange={(start, end) =>
@@ -830,7 +832,7 @@
     />
 
     <DateRangeFilter
-      label="Valid Until"
+      label={t('valid_until')}
       startDate={filters.expiry_date_gte}
       endDate={filters.expiry_date_lte}
       onchange={(start, end) =>
@@ -845,18 +847,18 @@
         <div class="mb-4 flex size-16 items-center justify-center rounded-[var(--radius-xl)] bg-[var(--surface-sunken)]">
           <span class="text-4xl">📋</span>
         </div>
-        <h3 class="text-[var(--text-primary)] text-lg font-medium">No estimates yet</h3>
-        <p class="text-[var(--text-secondary)] text-sm">Create your first estimate to get started</p>
+        <h3 class="text-[var(--text-primary)] text-lg font-medium">{t('noEstimatesYet')}</h3>
+        <p class="text-[var(--text-secondary)] text-sm">{t('createFirstEstimate')}</p>
       </div>
     {/snippet}
     {#snippet cellContent(row, column)}
       {#if column.key === 'status'}
         <span
-          class="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium {getStatusColor(
+          class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium {getStatusColor(
             row.status
           )}"
         >
-          {row.status}
+          {ESTIMATE_STATUSES.find(s => s.value === row.status)?.label || row.status}
         </span>
       {:else if column.key === 'expiryDate'}
         {#if row.expiryDate}
@@ -897,8 +899,8 @@
   data={drawerFormData}
   columns={drawerFields}
   titleKey="estimateNumber"
-  titlePlaceholder="New Estimate"
-  headerLabel="Estimate"
+  titlePlaceholder={t('newEstimate')}
+  headerLabel={t('estimate')}
   mode={drawerMode}
   onFieldChange={handleFieldChange}
   onDelete={handleDelete}
@@ -947,7 +949,7 @@
                 <line x1="22" y1="2" x2="11" y2="13" />
                 <polygon points="22 2 15 22 11 13 2 9 22 2" />
               </svg>
-              Send
+              {t('send')}
             </Button>
           {/if}
 
@@ -971,26 +973,26 @@
                 <line x1="12" y1="18" x2="12" y2="12" />
                 <line x1="9" y1="15" x2="15" y2="15" />
               </svg>
-              Convert to Invoice
+              {t('convertToInvoice')}
             </Button>
           {/if}
 
           <!-- Accept/Decline for Sent estimates -->
           {#if selectedEstimate.status === 'Sent' || selectedEstimate.status === 'Viewed'}
             <Button variant="outline" size="sm" class="text-green-600" onclick={handleAccept}>
-              Accept
+              {t('accepted')}
             </Button>
             <Button variant="outline" size="sm" class="text-red-600" onclick={handleDecline}>
-              Decline
+              {t('declined')}
             </Button>
           {/if}
         {/if}
       </div>
 
       <div class="flex gap-2">
-        <Button variant="outline" onclick={closeDrawer}>Cancel</Button>
+        <Button variant="outline" onclick={closeDrawer}>{t('cancel')}</Button>
         <Button onclick={handleDrawerSave}>
-          {drawerMode === 'create' ? 'Create Estimate' : 'Save Changes'}
+          {drawerMode === 'create' ? t('createEstimate') : t('saveChanges')}
         </Button>
       </div>
     </div>
@@ -1045,3 +1047,6 @@
     {/if}
   {/snippet}
 </CrmDrawer>
+
+<!-- 自动刷新组件 -->
+<AutoRefresh interval={3000} enabled={true} />

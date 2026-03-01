@@ -11,6 +11,8 @@
   import { FilterBar, SearchInput } from '$lib/components/ui/filter';
   import { Pagination } from '$lib/components/ui/pagination';
   import { Button } from '$lib/components/ui/button';
+  import { t } from '$lib/utils/i18n.js';
+import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 
   /** @type {{ data: import('./$types').PageData }} */
   let { data } = $props();
@@ -24,7 +26,7 @@
   const columns = [
     {
       key: 'name',
-      label: 'Name',
+      label: t('name'),
       type: 'text',
       width: 'w-48',
       editable: false,
@@ -32,7 +34,7 @@
     },
     {
       key: 'primaryColor',
-      label: 'Primary Color',
+      label: t('primary_color'),
       type: 'text',
       width: 'w-32',
       canHide: true,
@@ -40,7 +42,7 @@
     },
     {
       key: 'isDefault',
-      label: 'Default',
+      label: t('default'),
       type: 'checkbox',
       width: 'w-24',
       canHide: true,
@@ -48,7 +50,7 @@
     },
     {
       key: 'footerText',
-      label: 'Footer',
+      label: t('footer'),
       type: 'text',
       width: 'w-48',
       canHide: true,
@@ -58,13 +60,13 @@
 
   // Drawer field definitions
   const drawerFields = [
-    { key: 'name', label: 'Name', type: 'text', section: 'core', required: true },
-    { key: 'primaryColor', label: 'Primary Color', type: 'color', section: 'branding' },
-    { key: 'secondaryColor', label: 'Secondary Color', type: 'color', section: 'branding' },
-    { key: 'defaultNotes', label: 'Default Notes', type: 'textarea', section: 'defaults' },
-    { key: 'defaultTerms', label: 'Default Terms', type: 'textarea', section: 'defaults' },
-    { key: 'footerText', label: 'Footer Text', type: 'text', section: 'defaults' },
-    { key: 'isDefault', label: 'Set as Default', type: 'boolean', section: 'settings' }
+    { key: 'name', label: t('name'), type: 'text', section: 'core', required: true },
+    { key: 'primaryColor', label: t('primary_color'), type: 'color', section: 'branding' },
+    { key: 'secondaryColor', label: t('secondary_color'), type: 'color', section: 'branding' },
+    { key: 'defaultNotes', label: t('default_notes'), type: 'textarea', section: 'defaults' },
+    { key: 'defaultTerms', label: t('default_terms'), type: 'textarea', section: 'defaults' },
+    { key: 'footerText', label: t('footer_text'), type: 'text', section: 'defaults' },
+    { key: 'isDefault', label: t('set_as_default'), type: 'boolean', section: 'settings' }
   ];
 
   // Default visible columns
@@ -312,7 +314,7 @@
 <!-- Page Content -->
 <div class="flex flex-col gap-4 p-6">
   <!-- Header -->
-  <PageHeader title="Invoice Templates">
+  <PageHeader title={t('invoiceTemplates')}>
     {#snippet actions()}
       <!-- Back to Invoices -->
       <Button variant="ghost" size="sm" onclick={() => goto('/invoices')}>
@@ -330,7 +332,7 @@
         >
           <path d="M19 12H5M12 19l-7-7 7-7" />
         </svg>
-        Invoices
+        {t('invoices')}
       </Button>
 
       <!-- Filters Toggle -->
@@ -353,7 +355,7 @@
         >
           <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
         </svg>
-        Filters
+        {t('filters')}
         {#if activeFiltersCount() > 0}
           <span class="rounded-full bg-[var(--color-primary-light)] px-2 py-0.5 text-xs text-[var(--color-primary-default)]">
             {activeFiltersCount()}
@@ -377,7 +379,7 @@
           <line x1="12" y1="5" x2="12" y2="19" />
           <line x1="5" y1="12" x2="19" y2="12" />
         </svg>
-        New Template
+        {t('new_template')}
       </Button>
     {/snippet}
   </PageHeader>
@@ -413,7 +415,7 @@
           <span
             class="inline-flex items-center rounded-full bg-[var(--color-primary-light)] px-2 py-0.5 text-xs font-medium text-[var(--color-primary-default)]"
           >
-            Default
+            {t('default')}
           </span>
         {:else}
           <span class="text-[var(--text-tertiary)]">-</span>
@@ -455,9 +457,9 @@
 >
   {#snippet footerActions()}
     <div class="flex w-full items-center justify-end gap-2">
-      <Button variant="outline" onclick={closeDrawer}>Cancel</Button>
+      <Button variant="outline" onclick={closeDrawer}>{t('cancel')}</Button>
       <Button onclick={handleDrawerSave}>
-        {drawerMode === 'create' ? 'Create Template' : 'Save Changes'}
+        {drawerMode === 'create' ? t('create_template') : t('save_changes')}
       </Button>
     </div>
   {/snippet}
@@ -488,3 +490,6 @@
     {/if}
   {/snippet}
 </CrmDrawer>
+
+<!-- 自动刷新组件 -->
+<AutoRefresh interval={3000} enabled={true} />

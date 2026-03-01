@@ -6,7 +6,20 @@
   import { EditableMultiSelect } from '$lib/components/ui/editable-field/index.js';
   import { cn } from '$lib/utils.js';
   import { formatCurrency } from '$lib/utils/formatting.js';
+  import { t, getCurrentLanguage } from '$lib/utils/i18n.js';
   import { parseDate, getLocalTimeZone } from '@internationalized/date';
+  
+  // Reactive language tracking
+  let currentLang = $state(getCurrentLanguage());
+  
+  // Update language when it changes in localStorage
+  if (typeof window !== 'undefined') {
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'language') {
+        currentLang = e.newValue || 'en';
+      }
+    });
+  }
 
   /**
    * @type {{
@@ -54,7 +67,7 @@
   function getOptionLabel(val) {
     if (type !== 'select') return val;
     const opt = options.find((/** @type {any} */ o) => o.value === val);
-    return opt?.label || val || emptyText || 'Select...';
+    return opt?.label || val || emptyText || t('select', currentLang);
   }
 
   /**
@@ -91,10 +104,10 @@
    * @param {string} dateStr
    */
   function formatDateDisplay(dateStr) {
-    if (!dateStr) return placeholder || 'Pick a date';
+    if (!dateStr) return placeholder || t('pickADate', currentLang);
     try {
       const date = new Date(dateStr + 'T00:00:00');
-      return date.toLocaleDateString('en-US', {
+      return date.toLocaleDateString(currentLang === 'zh' ? 'zh-CN' : 'en-US', {
         month: 'short',
         day: 'numeric',
         year: 'numeric'
@@ -195,7 +208,7 @@
         <Icon class="h-3.5 w-3.5 text-muted-foreground/70" />
       </div>
     {/if}
-    {label}
+    {t(label.toLowerCase().replace(/\s+/g, '_').replace(/&/g, 'and'), currentLang)}
   </div>
 
   <!-- Value -->
@@ -314,7 +327,7 @@
         value={Array.isArray(value) ? value : []}
         {options}
         {placeholder}
-        emptyText={emptyText || 'None selected'}
+        emptyText={emptyText || t('noneSelected', currentLang)}
         disabled={!editable}
         onchange={handleMultiSelectChange}
       />

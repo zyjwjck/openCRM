@@ -53,6 +53,7 @@
   } from '$lib/constants/filters.js';
   import { orgSettings } from '$lib/stores/org.js';
   import { t } from '$lib/utils/i18n.js';
+import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 
   const STORAGE_KEY = 'opportunities-crm-columns';
 
@@ -125,7 +126,7 @@
   const columns = [
     {
       key: 'name',
-      label: 'Opportunity',
+      label: t('opportunity'),
       type: 'text',
       width: 'w-48',
       canHide: false,
@@ -133,7 +134,7 @@
     },
     {
       key: 'account',
-      label: 'Account',
+      label: t('account'),
       type: 'relation',
       width: 'w-40',
       relationIcon: 'building',
@@ -143,16 +144,16 @@
     },
     {
       key: 'amount',
-      label: 'Amount',
+      label: t('amount'),
       type: 'number',
       width: 'w-32',
       format: (value, row) => formatAmount(value, row?.currency)
     },
-    { key: 'stage', label: 'Stage', type: 'select', options: stageOptions, width: 'w-32' },
-    { key: 'closedOn', label: 'Close Date', type: 'date', width: 'w-36' },
+    { key: 'stage', label: t('stage'), type: 'select', options: stageOptions, width: 'w-32' },
+    { key: 'closedOn', label: t('close_date'), type: 'date', width: 'w-36' },
     {
       key: 'assignedTo',
-      label: 'Assigned To',
+      label: t('assigned_to'),
       type: 'relation',
       width: 'w-40',
       relationIcon: 'user',
@@ -168,7 +169,7 @@
     // Hidden by default
     {
       key: 'probability',
-      label: 'Probability',
+      label: t('probability'),
       type: 'number',
       width: 'w-28',
       canHide: true,
@@ -176,7 +177,7 @@
     },
     {
       key: 'opportunityType',
-      label: 'Type',
+      label: t('type'),
       type: 'select',
       options: typeOptions,
       width: 'w-32',
@@ -1582,3 +1583,6 @@
     {/if}
   {/snippet}
 </CrmDrawer>
+
+<!-- 自动刷新组件 -->
+<AutoRefresh interval={3000} enabled={true} />

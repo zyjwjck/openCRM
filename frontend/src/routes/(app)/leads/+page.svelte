@@ -60,6 +60,7 @@
   import { ViewToggle } from '$lib/components/ui/view-toggle';
   import { LeadKanban } from '$lib/components/ui/lead-kanban';
   import { t } from '$lib/utils/i18n.js';
+  import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 
   // Column visibility configuration
   const STORAGE_KEY = 'leads-column-config';
@@ -73,7 +74,7 @@
   const columns = [
     {
       key: 'title',
-      label: 'Title',
+      label: t('title'),
       type: 'text',
       width: 'w-[200px]',
       canHide: false,
@@ -81,7 +82,7 @@
     },
     {
       key: 'name',
-      label: 'Name',
+      label: t('name'),
       type: 'text',
       width: 'w-[180px]',
       editable: false,
@@ -91,7 +92,7 @@
     },
     {
       key: 'company',
-      label: 'Company',
+      label: t('company'),
       type: 'relation',
       width: 'w-40',
       relationIcon: 'building',
@@ -100,28 +101,28 @@
     },
     {
       key: 'email',
-      label: 'Email',
+      label: t('email'),
       type: 'email',
       width: 'w-52',
       emptyText: ''
     },
     {
       key: 'status',
-      label: 'Status',
+      label: t('status'),
       type: 'select',
       width: 'w-36',
       options: leadStatusOptions
     },
     {
       key: 'rating',
-      label: 'Rating',
+      label: t('rating'),
       type: 'select',
       width: 'w-28',
       options: leadRatingOptions
     },
     {
       key: 'createdAt',
-      label: 'Created',
+      label: t('created'),
       type: 'date',
       width: 'w-36',
       editable: false
@@ -129,7 +130,7 @@
     // Hidden by default
     {
       key: 'phone',
-      label: 'Phone',
+      label: t('phone'),
       type: 'text',
       width: 'w-36',
       canHide: true,
@@ -137,7 +138,7 @@
     },
     {
       key: 'jobTitle',
-      label: 'Job Title',
+      label: t('job_title'),
       type: 'text',
       width: 'w-36',
       canHide: true,
@@ -145,14 +146,14 @@
     },
     {
       key: 'leadSource',
-      label: 'Source',
+      label: t('source'),
       type: 'select',
       width: 'w-28',
       canHide: true
     },
     {
       key: 'industry',
-      label: 'Industry',
+      label: t('industry'),
       type: 'select',
       width: 'w-32',
       canHide: true,
@@ -163,7 +164,7 @@
     },
     {
       key: 'owner',
-      label: 'Assigned',
+      label: t('assigned'),
       type: 'relation',
       width: 'w-36',
       canHide: true,
@@ -972,12 +973,17 @@
     if (drawerMode !== 'view' || !drawerData) return;
 
     isSaving = true;
-    // Populate form state with current drawer data
-    const currentState = leadToFormState(drawerData);
-    Object.assign(formState, currentState);
+    try {
+      // Populate form state with current drawer data
+      const currentState = leadToFormState(drawerData);
+      Object.assign(formState, currentState);
 
-    await tick();
-    updateForm.requestSubmit();
+      await tick();
+      updateForm.requestSubmit();
+    } catch (error) {
+      isSaving = false;
+      toast.error('Failed to submit form');
+    }
   }
 
   /**
@@ -1065,8 +1071,9 @@
 
       await tick();
       createForm.requestSubmit();
-    } finally {
+    } catch (error) {
       isSaving = false;
+      toast.error('Failed to submit form');
     }
   }
 
@@ -1412,17 +1419,22 @@
   function createEnhanceHandler(successMessage, shouldCloseDrawer = true) {
     return () => {
       return async ({ result }) => {
-        isSaving = false;
-        if (result.type === 'success') {
-          toast.success(successMessage);
-          if (shouldCloseDrawer) {
-            await closeDrawer();
+        try {
+          isSaving = false;
+          if (result.type === 'success') {
+            toast.success(successMessage);
+            if (shouldCloseDrawer) {
+              await closeDrawer();
+            }
+            await invalidateAll();
+          } else if (result.type === 'failure') {
+            toast.error(result.data?.error || 'Operation failed');
+          } else if (result.type === 'error') {
+            toast.error('An unexpected error occurred');
           }
-          await invalidateAll();
-        } else if (result.type === 'failure') {
-          toast.error(result.data?.error || 'Operation failed');
-        } else if (result.type === 'error') {
-          toast.error('An unexpected error occurred');
+        } catch (error) {
+          isSaving = false;
+          toast.error('An error occurred while processing the response');
         }
       };
     };
@@ -1889,13 +1901,16 @@
   <input type="hidden" name="leadId" value={formState.leadId} />
 </form>
 
-<form
-  method="POST"
-  action="/leads?/updateStatus"
-  bind:this={updateStatusForm}
-  use:enhance={createEnhanceHandler('Lead status updated successfully', false)}
-  class="hidden"
->
-  <input type="hidden" name="leadId" bind:value={kanbanFormState.leadId} />
-  <input type="hidden" name="status" bind:value={kanbanFormState.status} />
-</form>
+  <form
+    method="POST"
+    action="/leads?/updateStatus"
+    bind:this={updateStatusForm}
+    use:enhance={createEnhanceHandler('Lead status updated successfully', false)}
+    class="hidden"
+  >
+    <input type="hidden" name="leadId" bind:value={kanbanFormState.leadId} />
+    <input type="hidden" name="status" bind:value={kanbanFormState.status} />
+  </form>
+
+  <!-- 自动刷新组件 -->
+  <AutoRefresh interval={3000} enabled={true} />

@@ -13,9 +13,40 @@
   import { formatCurrency } from '$lib/utils/formatting.js';
   import { orgSettings } from '$lib/stores/org.js';
   import { t, getTranslatedGreeting, getCurrentLanguage } from '$lib/utils/i18n.js';
+  import { onMount } from 'svelte';
+  import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 
   /** @type {{ data: any }} */
   let { data } = $props();
+
+  // Check for preloaded data in sessionStorage on client-side
+  onMount(() => {
+    if (typeof sessionStorage !== 'undefined') {
+      const preloadedData = sessionStorage.getItem('preloaded_dashboard_data');
+      if (preloadedData) {
+        console.log('Using preloaded dashboard data from sessionStorage');
+        const parsedData = JSON.parse(preloadedData);
+        // Update the data object with preloaded data
+        data = {
+          ...data,
+          metrics: parsedData,
+          recentData: {
+            leads: parsedData.leads || [],
+            opportunities: parsedData.opportunities || [],
+            tasks: parsedData.tasks || [],
+            activities: parsedData.activities || []
+          },
+          urgentCounts: parsedData.urgent_counts || {},
+          pipelineByStage: parsedData.pipeline_by_stage || {},
+          revenueMetrics: parsedData.revenue_metrics || {},
+          hotLeads: parsedData.hot_leads || []
+        };
+        // Clear the preloaded data since we've used it
+        sessionStorage.removeItem('preloaded_dashboard_data');
+        console.log('Preloaded dashboard data applied and cleared from sessionStorage');
+      }
+    }
+  });
 
   const metrics = $derived(data.metrics || {});
   const recentData = $derived(data.recentData || {});
@@ -194,4 +225,7 @@
       </div>
     {/if}
   </div>
+
+  <!-- 自动刷新组件 -->
+  <AutoRefresh interval={3000} enabled={true} />
 </div>

@@ -22,7 +22,20 @@ class LeadSerializer(serializers.ModelSerializer):
     tags = TagsSerializer(read_only=True, many=True)
     lead_attachment = AttachmentsSerializer(read_only=True, many=True)
     teams = TeamsSerializer(read_only=True, many=True)
-    lead_comments = LeadCommentSerializer(read_only=True, many=True)
+    lead_comments = serializers.SerializerMethodField()
+
+    def get_lead_comments(self, obj):
+        """Get comments for this lead using ContentType"""
+        from django.contrib.contenttypes.models import ContentType
+        from common.models import Comment
+        
+        lead_content_type = ContentType.objects.get_for_model(Lead)
+        comments = Comment.objects.filter(
+            content_type=lead_content_type,
+            object_id=obj.id,
+            org=obj.org
+        ).order_by('-created_at')
+        return LeadCommentSerializer(comments, many=True).data
 
     class Meta:
         model = Lead

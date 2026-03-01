@@ -49,6 +49,7 @@ import { COUNTRIES, getCountryName } from '$lib/constants/countries.js';
 import { CURRENCY_CODES } from '$lib/constants/filters.js';
 import { orgSettings } from '$lib/stores/org.js';
 import { t } from '$lib/utils/i18n.js';
+import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 
   // Column visibility configuration
   const STORAGE_KEY = 'accounts-column-config';
@@ -180,30 +181,30 @@ import { t } from '$lib/utils/i18n.js';
   const columns = [
     {
       key: 'name',
-      label: 'Account',
+      label: t('account'),
       type: 'text',
       width: 'w-60',
       canHide: false,
       emptyText: 'Untitled'
     },
-    { key: 'industry', label: 'Industry', type: 'text', width: 'w-40', emptyText: '' },
+    { key: 'industry', label: t('industry'), type: 'text', width: 'w-40', emptyText: '' },
     {
       key: 'annualRevenue',
-      label: 'Revenue',
+      label: t('revenue'),
       type: 'number',
       width: 'w-32',
       format: (value, row) => formatCurrency(value, row?.currency || 'USD', true)
     },
-    { key: 'phone', label: 'Phone', type: 'text', width: 'w-36', emptyText: '' },
+    { key: 'phone', label: t('phone'), type: 'text', width: 'w-36', emptyText: '' },
     {
       key: 'createdAt',
-      label: 'Created',
+      label: t('created'),
       type: 'date',
       width: 'w-36',
       editable: false
     },
     // Hidden by default
-    { key: 'website', label: 'Website', type: 'text', width: 'w-44', canHide: true, emptyText: '' }
+    { key: 'website', label: t('website'), type: 'text', width: 'w-44', canHide: true, emptyText: '' }
   ];
 
   // Default visible columns (excludes website; status removed - using tabs instead)
@@ -588,27 +589,32 @@ import { t } from '$lib/utils/i18n.js';
     if (drawerMode !== 'view' || !selectedAccount || isClosed) return;
 
     isSubmitting = true;
-    formState.accountId = selectedAccount.id;
-    formState.name = drawerFormData.name || '';
-    formState.email = drawerFormData.email || '';
-    formState.phone = drawerFormData.phone || '';
-    formState.website = drawerFormData.website || '';
-    formState.industry = drawerFormData.industry || '';
-    formState.description = drawerFormData.description || '';
-    formState.address_line = drawerFormData.addressLine || '';
-    formState.city = drawerFormData.city || '';
-    formState.state = drawerFormData.state || '';
-    formState.postcode = drawerFormData.postcode || '';
-    formState.country = drawerFormData.country || '';
-    formState.annual_revenue = drawerFormData.annualRevenue?.toString() || '';
-    formState.currency = drawerFormData.currency || '';
-    formState.number_of_employees = drawerFormData.numberOfEmployees?.toString() || '';
-    formState.assigned_to = JSON.stringify(drawerFormData.assignedTo || []);
-    formState.contacts = JSON.stringify(drawerFormData.contacts || []);
-    formState.tags = JSON.stringify(drawerFormData.tags || []);
+    try {
+      formState.accountId = selectedAccount.id;
+      formState.name = drawerFormData.name || '';
+      formState.email = drawerFormData.email || '';
+      formState.phone = drawerFormData.phone || '';
+      formState.website = drawerFormData.website || '';
+      formState.industry = drawerFormData.industry || '';
+      formState.description = drawerFormData.description || '';
+      formState.address_line = drawerFormData.addressLine || '';
+      formState.city = drawerFormData.city || '';
+      formState.state = drawerFormData.state || '';
+      formState.postcode = drawerFormData.postcode || '';
+      formState.country = drawerFormData.country || '';
+      formState.annual_revenue = drawerFormData.annualRevenue?.toString() || '';
+      formState.currency = drawerFormData.currency || '';
+      formState.number_of_employees = drawerFormData.numberOfEmployees?.toString() || '';
+      formState.assigned_to = JSON.stringify(drawerFormData.assignedTo || []);
+      formState.contacts = JSON.stringify(drawerFormData.contacts || []);
+      formState.tags = JSON.stringify(drawerFormData.tags || []);
 
-    await tick();
-    updateForm.requestSubmit();
+      await tick();
+      updateForm.requestSubmit();
+    } catch (error) {
+      isSubmitting = false;
+      toast.error('Failed to submit form');
+    }
   }
 
   /**
@@ -618,26 +624,31 @@ import { t } from '$lib/utils/i18n.js';
     if (drawerMode !== 'create') return;
 
     isSubmitting = true;
-    formState.name = drawerFormData.name || '';
-    formState.email = drawerFormData.email || '';
-    formState.phone = drawerFormData.phone || '';
-    formState.website = drawerFormData.website || '';
-    formState.industry = drawerFormData.industry || '';
-    formState.description = drawerFormData.description || '';
-    formState.address_line = drawerFormData.addressLine || '';
-    formState.city = drawerFormData.city || '';
-    formState.state = drawerFormData.state || '';
-    formState.postcode = drawerFormData.postcode || '';
-    formState.country = drawerFormData.country || '';
-    formState.annual_revenue = drawerFormData.annualRevenue?.toString() || '';
-    formState.currency = drawerFormData.currency || '';
-    formState.number_of_employees = drawerFormData.numberOfEmployees?.toString() || '';
-    formState.assigned_to = JSON.stringify(drawerFormData.assignedTo || []);
-    formState.contacts = JSON.stringify(drawerFormData.contacts || []);
-    formState.tags = JSON.stringify(drawerFormData.tags || []);
+    try {
+      formState.name = drawerFormData.name || '';
+      formState.email = drawerFormData.email || '';
+      formState.phone = drawerFormData.phone || '';
+      formState.website = drawerFormData.website || '';
+      formState.industry = drawerFormData.industry || '';
+      formState.description = drawerFormData.description || '';
+      formState.address_line = drawerFormData.addressLine || '';
+      formState.city = drawerFormData.city || '';
+      formState.state = drawerFormData.state || '';
+      formState.postcode = drawerFormData.postcode || '';
+      formState.country = drawerFormData.country || '';
+      formState.annual_revenue = drawerFormData.annualRevenue?.toString() || '';
+      formState.currency = drawerFormData.currency || '';
+      formState.number_of_employees = drawerFormData.numberOfEmployees?.toString() || '';
+      formState.assigned_to = JSON.stringify(drawerFormData.assignedTo || []);
+      formState.contacts = JSON.stringify(drawerFormData.contacts || []);
+      formState.tags = JSON.stringify(drawerFormData.tags || []);
 
-    await tick();
-    createForm.requestSubmit();
+      await tick();
+      createForm.requestSubmit();
+    } catch (error) {
+      isSubmitting = false;
+      toast.error('Failed to submit form');
+    }
   }
 
   /**
@@ -1256,3 +1267,6 @@ import { t } from '$lib/utils/i18n.js';
 >
   <input type="hidden" name="accountId" value={formState.accountId} />
 </form>
+
+<!-- 自动刷新组件 -->
+<AutoRefresh interval={3000} enabled={true} />
