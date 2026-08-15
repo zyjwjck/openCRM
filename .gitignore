@@ -50,6 +50,7 @@ frontend/.env
 frontend/.env.local
 frontend/package-lock.json
 frontend/pnpm-lock.yaml
+frontend/false/
 chatbot-webui
 
 # Logs

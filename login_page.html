@@ -1,0 +1,32 @@
+﻿<!doctype html>
+<html lang="en">
+  <head>
+
+    <meta charset="utf-8" />
+    <link rel="icon" href="./logo.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    
+  </head>
+  <body data-sveltekit-preload-data="hover">
+    <div style="display: contents">
+			<script>
+				{
+					__sveltekit_dev = {
+						base: new URL(".", location).pathname.slice(0, -1),
+						env: {"PUBLIC_DJANGO_API_URL":"http://localhost:8000"}
+					};
+
+					const element = document.currentScript.parentElement;
+
+					Promise.all([
+						import("/@fs/F:/opencrm/openCRM/frontend/node_modules/.pnpm/@sveltejs+kit@2.70.2_@svelt_75b5f5b1c19fba72860ead7a51ace4ab/node_modules/@sveltejs/kit/src/runtime/client/entry.js"),
+						import("/@fs/F:/opencrm/openCRM/frontend/.svelte-kit/generated/client/app.js")
+					]).then(([kit, app]) => {
+						kit.start(app, element);
+					});
+				}
+			</script>
+		</div>
+  </body>
+</html>
+

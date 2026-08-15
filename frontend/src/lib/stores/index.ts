@@ -88,24 +88,16 @@ const frequency_penalty = writable('0');
 const presence_penalty = writable('0');
 const system_prompt = writable('You are a helpful assistant for CRM.');
 
-// Default settings with nanobot model
+// Default settings
 const settings = writable({
-	modelsConfig: [
-		{
-			id: "1",
-			name: "nanobot",
-			url: "http://127.0.0.1:5679/v1",
-			apiKey: "",
-			isDefault: true
-		}
-	],
+	modelsConfig: [],
 	temperature: 0.13,
 	top_p: 0.9,
 	max_tokens: 1000,
 	frequency_penalty: 0,
 	presence_penalty: 0,
 	system_prompt: 'You are a helpful assistant for crm.',
-	API_BASE_URL: "http://127.0.0.1:5679/v1"
+	API_BASE_URL: ""
 });
 
 export const showSettings = writable(false);
