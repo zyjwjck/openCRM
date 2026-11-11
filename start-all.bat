@@ -5,6 +5,7 @@ chcp 65001 >nul
 REM ============================================
 REM  openCRM v0.05 一键启动脚本 (Windows)
 REM  启动: Django后端 + 自动拉起 MCP Server + SvelteKit前端 + nanobot AI
+REM  nanobot 配置: 项目根 .nanobot/config.json（已预置 openCRM MCP）
 REM ============================================
 
 cd /d "%~dp0"
@@ -16,9 +17,6 @@ echo ============================================
 echo   openCRM v0.05 - Starting all services...
 echo ============================================
 echo.
-
-REM ---------- 0. 创建 nanobot workspace ----------
-if not exist "%~dp0.nanobot-workspace" mkdir "%~dp0.nanobot-workspace"
 
 REM ---------- 1. Django Backend + 自动 MCP Server (Blue window) ----------
 REM manage.py 会自动在 runserver 时拉起 backend/mcp/opencrm_server.py --http
@@ -34,9 +32,9 @@ start "openCRM - Frontend (SvelteKit :5173)" cmd /k "color 2F && cd /d ""%~dp0fr
 timeout /t 2 /nobreak >nul
 
 REM ---------- 3. nanobot AI Agent (Purple window) ----------
-REM 使用项目级配置 nanobot.config.json（已预置 openCRM MCP + SSRF 白名单）
+REM 读取 .nanobot/config.json（项目根，已预置 openCRM MCP + SSRF 白名单）
 echo [3/3] Starting nanobot AI Agent (gateway) on port 8765...
-start "openCRM - AI Agent (nanobot :8765)" cmd /k "color 5F && cd /d ""%~dp0Agent\nanobot-main"" && if exist ""%~dp0.openCRM-venv\Scripts\nanobot.exe"" ( echo Using venv nanobot && echo Config: %~dp0nanobot.config.json && echo openCRM MCP: http://127.0.0.1:8001/mcp && ""%~dp0.openCRM-venv\Scripts\nanobot.exe"" gateway -c ""%~dp0nanobot.config.json"" ) else ( echo ERROR: nanobot not installed. && echo Run: cd Agent\nanobot-main ^&^& %~dp0.openCRM-venv\Scripts\python.exe -m pip install -e . && pause )"
+start "openCRM - AI Agent (nanobot :8765)" cmd /k "color 5F && cd /d ""%~dp0"" && if exist ""%~dp0.openCRM-venv\Scripts\nanobot.exe"" ( echo Using venv nanobot && echo Config:  %~dp0.nanobot\config.json && echo openCRM MCP: http://127.0.0.1:8001/mcp && ""%~dp0.openCRM-venv\Scripts\nanobot.exe"" gateway ) else ( echo ERROR: nanobot not installed. && echo Run: cd Agent\nanobot-main ^&^& %~dp0.openCRM-venv\Scripts\python.exe -m pip install -e . && pause )"
 
 echo.
 echo ============================================
