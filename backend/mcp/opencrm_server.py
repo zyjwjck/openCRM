@@ -105,25 +105,34 @@ class CRMClient:
 
     # --------- 认证 ---------
     def _login(self):
-        """JWT 登录拿 access_token。"""
+        """JWT 登录拿 access_token。自动重试（兼容 Django 稍后启动的场景）。"""
         if self.access_token:
             return  # 已有 token
         url = f"{self.base_url}/api/auth/login/"
-        try:
-            r = self.session.post(url, json={
-                "email": self.email, "password": self.password
-            }, timeout=10)
-            if r.status_code == 200:
-                data = r.json()
-                self.access_token = data.get("access_token") or data.get("access")
-                if not self.access_token:
-                    raise RuntimeError(f"登录成功但没拿到 token: {data}")
-            else:
-                raise RuntimeError(f"登录失败 HTTP {r.status_code}: {r.text[:200]}")
-        except requests.ConnectionError:
-            raise RuntimeError(
-                f"无法连接后端 {self.base_url}。请先启动 Django 服务 (manage.py runserver)。"
-            )
+        import time as _time
+        last_err = None
+        for attempt in range(10):  # 最多重试 10 次，每次等 2 秒
+            try:
+                r = self.session.post(url, json={
+                    "email": self.email, "password": self.password
+                }, timeout=10)
+                if r.status_code == 200:
+                    data = r.json()
+                    self.access_token = data.get("access_token") or data.get("access")
+                    if not self.access_token:
+                        raise RuntimeError(f"登录成功但没拿到 token: {data}")
+                    return  # 登录成功
+                else:
+                    raise RuntimeError(f"登录失败 HTTP {r.status_code}: {r.text[:200]}")
+            except requests.ConnectionError as e:
+                last_err = e
+                if attempt < 9:
+                    print(f"  ⏳ 等待后端就绪... ({attempt + 1}/10)  [{e}]", file=sys.stderr)
+                    _time.sleep(2)
+                else:
+                    raise RuntimeError(
+                        f"无法连接后端 {self.base_url}（重试 10 次均失败）。请先启动 Django 服务 (manage.py runserver)。"
+                    ) from last_err
 
     def _headers(self) -> dict:
         headers = {"Authorization": f"Bearer {self.access_token}"}

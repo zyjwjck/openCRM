@@ -71,9 +71,10 @@ TODO.md
 .nanobot/
 start-nanobot.cmd
 
-# openCRM MCP sensitive config
-mcp/config.json
-mcp/__pycache__/
+# openCRM MCP sensitive config & runtime
+backend/mcp/config.json
+backend/mcp/__pycache__/
+backend/mcp/mcp.log
 
 # nanobot runtime
 .nanobot-workspace/
