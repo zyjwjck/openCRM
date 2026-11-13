@@ -48,8 +48,13 @@
 import { COUNTRIES, getCountryName } from '$lib/constants/countries.js';
 import { CURRENCY_CODES } from '$lib/constants/filters.js';
 import { orgSettings } from '$lib/stores/org.js';
-import { t } from '$lib/utils/i18n.svelte.js';
+import { useI18n } from '$lib/utils/i18n.svelte.js';
+import { getOptionLabel } from '$lib/utils/table-helpers.js';
 import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
+
+  // Keep every existing t() call site, but make it reactive to language changes.
+  const i18n = useI18n();
+  const t = i18n.t;
 
   // Column visibility configuration
   const STORAGE_KEY = 'accounts-column-config';
@@ -61,37 +66,58 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 
   // Industry options for drawer
   const industryOptions = [
-    { value: 'ADVERTISING', label: 'Advertising' },
-    { value: 'AGRICULTURE', label: 'Agriculture' },
-    { value: 'APPAREL & ACCESSORIES', label: 'Apparel & Accessories' },
-    { value: 'AUTOMOTIVE', label: 'Automotive' },
-    { value: 'BANKING', label: 'Banking' },
-    { value: 'BIOTECHNOLOGY', label: 'Biotechnology' },
-    { value: 'BUILDING MATERIALS & EQUIPMENT', label: 'Building Materials & Equipment' },
-    { value: 'CHEMICAL', label: 'Chemical' },
-    { value: 'COMPUTER', label: 'Computer' },
-    { value: 'EDUCATION', label: 'Education' },
-    { value: 'ELECTRONICS', label: 'Electronics' },
-    { value: 'ENERGY', label: 'Energy' },
-    { value: 'ENTERTAINMENT & LEISURE', label: 'Entertainment & Leisure' },
-    { value: 'FINANCE', label: 'Finance' },
-    { value: 'FOOD & BEVERAGE', label: 'Food & Beverage' },
-    { value: 'GROCERY', label: 'Grocery' },
-    { value: 'HEALTHCARE', label: 'Healthcare' },
-    { value: 'INSURANCE', label: 'Insurance' },
-    { value: 'LEGAL', label: 'Legal' },
-    { value: 'MANUFACTURING', label: 'Manufacturing' },
-    { value: 'PUBLISHING', label: 'Publishing' },
-    { value: 'REAL ESTATE', label: 'Real Estate' },
-    { value: 'SERVICE', label: 'Service' },
-    { value: 'SOFTWARE', label: 'Software' },
-    { value: 'SPORTS', label: 'Sports' },
-    { value: 'TECHNOLOGY', label: 'Technology' },
-    { value: 'TELECOMMUNICATIONS', label: 'Telecommunications' },
-    { value: 'TELEVISION', label: 'Television' },
-    { value: 'TRANSPORTATION', label: 'Transportation' },
-    { value: 'VENTURE CAPITAL', label: 'Venture Capital' }
+    { value: 'ADVERTISING', label: 'Advertising', labelKey: 'industryAdvertising' },
+    { value: 'AGRICULTURE', label: 'Agriculture', labelKey: 'industryAgriculture' },
+    {
+      value: 'APPAREL & ACCESSORIES',
+      label: 'Apparel & Accessories',
+      labelKey: 'industryApparelAccessories'
+    },
+    { value: 'AUTOMOTIVE', label: 'Automotive', labelKey: 'industryAutomotive' },
+    { value: 'BANKING', label: 'Banking', labelKey: 'industryBanking' },
+    { value: 'BIOTECHNOLOGY', label: 'Biotechnology', labelKey: 'industryBiotechnology' },
+    {
+      value: 'BUILDING MATERIALS & EQUIPMENT',
+      label: 'Building Materials & Equipment',
+      labelKey: 'industryBuildingMaterialsEquipment'
+    },
+    { value: 'CHEMICAL', label: 'Chemical', labelKey: 'industryChemical' },
+    { value: 'COMPUTER', label: 'Computer', labelKey: 'industryComputer' },
+    { value: 'EDUCATION', label: 'Education', labelKey: 'industryEducation' },
+    { value: 'ELECTRONICS', label: 'Electronics', labelKey: 'industryElectronics' },
+    { value: 'ENERGY', label: 'Energy', labelKey: 'industryEnergy' },
+    {
+      value: 'ENTERTAINMENT & LEISURE',
+      label: 'Entertainment & Leisure',
+      labelKey: 'industryEntertainmentLeisure'
+    },
+    { value: 'FINANCE', label: 'Finance', labelKey: 'industryFinance' },
+    { value: 'FOOD & BEVERAGE', label: 'Food & Beverage', labelKey: 'industryFoodBeverage' },
+    { value: 'GROCERY', label: 'Grocery', labelKey: 'industryGrocery' },
+    { value: 'HEALTHCARE', label: 'Healthcare', labelKey: 'industryHealthcare' },
+    { value: 'INSURANCE', label: 'Insurance', labelKey: 'industryInsurance' },
+    { value: 'LEGAL', label: 'Legal', labelKey: 'industryLegal' },
+    { value: 'MANUFACTURING', label: 'Manufacturing', labelKey: 'industryManufacturing' },
+    { value: 'PUBLISHING', label: 'Publishing', labelKey: 'industryPublishing' },
+    { value: 'REAL ESTATE', label: 'Real Estate', labelKey: 'industryRealEstate' },
+    { value: 'SERVICE', label: 'Service', labelKey: 'industryService' },
+    { value: 'SOFTWARE', label: 'Software', labelKey: 'industrySoftware' },
+    { value: 'SPORTS', label: 'Sports', labelKey: 'industrySports' },
+    { value: 'TECHNOLOGY', label: 'Technology', labelKey: 'industryTechnology' },
+    {
+      value: 'TELECOMMUNICATIONS',
+      label: 'Telecommunications',
+      labelKey: 'industryTelecommunications'
+    },
+    { value: 'TELEVISION', label: 'Television', labelKey: 'industryTelevision' },
+    { value: 'TRANSPORTATION', label: 'Transportation', labelKey: 'industryTransportation' },
+    { value: 'VENTURE CAPITAL', label: 'Venture Capital', labelKey: 'industryVentureCapital' }
   ];
+
+  // CrmDrawer renders option.label directly, so localize before passing.
+  const industryOptionsLocalized = $derived(
+    industryOptions.map((o) => ({ ...o, label: o.labelKey ? t(o.labelKey) : o.label }))
+  );
 
   // Country options for drawer
   const countryOptions = COUNTRIES.map((c) => ({ value: c.code, label: c.name }));
@@ -108,11 +134,11 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
     { key: 'name', label: 'Name', type: 'text' },
     {
       key: 'industry',
-      label: 'Industry',
+      label: t('industry'),
       type: 'select',
       icon: Briefcase,
-      options: industryOptions,
-      placeholder: 'Select industry'
+      options: industryOptionsLocalized,
+      placeholder: t('selectIndustry')
     },
     {
       key: 'website',
@@ -178,22 +204,29 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   ]);
 
   /** @type {ColumnDef[]} */
-  const columns = [
+  const columns = $derived([
     {
       key: 'name',
       label: t('account'),
       type: 'text',
       width: 'w-60',
       canHide: false,
-      emptyText: 'Untitled'
+      emptyText: t('untitled')
     },
-    { key: 'industry', label: t('industry'), type: 'text', width: 'w-40', emptyText: '' },
+    {
+      key: 'industry',
+      label: t('industry'),
+      type: 'text',
+      width: 'w-40',
+      emptyText: '',
+      format: (v) => (v ? getOptionLabel(v, industryOptions, t) : '')
+    },
     {
       key: 'annualRevenue',
       label: t('revenue'),
       type: 'number',
       width: 'w-32',
-      format: (value, row) => formatCurrency(value, row?.currency || 'USD', true)
+      format: (value, row) => formatCurrency(value, row?.currency || 'USD', true, i18n.lang)
     },
     { key: 'phone', label: t('phone'), type: 'text', width: 'w-36', emptyText: '' },
     {
@@ -205,7 +238,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
     },
     // Hidden by default
     { key: 'website', label: t('website'), type: 'text', width: 'w-44', canHide: true, emptyText: '' }
-  ];
+  ]);
 
   // Default visible columns (excludes website; status removed - using tabs instead)
   const DEFAULT_VISIBLE_COLUMNS = ['name', 'industry', 'annualRevenue', 'phone', 'createdAt'];
@@ -334,38 +367,58 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   // Drawer form data - mutable copy of selectedAccount for editing
   let drawerFormData = $state({ ...emptyAccount });
 
-  // Reset form data when account changes or drawer opens
-  $effect(() => {
-    if (drawerOpen) {
-      if (drawerMode === 'create') {
-        drawerFormData = { ...emptyAccount, currency: $orgSettings.default_currency || 'USD' };
-      } else if (selectedAccount) {
-        drawerFormData = {
-          ...selectedAccount,
-          currency: selectedAccount.currency || $orgSettings.default_currency || 'USD'
-        };
-      }
+  // Initialize drawer form data from the selected account (or empty for create).
+  // Called EXPLICITLY when the drawer opens (see openAccount / openCreate / the
+  // URL-sync effect below) rather than via an $effect. This guarantees that
+  // user edits held in drawerFormData are never clobbered by a reactive re-run
+  // while the drawer is open — the previous $effect wiped edits on every change.
+  function initDrawerForm() {
+    if (drawerMode === 'create') {
+      drawerFormData = { ...emptyAccount, currency: $orgSettings.default_currency || 'USD' };
+    } else if (selectedAccount) {
+      drawerFormData = {
+        ...selectedAccount,
+        currency: selectedAccount.currency || $orgSettings.default_currency || 'USD'
+      };
     }
-  });
+  }
 
   // Check if account is closed (inactive)
   const isClosed = $derived(selectedAccount?.isActive === false);
 
-  // URL sync for drawer state
+  // URL sync for drawer state.
+  // AutoRefresh calls invalidateAll() periodically, which replaces
+  // data.accounts with a fresh array. Dependencies are collected dynamically:
+  // while uninitialized this effect reads `accounts` (so initialization also
+  // works when data arrives late); once initialized it returns early BEFORE
+  // touching `accounts`, so periodic refreshes cannot re-init drawerFormData
+  // and wipe in-progress edits.
+  let lastDrawerKey = null;
   $effect(() => {
     const viewId = $page.url.searchParams.get('view');
     const action = $page.url.searchParams.get('action');
+    const key = action === 'create' ? 'create' : viewId || null;
+
+    if (key === null) {
+      lastDrawerKey = null;
+      return;
+    }
+    if (key === lastDrawerKey) return; // same record: never re-init, keep edits
 
     if (action === 'create') {
+      lastDrawerKey = key;
       selectedAccount = null;
       drawerMode = 'create';
       drawerOpen = true;
-    } else if (viewId && accounts.length > 0) {
+      initDrawerForm();
+    } else if (accounts.length > 0) {
       const account = accounts.find((a) => a.id === viewId);
       if (account) {
+        lastDrawerKey = key;
         selectedAccount = account;
         drawerMode = 'view';
         drawerOpen = true;
+        initDrawerForm();
       }
     }
   });
@@ -399,6 +452,8 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
     selectedAccount = account;
     drawerMode = 'view';
     drawerOpen = true;
+    lastDrawerKey = account.id;
+    initDrawerForm();
     updateUrl(account.id, null);
   }
 
@@ -409,6 +464,8 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
     selectedAccount = null;
     drawerMode = 'create';
     drawerOpen = true;
+    lastDrawerKey = 'create';
+    initDrawerForm();
     updateUrl(null, 'create');
   }
 
@@ -440,8 +497,8 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 
   // Industry options for filter
   const industryFilterOptions = $derived([
-    { value: '', label: 'All Industries' },
-    ...industries.map((ind) => ({ value: ind, label: ind }))
+    { value: '', label: t('allIndustries') },
+    ...industries.map((ind) => ({ value: ind, label: getOptionLabel(ind, industryOptions, t) }))
   ]);
 
   // URL-based filter state from server
@@ -588,6 +645,12 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   async function handleDrawerUpdate() {
     if (drawerMode !== 'view' || !selectedAccount || isClosed) return;
 
+    // Force any focused field to commit its pending change event before we read
+    // drawerFormData (e.g. user typed then clicked Save without blurring first).
+    if (typeof document !== 'undefined' && document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
+
     isSubmitting = true;
     try {
       formState.accountId = selectedAccount.id;
@@ -613,7 +676,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
       updateForm.requestSubmit();
     } catch (error) {
       isSubmitting = false;
-      toast.error('Failed to submit form');
+      toast.error(t('failedToSubmitForm'));
     }
   }
 
@@ -622,6 +685,10 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
    */
   async function handleDrawerSave() {
     if (drawerMode !== 'create') return;
+
+    if (typeof document !== 'undefined' && document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
 
     isSubmitting = true;
     try {
@@ -647,7 +714,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
       createForm.requestSubmit();
     } catch (error) {
       isSubmitting = false;
-      toast.error('Failed to submit form');
+      toast.error(t('failedToSubmitForm'));
     }
   }
 
@@ -686,24 +753,26 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   }
 
   /**
-   * Create enhance handler for form actions
-   * @param {string} successMessage
+   * Create enhance handler for form actions.
+   * Accepts an i18n KEY (not a literal string) and resolves it with t() at
+   * toast time so the message always follows the current language.
+   * @param {string} successKey
    * @param {boolean} shouldCloseDrawer
    */
-  function createEnhanceHandler(successMessage, shouldCloseDrawer = false) {
+  function createEnhanceHandler(successKey, shouldCloseDrawer = false) {
     return () => {
       return async ({ result }) => {
         isSubmitting = false;
         if (result.type === 'success') {
-          toast.success(successMessage);
+          toast.success(t(successKey));
           if (shouldCloseDrawer) {
             await closeDrawer();
           }
           await invalidateAll();
         } else if (result.type === 'failure') {
-          toast.error(result.data?.error || 'Operation failed');
+          toast.error(result.data?.error || t('operationFailed'));
         } else if (result.type === 'error') {
-          toast.error('An unexpected error occurred');
+          toast.error(t('unexpectedError'));
         }
       };
     };
@@ -750,7 +819,10 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   <title>{t('accounts')} - openCRM</title>
 </svelte:head>
 
-<PageHeader title={t('accounts')} subtitle="{filteredAccounts.length} of {accounts.length} {t('accounts')}">
+<PageHeader
+  title={t('accounts')}
+  subtitle="{t('countOfTotal', { current: filteredAccounts.length, total: accounts.length })} {t('accounts')}"
+>
   {#snippet actions()}
     <div class="flex items-center gap-2">
       <!-- Status Filter Chips -->
@@ -954,13 +1026,13 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
                     <span
                       class="inline-flex items-center rounded-full bg-[var(--color-success-light)] px-2.5 py-1 text-xs font-medium text-[var(--color-success-default)] dark:bg-[var(--color-success-default)]/15"
                     >
-                      Active
+                      {t('active')}
                     </span>
                   {:else}
                     <span
                       class="inline-flex items-center rounded-full bg-[var(--surface-sunken)] px-2.5 py-1 text-xs font-medium text-[var(--text-secondary)]"
                     >
-                      Closed
+                      {t('closed')}
                     </span>
                   {/if}
                 </div>
@@ -970,7 +1042,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
               class="mt-2 flex flex-wrap items-center gap-3 text-sm text-[var(--text-secondary)]"
             >
               {#if account.industry}
-                <span>{account.industry}</span>
+                <span>{getOptionLabel(account.industry, industryOptions, t)}</span>
               {/if}
               <div class="flex items-center gap-1">
                 <Users class="size-3.5 text-[var(--text-tertiary)]" />
@@ -1189,60 +1261,60 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   method="POST"
   action="?/create"
   bind:this={createForm}
-  use:enhance={createEnhanceHandler('Account created successfully', true)}
+  use:enhance={createEnhanceHandler('accountCreated', true)}
   class="hidden"
 >
-  <input type="hidden" name="name" value={formState.name} />
-  <input type="hidden" name="email" value={formState.email} />
-  <input type="hidden" name="phone" value={formState.phone} />
-  <input type="hidden" name="website" value={formState.website} />
-  <input type="hidden" name="industry" value={formState.industry} />
-  <input type="hidden" name="description" value={formState.description} />
-  <input type="hidden" name="address_line" value={formState.address_line} />
-  <input type="hidden" name="city" value={formState.city} />
-  <input type="hidden" name="state" value={formState.state} />
-  <input type="hidden" name="postcode" value={formState.postcode} />
-  <input type="hidden" name="country" value={formState.country} />
-  <input type="hidden" name="annual_revenue" value={formState.annual_revenue} />
-  <input type="hidden" name="currency" value={formState.currency} />
-  <input type="hidden" name="number_of_employees" value={formState.number_of_employees} />
-  <input type="hidden" name="assigned_to" value={formState.assigned_to} />
-  <input type="hidden" name="contacts" value={formState.contacts} />
-  <input type="hidden" name="tags" value={formState.tags} />
+  <input type="hidden" name="name" bind:value={formState.name} />
+  <input type="hidden" name="email" bind:value={formState.email} />
+  <input type="hidden" name="phone" bind:value={formState.phone} />
+  <input type="hidden" name="website" bind:value={formState.website} />
+  <input type="hidden" name="industry" bind:value={formState.industry} />
+  <input type="hidden" name="description" bind:value={formState.description} />
+  <input type="hidden" name="address_line" bind:value={formState.address_line} />
+  <input type="hidden" name="city" bind:value={formState.city} />
+  <input type="hidden" name="state" bind:value={formState.state} />
+  <input type="hidden" name="postcode" bind:value={formState.postcode} />
+  <input type="hidden" name="country" bind:value={formState.country} />
+  <input type="hidden" name="annual_revenue" bind:value={formState.annual_revenue} />
+  <input type="hidden" name="currency" bind:value={formState.currency} />
+  <input type="hidden" name="number_of_employees" bind:value={formState.number_of_employees} />
+  <input type="hidden" name="assigned_to" bind:value={formState.assigned_to} />
+  <input type="hidden" name="contacts" bind:value={formState.contacts} />
+  <input type="hidden" name="tags" bind:value={formState.tags} />
 </form>
 
 <form
   method="POST"
   action="?/update"
   bind:this={updateForm}
-  use:enhance={createEnhanceHandler('Account updated successfully', true)}
+  use:enhance={createEnhanceHandler('accountUpdated', true)}
   class="hidden"
 >
-  <input type="hidden" name="accountId" value={formState.accountId} />
-  <input type="hidden" name="name" value={formState.name} />
-  <input type="hidden" name="email" value={formState.email} />
-  <input type="hidden" name="phone" value={formState.phone} />
-  <input type="hidden" name="website" value={formState.website} />
-  <input type="hidden" name="industry" value={formState.industry} />
-  <input type="hidden" name="description" value={formState.description} />
-  <input type="hidden" name="address_line" value={formState.address_line} />
-  <input type="hidden" name="city" value={formState.city} />
-  <input type="hidden" name="state" value={formState.state} />
-  <input type="hidden" name="postcode" value={formState.postcode} />
-  <input type="hidden" name="country" value={formState.country} />
-  <input type="hidden" name="annual_revenue" value={formState.annual_revenue} />
-  <input type="hidden" name="currency" value={formState.currency} />
-  <input type="hidden" name="number_of_employees" value={formState.number_of_employees} />
-  <input type="hidden" name="assigned_to" value={formState.assigned_to} />
-  <input type="hidden" name="contacts" value={formState.contacts} />
-  <input type="hidden" name="tags" value={formState.tags} />
+  <input type="hidden" name="accountId" bind:value={formState.accountId} />
+  <input type="hidden" name="name" bind:value={formState.name} />
+  <input type="hidden" name="email" bind:value={formState.email} />
+  <input type="hidden" name="phone" bind:value={formState.phone} />
+  <input type="hidden" name="website" bind:value={formState.website} />
+  <input type="hidden" name="industry" bind:value={formState.industry} />
+  <input type="hidden" name="description" bind:value={formState.description} />
+  <input type="hidden" name="address_line" bind:value={formState.address_line} />
+  <input type="hidden" name="city" bind:value={formState.city} />
+  <input type="hidden" name="state" bind:value={formState.state} />
+  <input type="hidden" name="postcode" bind:value={formState.postcode} />
+  <input type="hidden" name="country" bind:value={formState.country} />
+  <input type="hidden" name="annual_revenue" bind:value={formState.annual_revenue} />
+  <input type="hidden" name="currency" bind:value={formState.currency} />
+  <input type="hidden" name="number_of_employees" bind:value={formState.number_of_employees} />
+  <input type="hidden" name="assigned_to" bind:value={formState.assigned_to} />
+  <input type="hidden" name="contacts" bind:value={formState.contacts} />
+  <input type="hidden" name="tags" bind:value={formState.tags} />
 </form>
 
 <form
   method="POST"
   action="?/delete"
   bind:this={deleteForm}
-  use:enhance={createEnhanceHandler('Account deleted successfully', true)}
+  use:enhance={createEnhanceHandler('accountDeleted', true)}
   class="hidden"
 >
   <input type="hidden" name="accountId" value={formState.accountId} />
@@ -1252,7 +1324,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   method="POST"
   action="?/deactivate"
   bind:this={deactivateForm}
-  use:enhance={createEnhanceHandler('Account closed successfully', true)}
+  use:enhance={createEnhanceHandler('accountClosed', true)}
   class="hidden"
 >
   <input type="hidden" name="accountId" value={formState.accountId} />
@@ -1262,11 +1334,11 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   method="POST"
   action="?/activate"
   bind:this={activateForm}
-  use:enhance={createEnhanceHandler('Account reopened successfully')}
+  use:enhance={createEnhanceHandler('accountReopened')}
   class="hidden"
 >
   <input type="hidden" name="accountId" value={formState.accountId} />
 </form>
 
-<!-- 自动刷新组件 -->
-<AutoRefresh interval={3000} enabled={true} />
+<!-- 自动刷新组件：抽屉打开（编辑中）时暂停，避免 invalidateAll 打断编辑 -->
+<AutoRefresh interval={3000} enabled={!drawerOpen} />

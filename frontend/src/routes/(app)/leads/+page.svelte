@@ -59,8 +59,11 @@
   import { orgSettings } from '$lib/stores/org.js';
   import { ViewToggle } from '$lib/components/ui/view-toggle';
   import { LeadKanban } from '$lib/components/ui/lead-kanban';
-  import { t } from '$lib/utils/i18n.svelte.js';
+  import { useI18n } from '$lib/utils/i18n.svelte.js';
   import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
+
+  const i18n = useI18n();
+  const tr = i18n.t;
 
   // Column visibility configuration
   const STORAGE_KEY = 'leads-column-config';
@@ -71,18 +74,18 @@
    */
 
   /** @type {ColumnDef[]} */
-  const columns = [
+  const columns = $derived([
     {
       key: 'title',
-      label: t('title'),
+      label: tr('title'),
       type: 'text',
       width: 'w-[200px]',
       canHide: false,
-      emptyText: 'Untitled'
+      emptyText: tr('untitled')
     },
     {
       key: 'name',
-      label: t('name'),
+      label: tr('name'),
       type: 'text',
       width: 'w-[180px]',
       editable: false,
@@ -92,7 +95,7 @@
     },
     {
       key: 'company',
-      label: t('company'),
+      label: tr('company'),
       type: 'relation',
       width: 'w-40',
       relationIcon: 'building',
@@ -101,28 +104,28 @@
     },
     {
       key: 'email',
-      label: t('email'),
+      label: tr('email'),
       type: 'email',
       width: 'w-52',
       emptyText: ''
     },
     {
       key: 'status',
-      label: t('status'),
+      label: tr('status'),
       type: 'select',
       width: 'w-36',
       options: leadStatusOptions
     },
     {
       key: 'rating',
-      label: t('rating'),
+      label: tr('rating'),
       type: 'select',
       width: 'w-28',
       options: leadRatingOptions
     },
     {
       key: 'createdAt',
-      label: t('created'),
+      label: tr('created'),
       type: 'date',
       width: 'w-36',
       editable: false
@@ -130,7 +133,7 @@
     // Hidden by default
     {
       key: 'phone',
-      label: t('phone'),
+      label: tr('phone'),
       type: 'text',
       width: 'w-36',
       canHide: true,
@@ -138,7 +141,7 @@
     },
     {
       key: 'jobTitle',
-      label: t('job_title'),
+      label: tr('job_title'),
       type: 'text',
       width: 'w-36',
       canHide: true,
@@ -146,14 +149,14 @@
     },
     {
       key: 'leadSource',
-      label: t('source'),
+      label: tr('source'),
       type: 'select',
       width: 'w-28',
       canHide: true
     },
     {
       key: 'industry',
-      label: t('industry'),
+      label: tr('industry'),
       type: 'select',
       width: 'w-32',
       canHide: true,
@@ -164,7 +167,7 @@
     },
     {
       key: 'owner',
-      label: t('assigned'),
+      label: tr('assigned_to'),
       type: 'relation',
       width: 'w-36',
       canHide: true,
@@ -172,7 +175,7 @@
       getValue: (row) => row.owner?.name || '',
       emptyText: ''
     }
-  ];
+  ]);
 
   // Default visible columns (7 columns: Title, Name, Company, Email, Status, Rating, Created)
   const DEFAULT_VISIBLE_COLUMNS = [
@@ -187,43 +190,52 @@
   let visibleColumns = $state([...DEFAULT_VISIBLE_COLUMNS]);
 
   // Source options for leads - using design system tokens
-  const sourceOptions = [
+  const sourceOptions = $derived([
     {
       value: 'call',
-      label: 'Call',
+      label: tr('sourceCall'),
       color: 'bg-[var(--activity-call)]/10 text-[var(--activity-call)] dark:bg-[var(--activity-call)]/15'
     },
     {
       value: 'email',
-      label: 'Email',
+      label: tr('sourceEmail'),
       color: 'bg-[var(--activity-email)]/10 text-[var(--activity-email)] dark:bg-[var(--activity-email)]/15'
     },
     {
       value: 'existing customer',
-      label: 'Existing Customer',
+      label: tr('sourceExistingCustomer'),
       color: 'bg-[var(--color-success-light)] text-[var(--color-success-default)] dark:bg-[var(--color-success-default)]/15'
     },
     {
       value: 'partner',
-      label: 'Partner',
+      label: tr('sourcePartner'),
       color: 'bg-[var(--color-primary-light)] text-[var(--color-primary-default)] dark:bg-[var(--color-primary-default)]/15'
     },
     {
       value: 'public relations',
-      label: 'Public Relations',
+      label: tr('sourcePublicRelations'),
       color: 'bg-[var(--activity-meeting)]/10 text-[var(--activity-meeting)] dark:bg-[var(--activity-meeting)]/15'
     },
     {
       value: 'campaign',
-      label: 'Campaign',
+      label: tr('sourceCampaign'),
       color: 'bg-[var(--stage-qualified)]/10 text-[var(--stage-qualified)] dark:bg-[var(--stage-qualified)]/15'
     },
     {
       value: 'other',
-      label: 'Other',
+      label: tr('sourceOther'),
       color: 'bg-[var(--surface-sunken)] text-[var(--text-secondary)] dark:bg-[var(--surface-sunken)]'
     }
-  ];
+  ]);
+
+  // CrmDrawer renders `option.label` directly, so give it translated labels.
+  // CrmTable uses `labelKey` instead and translates on its own.
+  const drawerStatusOptions = $derived(
+    leadStatusOptions.map((o) => ({ ...o, label: o.labelKey ? tr(o.labelKey) : o.label }))
+  );
+  const drawerRatingOptions = $derived(
+    leadRatingOptions.map((o) => ({ ...o, label: o.labelKey ? tr(o.labelKey) : o.label }))
+  );
 
   // Salutation options - using design system tokens
   const salutationOptions = [
@@ -267,94 +279,94 @@
     // Contact Information
     {
       key: 'salutation',
-      label: 'Salutation',
+      label: tr('salutation'),
       type: 'select',
       icon: User,
       options: salutationOptions
     },
     {
       key: 'firstName',
-      label: 'First Name',
+      label: tr('first_name'),
       type: 'text',
       icon: User,
-      placeholder: 'First name',
+      placeholder: tr('addField', { field: tr('first_name') }),
       essential: true
     },
     {
       key: 'lastName',
-      label: 'Last Name',
+      label: tr('last_name'),
       type: 'text',
       icon: User,
-      placeholder: 'Last name',
+      placeholder: tr('addField', { field: tr('last_name') }),
       essential: true
     },
     {
       key: 'email',
-      label: 'Email',
+      label: tr('email'),
       type: 'email',
       icon: Mail,
-      placeholder: 'Add email',
+      placeholder: tr('addField', { field: tr('email') }),
       essential: true
     },
     {
       key: 'phone',
-      label: 'Phone',
+      label: tr('phone'),
       type: 'text',
       icon: Phone,
-      placeholder: 'Add phone',
+      placeholder: tr('addField', { field: tr('phone') }),
       essential: true
     },
     {
       key: 'jobTitle',
-      label: 'Job Title',
+      label: tr('job_title'),
       type: 'text',
       icon: Briefcase,
-      placeholder: 'Add job title'
+      placeholder: tr('addField', { field: tr('job_title') })
     },
     {
       key: 'company',
-      label: 'Company',
+      label: tr('company'),
       type: 'text',
       icon: Building2,
       getValue: (/** @type {any} */ row) =>
         typeof row.company === 'object' ? row.company?.name : row.company,
-      placeholder: 'Add company',
+      placeholder: tr('addField', { field: tr('company') }),
       essential: true
     },
     {
       key: 'website',
-      label: 'Website',
+      label: tr('website'),
       type: 'text',
       icon: Globe,
-      placeholder: 'Add website'
+      placeholder: tr('addField', { field: tr('website') })
     },
     {
       key: 'linkedinUrl',
-      label: 'LinkedIn',
+      label: tr('linkedIn'),
       type: 'text',
       icon: Linkedin,
-      placeholder: 'Add LinkedIn URL'
+      placeholder: tr('addField', { field: tr('linkedIn') })
     },
     // Lead Details
     {
       key: 'status',
-      label: 'Status',
+      label: tr('status'),
       type: 'select',
       icon: Briefcase,
-      options: leadStatusOptions,
+      options: drawerStatusOptions,
       essential: true
     },
     {
       key: 'rating',
-      label: 'Rating',
+      label: tr('rating'),
       type: 'select',
       icon: Star,
-      options: leadRatingOptions
+      options: drawerRatingOptions
     },
     // Metadata
     {
       key: 'createdAt',
-      label: 'Created',
+      label: tr('created'),
       type: 'date',
       icon: Calendar,
       editable: false,
@@ -362,14 +374,14 @@
     },
     {
       key: 'leadSource',
-      label: 'Source',
+      label: tr('source'),
       type: 'select',
       icon: Target,
       options: sourceOptions
     },
     {
       key: 'industry',
-      label: 'Industry',
+      label: tr('industry'),
       type: 'select',
       icon: Building2,
       options: INDUSTRIES.map((i) => ({
@@ -380,7 +392,7 @@
     // Deal Information
     {
       key: 'opportunityAmount',
-      label: 'Deal Value',
+      label: tr('deal_value'),
       type: 'number',
       icon: DollarSign,
       placeholder: '0',
@@ -388,76 +400,76 @@
     },
     {
       key: 'currency',
-      label: 'Currency',
+      label: tr('currency'),
       type: 'select',
       icon: Banknote,
       options: currencyOptions,
-      placeholder: 'Select currency',
+      placeholder: tr('selectCurrency'),
       essential: true
     },
     {
       key: 'probability',
-      label: 'Probability',
+      label: tr('probability'),
       type: 'number',
       icon: Percent,
       placeholder: '0-100'
     },
     {
       key: 'closeDate',
-      label: 'Close Date',
+      label: tr('closeDate'),
       type: 'date',
       icon: Calendar,
-      placeholder: 'Set date',
+      placeholder: tr('pickADate'),
       hideOnCreate: true
     },
     // Activity
     {
       key: 'lastContacted',
-      label: 'Last Contact',
+      label: tr('lastContact'),
       type: 'date',
       icon: Calendar,
-      placeholder: 'Set date',
+      placeholder: tr('pickADate'),
       hideOnCreate: true
     },
     {
       key: 'nextFollowUp',
-      label: 'Follow-up',
+      label: tr('followUp'),
       type: 'date',
       icon: Calendar,
-      placeholder: 'Set date'
+      placeholder: tr('pickADate')
     },
     // Address
     {
       key: 'addressLine',
-      label: 'Address',
+      label: tr('address'),
       type: 'text',
       icon: MapPin,
-      placeholder: 'Street address'
+      placeholder: tr('street_address')
     },
     {
       key: 'city',
-      label: 'City',
+      label: tr('city'),
       type: 'text',
       icon: MapPin,
-      placeholder: 'City'
+      placeholder: tr('city')
     },
     {
       key: 'state',
-      label: 'State',
+      label: tr('state'),
       type: 'text',
       icon: MapPin,
-      placeholder: 'State/Province'
+      placeholder: tr('state')
     },
     {
       key: 'postcode',
-      label: 'Postal Code',
+      label: tr('postal_code'),
       type: 'text',
       icon: MapPin,
-      placeholder: 'Postal code'
+      placeholder: tr('postal_code')
     },
     {
       key: 'country',
-      label: 'Country',
+      label: tr('country'),
       type: 'select',
       icon: Globe,
       options: COUNTRIES.map((c) => ({
@@ -469,36 +481,36 @@
     // Notes
     {
       key: 'description',
-      label: 'Notes',
+      label: tr('notes'),
       type: 'textarea',
       icon: FileText,
-      placeholder: 'Add notes...'
+      placeholder: tr('addField', { field: tr('notes') })
     },
     // Assignment (multi-select fields - options populated dynamically)
     {
       key: 'assignedTo',
-      label: 'Assigned To',
+      label: tr('assigned_to'),
       type: 'multiselect',
       icon: Users,
       options: []
     },
     {
       key: 'teams',
-      label: 'Teams',
+      label: tr('teams'),
       type: 'multiselect',
       icon: Users,
       options: []
     },
     {
       key: 'contacts',
-      label: 'Contacts',
+      label: tr('contacts'),
       type: 'multiselect',
       icon: UserPlus,
       options: []
     },
     {
       key: 'tags',
-      label: 'Tags',
+      label: tr('tags'),
       type: 'multiselect',
       icon: Tag,
       options: []
@@ -812,18 +824,18 @@
         } else if (result.type === 'failure') {
           console.error('Server action failed:', result.data);
           const errorMsg = /** @type {{ error?: string }} */ (result.data)?.error;
-          throw new Error(errorMsg || 'Failed to fetch lead');
+          throw new Error(errorMsg || tr('failedToFetchLead'));
         } else if (result.type === 'error') {
           console.error('Server action error:', result.error);
-          throw new Error(result.error?.message || 'Failed to fetch lead');
+          throw new Error(result.error?.message || tr('failedToFetchLead'));
         } else {
           // Handle unexpected response format
           console.warn('Unexpected response format:', result);
-          throw new Error('Failed to fetch lead');
+          throw new Error(tr('failedToFetchLead'));
         }
       } catch (err) {
         console.error('Failed to fetch lead details:', err);
-        toast.error('Failed to load lead details');
+        toast.error(tr('failedToLoadLeadDetails'));
         // Fall back to what we have (minimal kanban data transformed)
         drawerData = {
           id: lead.id,
@@ -982,7 +994,7 @@
       updateForm.requestSubmit();
     } catch (error) {
       isSaving = false;
-      toast.error('Failed to submit form');
+      toast.error(tr('failedToSubmitForm'));
     }
   }
 
@@ -1031,7 +1043,7 @@
    */
   async function handleCreateLead() {
     if (!createFormData.title?.trim()) {
-      toast.error('Lead title is required');
+      toast.error(tr('leadTitleRequired'));
       return;
     }
 
@@ -1073,7 +1085,7 @@
       createForm.requestSubmit();
     } catch (error) {
       isSaving = false;
-      toast.error('Failed to submit form');
+      toast.error(tr('failedToSubmitForm'));
     }
   }
 
@@ -1321,7 +1333,7 @@
    */
   async function handleDelete() {
     if (!drawerData) return;
-    if (!confirm(`Are you sure you want to delete ${getFullName(drawerData)}?`)) return;
+    if (!confirm(tr('confirmDeleteLead'))) return;
 
     formState.leadId = drawerData.id;
     await tick();
@@ -1344,7 +1356,7 @@
    * @param {any} lead
    */
   async function handleRowDelete(lead) {
-    if (!confirm(`Are you sure you want to delete ${getFullName(lead)}?`)) return;
+    if (!confirm(tr('confirmDeleteLead'))) return;
 
     formState.leadId = lead.id;
     await tick();
@@ -1413,28 +1425,28 @@
 
   /**
    * Create enhance handler for form actions
-   * @param {string} successMessage
+   * @param {string} successKey - i18n key, resolved with the current language at toast time
    * @param {boolean} shouldCloseDrawer
    */
-  function createEnhanceHandler(successMessage, shouldCloseDrawer = true) {
+  function createEnhanceHandler(successKey, shouldCloseDrawer = true) {
     return () => {
       return async ({ result }) => {
         try {
           isSaving = false;
           if (result.type === 'success') {
-            toast.success(successMessage);
+            toast.success(tr(successKey));
             if (shouldCloseDrawer) {
               await closeDrawer();
             }
             await invalidateAll();
           } else if (result.type === 'failure') {
-            toast.error(result.data?.error || 'Operation failed');
+            toast.error(result.data?.error || tr('operationFailed'));
           } else if (result.type === 'error') {
-            toast.error('An unexpected error occurred');
+            toast.error(tr('unexpectedError'));
           }
         } catch (error) {
           isSaving = false;
-          toast.error('An error occurred while processing the response');
+          toast.error(tr('errorProcessingResponse'));
         }
       };
     };
@@ -1442,14 +1454,12 @@
 </script>
 
 <svelte:head>
-  <title>{t('leads')} - openCRM</title>
+  <title>{tr('leads')} - openCRM</title>
 </svelte:head>
 
 <PageHeader
-  title={t('leads')}
-  subtitle="{viewMode === 'kanban'
-    ? totalLeadCount
-    : filteredLeads.length} of {totalLeadCount} {t('leads')}"
+  title={tr('leads')}
+  subtitle="{tr('countOfTotal', { current: viewMode === 'kanban' ? totalLeadCount : filteredLeads.length, total: totalLeadCount })} {tr('leads')}"
 >
   {#snippet actions()}
     <div class="flex items-center gap-2">
@@ -1468,7 +1478,7 @@
             ? 'bg-[var(--text-primary)] text-[var(--surface-default)]'
             : 'bg-[var(--surface-sunken)] text-[var(--text-secondary)] hover:bg-[var(--surface-raised)]'}"
         >
-          {t('all')}
+          {tr('all')}
           <span
             class="rounded-full px-1.5 py-0.5 text-xs {statusChipFilter === 'ALL'
               ? 'bg-[var(--text-secondary)] text-[var(--surface-default)]'
@@ -1485,7 +1495,7 @@
             ? 'bg-[var(--color-primary-default)] text-white'
             : 'bg-[var(--surface-sunken)] text-[var(--text-secondary)] hover:bg-[var(--surface-raised)]'}"
         >
-          {t('open')}
+          {tr('open')}
           <span
             class="rounded-full px-1.5 py-0.5 text-xs {statusChipFilter === 'open'
               ? 'bg-[var(--color-primary-hover)] text-white/90'
@@ -1502,7 +1512,7 @@
             ? 'bg-[var(--stage-lost)] text-white'
             : 'bg-[var(--surface-sunken)] text-[var(--text-secondary)] hover:bg-[var(--surface-raised)]'}"
         >
-          {t('lost')}
+          {tr('lost')}
           <span
             class="rounded-full px-1.5 py-0.5 text-xs {statusChipFilter === 'lost'
               ? 'bg-[var(--stage-lost)]/80 text-white/90'
@@ -1523,7 +1533,7 @@
         onclick={() => (filtersExpanded = !filtersExpanded)}
       >
         <Filter class="h-4 w-4" />
-        {t('filters')}
+        {tr('filters')}
         {#if activeFiltersCount > 0}
           <span
             class="rounded-full bg-[var(--color-primary-light)] px-1.5 py-0.5 text-xs font-medium text-[var(--color-primary-default)] dark:bg-[var(--color-primary-default)]/15"
@@ -1540,7 +1550,7 @@
             {#snippet child({ props })}
               <Button {...props} variant="outline" size="sm" class="gap-2">
                 <Eye class="h-4 w-4" />
-                {t('columns')}
+                {tr('columns')}
                 {#if visibleColumns.length < columns.length}
                   <span
                     class="rounded-full bg-[var(--color-primary-light)] px-1.5 py-0.5 text-xs font-medium text-[var(--color-primary-default)] dark:bg-[var(--color-primary-default)]/15"
@@ -1552,7 +1562,7 @@
             {/snippet}
           </DropdownMenu.Trigger>
           <DropdownMenu.Content align="end" class="w-48">
-            <DropdownMenu.Label>{t('toggleColumns')}</DropdownMenu.Label>
+            <DropdownMenu.Label>{tr('toggleColumns')}</DropdownMenu.Label>
             <DropdownMenu.Separator />
             {#each columns as column (column.key)}
               <DropdownMenu.CheckboxItem
@@ -1570,7 +1580,7 @@
 
       <Button onclick={openCreate}>
         <Plus class="mr-2 h-4 w-4" />
-        {t('newLead')}
+        {tr('newLead')}
       </Button>
     </div>
   {/snippet}
@@ -1587,27 +1597,27 @@
   >
     <SearchInput
       value={filters.search}
-      placeholder={t('searchLeads')}
+      placeholder={tr('searchLeads')}
       showLabel={false}
       onchange={(value) => updateFilters({ ...filters, search: value })}
       class="w-64"
     />
     <SelectFilter
-      label={t('source')}
+      label={tr('source')}
       options={filterOptions.sources}
       value={filters.source || 'ALL'}
       onchange={(value) => updateFilters({ ...filters, source: value })}
       class="w-40"
     />
     <SelectFilter
-      label={t('rating')}
+      label={tr('rating')}
       options={filterOptions.ratings}
       value={filters.rating || 'ALL'}
       onchange={(value) => updateFilters({ ...filters, rating: value })}
       class="w-32"
     />
     <DateRangeFilter
-      label={t('created')}
+      label={tr('created')}
       startDate={filters.created_at_gte}
       endDate={filters.created_at_lte}
       onchange={(start, end) =>
@@ -1636,8 +1646,8 @@
         <div class="mb-4 flex size-16 items-center justify-center rounded-[var(--radius-xl)] bg-[var(--surface-sunken)]">
           <User class="size-8 text-[var(--text-tertiary)]" />
         </div>
-        <h3 class="text-lg font-medium text-[var(--text-primary)]">{t('noLeadsFound')}</h3>
-        <p class="mt-1 text-sm text-[var(--text-secondary)]">{t('createNewLead')}</p>
+        <h3 class="text-lg font-medium text-[var(--text-primary)]">{tr('noLeadsFound')}</h3>
+        <p class="mt-1 text-sm text-[var(--text-secondary)]">{tr('createNewLead')}</p>
       </div>
     {:else}
       <!-- Desktop Table using CrmTable -->
@@ -1654,7 +1664,7 @@
               <div class="mb-4 flex size-12 items-center justify-center rounded-[var(--radius-lg)] bg-[var(--surface-sunken)]">
                 <User class="size-6 text-[var(--text-tertiary)]" />
               </div>
-              <h3 class="text-lg font-medium text-[var(--text-primary)]">{t('noLeadsFound')}</h3>
+              <h3 class="text-lg font-medium text-[var(--text-primary)]">{tr('noLeadsFound')}</h3>
             </div>
           {/snippet}
         </CrmTable>
@@ -1686,7 +1696,7 @@
                     leadStatusOptions
                   )}"
                 >
-                  {getOptionLabel(lead.status, leadStatusOptions)}
+                  {getOptionLabel(lead.status, leadStatusOptions, tr)}
                 </span>
               </div>
               <div
@@ -1699,10 +1709,10 @@
                       leadRatingOptions
                     )}"
                   >
-                    {getOptionLabel(lead.rating, leadRatingOptions)}
+                    {getOptionLabel(lead.rating, leadRatingOptions, tr)}
                   </span>
                 {/if}
-                <span>{formatRelativeDate(lead.createdAt)}</span>
+                <span>{formatRelativeDate(lead.createdAt, i18n.lang)}</span>
               </div>
             </div>
           </button>
@@ -1715,7 +1725,7 @@
           class="flex w-full items-center gap-2 px-4 py-3 text-sm text-[var(--text-secondary)] transition-colors hover:bg-[var(--surface-raised)] hover:text-[var(--text-primary)]"
         >
           <Plus class="h-4 w-4" />
-          New
+          {tr('new')}
         </button>
       </div>
     {/if}
@@ -1738,8 +1748,8 @@
   data={currentDrawerData}
   columns={drawerColumnsWithOptions}
   titleKey="title"
-  titlePlaceholder={drawerMode === 'create' ? 'Lead Title' : 'Untitled Lead'}
-  headerLabel={drawerMode === 'create' ? 'New Lead' : 'Lead'}
+  titlePlaceholder={drawerMode === 'create' ? tr('leadTitle') : tr('untitledLead')}
+  headerLabel={drawerMode === 'create' ? tr('newLead') : tr('leadLabel')}
   mode={drawerMode}
   loading={drawerLoading}
   onFieldChange={handleDrawerFieldChange}
@@ -1760,29 +1770,29 @@
 
   {#snippet footerActions()}
     {#if drawerMode === 'create'}
-      <Button variant="outline" onclick={closeDrawer}>Cancel</Button>
+      <Button variant="outline" onclick={closeDrawer}>{tr('cancel')}</Button>
       <Button onclick={handleCreateLead} disabled={isSaving}>
         {#if isSaving}
           <Loader2 class="mr-2 h-4 w-4 animate-spin" />
-          Creating...
+          {tr('creating')}
         {:else}
-          Create Lead
+          {tr('createLead')}
         {/if}
       </Button>
     {:else}
-      <Button variant="outline" onclick={closeDrawer} disabled={isSaving}>Cancel</Button>
+      <Button variant="outline" onclick={closeDrawer} disabled={isSaving}>{tr('cancel')}</Button>
       {#if drawerData?.status !== 'converted'}
         <Button variant="outline" onclick={handleDrawerConvert} disabled={isSaving}>
           <ArrowRightCircle class="mr-2 h-4 w-4" />
-          Convert
+          {tr('convert')}
         </Button>
       {/if}
       <Button onclick={handleDrawerUpdate} disabled={isSaving}>
         {#if isSaving}
           <Loader2 class="mr-2 h-4 w-4 animate-spin" />
-          Saving...
+          {tr('saving')}
         {:else}
-          Save
+          {tr('save')}
         {/if}
       </Button>
     {/if}
@@ -1794,7 +1804,7 @@
   method="POST"
   action="/leads?/create"
   bind:this={createForm}
-  use:enhance={createEnhanceHandler('Lead created successfully')}
+  use:enhance={createEnhanceHandler('leadCreated')}
   class="hidden"
 >
   <!-- Core Information -->
@@ -1839,7 +1849,7 @@
   method="POST"
   action="/leads?/update"
   bind:this={updateForm}
-  use:enhance={createEnhanceHandler('Lead updated successfully')}
+  use:enhance={createEnhanceHandler('leadUpdated')}
   class="hidden"
 >
   <input type="hidden" name="leadId" value={formState.leadId} />
@@ -1885,7 +1895,7 @@
   method="POST"
   action="/leads?/delete"
   bind:this={deleteForm}
-  use:enhance={createEnhanceHandler('Lead deleted successfully')}
+  use:enhance={createEnhanceHandler('leadDeleted')}
   class="hidden"
 >
   <input type="hidden" name="leadId" value={formState.leadId} />
@@ -1895,7 +1905,7 @@
   method="POST"
   action="/leads?/convert"
   bind:this={convertForm}
-  use:enhance={createEnhanceHandler('Lead converted successfully')}
+  use:enhance={createEnhanceHandler('leadConverted')}
   class="hidden"
 >
   <input type="hidden" name="leadId" value={formState.leadId} />
@@ -1905,7 +1915,7 @@
     method="POST"
     action="/leads?/updateStatus"
     bind:this={updateStatusForm}
-    use:enhance={createEnhanceHandler('Lead status updated successfully', false)}
+    use:enhance={createEnhanceHandler('leadStatusUpdated', false)}
     class="hidden"
   >
     <input type="hidden" name="leadId" bind:value={kanbanFormState.leadId} />
@@ -1913,4 +1923,4 @@
   </form>
 
   <!-- 自动刷新组件 -->
-  <AutoRefresh interval={3000} enabled={true} />
+  <AutoRefresh interval={3000} enabled={!drawerOpen} />

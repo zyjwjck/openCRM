@@ -6,14 +6,15 @@
 /**
  * @typedef {Object} SelectOption
  * @property {string} value - Option value
- * @property {string} label - Display label
+ * @property {string} label - Display label (fallback when not localized)
+ * @property {string} [labelKey] - i18n key used to localize the label
  * @property {string} color - Tailwind CSS classes for styling
  */
 
 /**
  * Get style classes for a select option
  * @param {string | null | undefined} value - Current value
- * @param {SelectOption[]} options - Available options
+ * @param {LabeledOption[]} options - Available options
  * @returns {string} Tailwind CSS classes
  */
 export function getOptionStyle(value, options) {
@@ -22,20 +23,31 @@ export function getOptionStyle(value, options) {
 }
 
 /**
+ * @typedef {Object} LabeledOption
+ * @property {string} value
+ * @property {string} [label]
+ * @property {string} [labelKey]
+ * @property {string} [color]
+ */
+
+/**
  * Get display label for a select option
  * @param {string | null | undefined} value - Current value
- * @param {SelectOption[]} options - Available options
+ * @param {LabeledOption[]} options - Available options
+ * @param {(key: string) => string} [translate] - i18n function for labelKey
  * @returns {string} Display label
  */
-export function getOptionLabel(value, options) {
+export function getOptionLabel(value, options, translate) {
   const option = options.find((o) => o.value === value);
-  return option?.label ?? value ?? '';
+  if (!option) return value ?? '';
+  if (option.labelKey && translate) return translate(option.labelKey);
+  return option.label ?? value ?? '';
 }
 
 /**
  * Get the background color class (first part of color string)
  * @param {string | null | undefined} value - Current value
- * @param {SelectOption[]} options - Available options
+ * @param {LabeledOption[]} options - Available options
  * @returns {string} Background color class
  */
 export function getOptionBgColor(value, options) {
@@ -125,26 +137,31 @@ export const leadStatusOptions = [
   {
     value: 'ASSIGNED',
     label: 'Assigned',
+    labelKey: 'statusAssigned',
     color: 'bg-[var(--stage-new-bg)] text-[var(--stage-new)] dark:bg-[var(--stage-new)]/15'
   },
   {
     value: 'IN_PROCESS',
     label: 'In Process',
+    labelKey: 'statusInProcess',
     color: 'bg-[var(--stage-contacted-bg)] text-[var(--stage-contacted)] dark:bg-[var(--stage-contacted)]/15'
   },
   {
     value: 'CONVERTED',
     label: 'Converted',
+    labelKey: 'statusConverted',
     color: 'bg-[var(--stage-won-bg)] text-[var(--stage-won)] dark:bg-[var(--stage-won)]/15'
   },
   {
     value: 'RECYCLED',
     label: 'Recycled',
+    labelKey: 'statusRecycled',
     color: 'bg-[var(--color-primary-light)] text-[var(--color-primary-default)] dark:bg-[var(--color-primary-default)]/15'
   },
   {
     value: 'CLOSED',
     label: 'Closed',
+    labelKey: 'statusClosed',
     color: 'bg-[var(--surface-sunken)] text-[var(--text-secondary)]'
   }
 ];
@@ -154,45 +171,54 @@ export const leadRatingOptions = [
   {
     value: 'HOT',
     label: 'Hot',
+    labelKey: 'ratingHot',
     color: 'bg-[var(--lead-hot-bg)] text-[var(--lead-hot)] dark:bg-[var(--lead-hot)]/15'
   },
   {
     value: 'WARM',
     label: 'Warm',
+    labelKey: 'ratingWarm',
     color: 'bg-[var(--lead-warm-bg)] text-[var(--lead-warm)] dark:bg-[var(--lead-warm)]/15'
   },
   {
     value: 'COLD',
     label: 'Cold',
+    labelKey: 'ratingCold',
     color: 'bg-[var(--lead-cold-bg)] text-[var(--lead-cold)] dark:bg-[var(--lead-cold)]/15'
   }
 ];
 
-// Priority options - using design system tokens
+// Priority options - `labelKey` lets tables/filters render the current language,
+// `label` remains the language-neutral English fallback.
 export const priorityOptions = [
   {
     value: 'URGENT',
     label: 'Urgent',
+    labelKey: 'priorityUrgent',
     color: 'bg-[var(--priority-urgent-bg)] text-[var(--priority-urgent)] dark:bg-[var(--priority-urgent)]/15'
   },
   {
     value: 'HIGH',
     label: 'High',
+    labelKey: 'priorityHigh',
     color: 'bg-[var(--priority-high-bg)] text-[var(--priority-high)] dark:bg-[var(--priority-high)]/15'
   },
   {
     value: 'NORMAL',
     label: 'Normal',
+    labelKey: 'priorityNormal',
     color: 'bg-[var(--priority-medium-bg)] text-[var(--priority-medium)] dark:bg-[var(--priority-medium)]/15'
   },
   {
     value: 'MEDIUM',
     label: 'Medium',
+    labelKey: 'priorityMedium',
     color: 'bg-[var(--priority-medium-bg)] text-[var(--priority-medium)] dark:bg-[var(--priority-medium)]/15'
   },
   {
     value: 'LOW',
     label: 'Low',
+    labelKey: 'priorityLow',
     color: 'bg-[var(--priority-low-bg)] text-[var(--priority-low)] dark:bg-[var(--priority-low)]/15'
   }
 ];
@@ -202,26 +228,31 @@ export const taskStatusOptions = [
   {
     value: 'NOT STARTED',
     label: 'Not Started',
+    labelKey: 'statusNotStarted',
     color: 'bg-[var(--task-upcoming-bg)] text-[var(--task-upcoming)] dark:bg-[var(--task-upcoming)]/15'
   },
   {
     value: 'IN PROGRESS',
     label: 'In Progress',
+    labelKey: 'statusInProgress',
     color: 'bg-[var(--task-due-today-bg)] text-[var(--task-due-today)] dark:bg-[var(--task-due-today)]/15'
   },
   {
     value: 'PENDING',
     label: 'Pending',
+    labelKey: 'statusPending',
     color: 'bg-[var(--color-primary-light)] text-[var(--color-primary-default)] dark:bg-[var(--color-primary-default)]/15'
   },
   {
     value: 'COMPLETED',
     label: 'Completed',
+    labelKey: 'statusCompleted',
     color: 'bg-[var(--task-completed-bg)] text-[var(--task-completed)] dark:bg-[var(--task-completed)]/15'
   },
   {
     value: 'DEFERRED',
     label: 'Deferred',
+    labelKey: 'statusDeferred',
     color: 'bg-[var(--surface-sunken)] text-[var(--text-secondary)]'
   }
 ];
@@ -231,31 +262,37 @@ export const caseStatusOptions = [
   {
     value: 'New',
     label: 'New',
+    labelKey: 'statusNew',
     color: 'bg-[var(--stage-new-bg)] text-[var(--stage-new)] dark:bg-[var(--stage-new)]/15'
   },
   {
     value: 'Assigned',
     label: 'Assigned',
+    labelKey: 'statusAssigned',
     color: 'bg-[var(--stage-qualified-bg)] text-[var(--stage-qualified)] dark:bg-[var(--stage-qualified)]/15'
   },
   {
     value: 'Pending',
     label: 'Pending',
+    labelKey: 'statusPending',
     color: 'bg-[var(--stage-negotiation-bg)] text-[var(--stage-negotiation)] dark:bg-[var(--stage-negotiation)]/15'
   },
   {
     value: 'Closed',
     label: 'Closed',
+    labelKey: 'statusClosed',
     color: 'bg-[var(--surface-sunken)] text-[var(--text-secondary)]'
   },
   {
     value: 'Rejected',
     label: 'Rejected',
+    labelKey: 'statusRejected',
     color: 'bg-[var(--stage-lost-bg)] text-[var(--stage-lost)] dark:bg-[var(--stage-lost)]/15'
   },
   {
     value: 'Duplicate',
     label: 'Duplicate',
+    labelKey: 'statusDuplicate',
     color: 'bg-[var(--color-primary-light)] text-[var(--color-primary-default)] dark:bg-[var(--color-primary-default)]/15'
   }
 ];
@@ -265,16 +302,19 @@ export const caseTypeOptions = [
   {
     value: 'Question',
     label: 'Question',
+    labelKey: 'caseTypeQuestion',
     color: 'bg-[var(--stage-qualified-bg)] text-[var(--stage-qualified)] dark:bg-[var(--stage-qualified)]/15'
   },
   {
     value: 'Incident',
     label: 'Incident',
+    labelKey: 'caseTypeIncident',
     color: 'bg-[var(--color-primary-light)] text-[var(--color-primary-default)] dark:bg-[var(--color-primary-default)]/15'
   },
   {
     value: 'Problem',
     label: 'Problem',
+    labelKey: 'caseTypeProblem',
     color: 'bg-[var(--stage-lost-bg)] text-[var(--stage-lost)] dark:bg-[var(--stage-lost)]/15'
   }
 ];
@@ -284,21 +324,25 @@ export const casePriorityOptions = [
   {
     value: 'Low',
     label: 'Low',
+    labelKey: 'priorityLow',
     color: 'bg-[var(--priority-low-bg)] text-[var(--priority-low)] dark:bg-[var(--priority-low)]/15'
   },
   {
     value: 'Normal',
     label: 'Normal',
+    labelKey: 'priorityNormal',
     color: 'bg-[var(--priority-medium-bg)] text-[var(--priority-medium)] dark:bg-[var(--priority-medium)]/15'
   },
   {
     value: 'High',
     label: 'High',
+    labelKey: 'priorityHigh',
     color: 'bg-[var(--priority-high-bg)] text-[var(--priority-high)] dark:bg-[var(--priority-high)]/15'
   },
   {
     value: 'Urgent',
     label: 'Urgent',
+    labelKey: 'priorityUrgent',
     color: 'bg-[var(--priority-urgent-bg)] text-[var(--priority-urgent)] dark:bg-[var(--priority-urgent)]/15'
   }
 ];
@@ -308,16 +352,19 @@ export const accountStatusOptions = [
   {
     value: 'ACTIVE',
     label: 'Active',
+    labelKey: 'statusActive',
     color: 'bg-[var(--color-success-light)] text-[var(--color-success-default)] dark:bg-[var(--color-success-default)]/15'
   },
   {
     value: 'INACTIVE',
     label: 'Inactive',
+    labelKey: 'statusInactive',
     color: 'bg-[var(--surface-sunken)] text-[var(--text-secondary)]'
   },
   {
     value: 'PENDING',
     label: 'Pending',
+    labelKey: 'statusPending',
     color: 'bg-[var(--stage-negotiation-bg)] text-[var(--stage-negotiation)] dark:bg-[var(--stage-negotiation)]/15'
   }
 ];

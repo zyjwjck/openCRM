@@ -45,8 +45,11 @@
     casePriorityOptions
   } from '$lib/utils/table-helpers.js';
   import { useDrawerState } from '$lib/hooks';
-  import { t } from '$lib/utils/i18n.svelte.js';
+  import { useI18n } from '$lib/utils/i18n.svelte.js';
 import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
+
+  // Reuse every existing t() call site, but make it reactive to language changes.
+  const { t } = useI18n();
 
   // Account from URL param (for quick action from account page)
   let accountFromUrl = $state(false);
@@ -68,7 +71,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 
   // NotionTable column configuration - reordered for scanning priority
   /** @type {ColumnDef[]} */
-  const columns = [
+  const columns = $derived([
     { key: 'subject', label: t('case'), type: 'text', width: 'w-[250px]', canHide: false },
     {
       key: 'account',
@@ -96,11 +99,22 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
       getValue: (/** @type {any} */ row) => row.owner
     },
     { key: 'createdAt', label: t('created'), type: 'date', width: 'w-32', editable: false }
-  ];
+  ]);
 
   // Column visibility state
   const STORAGE_KEY = 'cases-column-config';
-  let visibleColumns = $state(columns.map((c) => c.key));
+  // Keep in sync with `columns`. A plain list avoids capturing a reactive
+  // $derived value during $state() initialization.
+  const ALL_COLUMN_KEYS = [
+    'subject',
+    'account',
+    'priority',
+    'status',
+    'caseType',
+    'owner',
+    'createdAt'
+  ];
+  let visibleColumns = $state([...ALL_COLUMN_KEYS]);
   let currentUser = $state(null);
 
   // Load column visibility from localStorage
@@ -211,7 +225,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
     if (account) {
       accountName = account.name;
     } else {
-      accountName = 'Unknown Account';
+      accountName = t('unknownAccount');
     }
   }
 
@@ -253,9 +267,20 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
     }
   });
 
+  // CrmDrawer renders option.label directly; tables/filters resolve labelKey themselves.
+  /**
+   * @param {{ value: string, label: string, labelKey?: string, color: string }[]} options
+   */
+  const localizeOptions = (options) =>
+    options.map((o) => ({ ...o, label: o.labelKey ? t(o.labelKey) : o.label }));
+
+  const drawerTypeOptions = $derived(localizeOptions(caseTypeOptions));
+  const drawerStatusOptions = $derived(localizeOptions(caseStatusOptions));
+  const drawerPriorityOptions = $derived(localizeOptions(casePriorityOptions));
+
   // Account options for drawer select
   const accountOptions = $derived([
-    { value: '', label: 'None', color: 'bg-[var(--surface-sunken)] text-[var(--text-secondary)]' },
+    { value: '', label: t('none'), color: 'bg-[var(--surface-sunken)] text-[var(--text-secondary)]' },
     ...accounts.map((/** @type {any} */ a) => ({
       value: a.id,
       label: a.name,
@@ -266,100 +291,100 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   // Drawer columns configuration (with icons and multiselect)
   // Account is only editable on create (and not when pre-filled from URL), read-only on edit
   const drawerColumns = $derived([
-    { key: 'subject', label: 'Case Title', type: 'text' },
+    { key: 'subject', label: t('caseSubject'), type: 'text' },
     // Account field: readonly when pre-filled from URL or in edit mode
     drawer.mode === 'create' && !accountFromUrl
       ? {
           key: 'accountId',
-          label: 'Account',
+          label: t('account'),
           type: 'select',
           icon: Building2,
           options: accountOptions,
-          emptyText: 'No account'
+          emptyText: t('noAccount')
         }
       : accountFromUrl
         ? {
             key: 'accountDisplay',
-            label: 'Account',
+            label: t('account'),
             type: 'readonly',
             icon: Building2,
-            getValue: () => accountName || 'Loading...'
+            getValue: () => accountName || t('loading')
           }
         : {
             key: 'accountName',
-            label: 'Account',
+            label: t('account'),
             type: 'readonly',
             icon: Building2,
-            emptyText: 'No account'
+            emptyText: t('noAccount')
           },
     {
       key: 'caseType',
-      label: 'Type',
+      label: t('type'),
       type: 'select',
       icon: Tag,
-      options: caseTypeOptions,
-      emptyText: 'Select type'
+      options: drawerTypeOptions,
+      emptyText: t('selectType')
     },
     {
       key: 'status',
-      label: 'Status',
+      label: t('status'),
       type: 'select',
       icon: Circle,
-      options: caseStatusOptions
+      options: drawerStatusOptions
     },
     {
       key: 'priority',
-      label: 'Priority',
+      label: t('priority'),
       type: 'select',
       icon: Flag,
-      options: casePriorityOptions
+      options: drawerPriorityOptions
     },
     {
       key: 'description',
-      label: 'Description',
+      label: t('description'),
       type: 'textarea',
       icon: FileText,
-      placeholder: 'Describe the case...',
-      emptyText: 'No description'
+      placeholder: t('describeCase'),
+      emptyText: t('noDescription')
     },
     {
       key: 'assignedTo',
-      label: 'Assigned To',
+      label: t('assigned_to'),
       type: 'multiselect',
       icon: User,
       options: users.map((/** @type {any} */ u) => ({ id: u.id, name: u.name })),
-      emptyText: 'Unassigned'
+      emptyText: t('unassigned')
     },
     {
       key: 'teams',
-      label: 'Teams',
+      label: t('teams'),
       type: 'multiselect',
       icon: Users,
-      options: teams.map((/** @type {any} */ t) => ({ id: t.id, name: t.name })),
-      emptyText: 'No teams'
+      options: teams.map((/** @type {any} */ item) => ({ id: item.id, name: item.name })),
+      emptyText: t('no_teams')
     },
     {
       key: 'contacts',
-      label: 'Contacts',
+      label: t('contacts'),
       type: 'multiselect',
       icon: User,
       options: contacts.map((/** @type {any} */ c) => ({ id: c.id, name: c.name, email: c.email })),
-      emptyText: 'No contacts'
+      emptyText: t('no_contacts')
     },
     {
       key: 'tags',
-      label: 'Tags',
+      label: t('tags'),
       type: 'multiselect',
       icon: Tag,
-      options: tags.map((/** @type {any} */ t) => ({ id: t.id, name: t.name })),
-      emptyText: 'No tags'
+      options: tags.map((/** @type {any} */ item) => ({ id: item.id, name: item.name })),
+      emptyText: t('no_tags')
     },
     {
       key: 'closedOn',
-      label: 'Close Date',
+      label: t('closeDate'),
       type: 'date',
       icon: Calendar,
-      emptyText: 'Not set'
+      emptyText: t('notSet')
     }
   ]);
 
@@ -417,18 +442,18 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 
   // Status options for filter dropdown
   const statusFilterOptions = $derived([
-    { value: '', label: 'All Statuses' },
+    { value: '', label: t('allStatuses') },
     ...caseStatusOptions
   ]);
 
   // Priority options for filter dropdown
   const priorityFilterOptions = $derived([
-    { value: '', label: 'All Priorities' },
+    { value: '', label: t('allPriorities') },
     ...casePriorityOptions
   ]);
 
   // Type options for filter dropdown
-  const typeFilterOptions = $derived([{ value: '', label: 'All Types' }, ...caseTypeOptions]);
+  const typeFilterOptions = $derived([{ value: '', label: t('allTypes') }, ...caseTypeOptions]);
 
   // Count active filters (excluding status since it's handled via chips in header)
   const activeFiltersCount = $derived.by(() => {
@@ -568,7 +593,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
    */
   async function handleSave() {
     if (!drawerFormData.subject?.trim()) {
-      toast.error('Case title is required');
+      toast.error(t('caseTitleRequired'));
       return;
     }
 
@@ -603,7 +628,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
    */
   async function handleDelete() {
     if (!drawer.selected) return;
-    if (!confirm(`Are you sure you want to delete "${drawer.selected.subject}"?`)) return;
+    if (!confirm(t('confirmDeleteCase', { name: drawer.selected.subject }))) return;
 
     formState.caseId = drawer.selected.id;
     await tick();
@@ -634,15 +659,15 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 
   /**
    * Create enhance handler for form actions
-   * @param {string} successMessage
+   * @param {string} successKey - i18n key, resolved with the current language
    * @param {boolean} closeDetailDrawer
    */
-  function createEnhanceHandler(successMessage, closeDetailDrawer = false) {
+  function createEnhanceHandler(successKey, closeDetailDrawer = false) {
     return () => {
       return async ({ result }) => {
         isSubmitting = false;
         if (result.type === 'success') {
-          toast.success(successMessage);
+          toast.success(t(successKey));
           isDrawerDirty = false;
           if (closeDetailDrawer) {
             drawer.closeDetail();
@@ -655,9 +680,9 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
           }
           await invalidateAll();
         } else if (result.type === 'failure') {
-          toast.error(result.data?.error || 'Operation failed');
+          toast.error(result.data?.error || t('operationFailed'));
         } else if (result.type === 'error') {
-          toast.error('An unexpected error occurred');
+          toast.error(t('unexpectedError'));
         }
       };
     };
@@ -793,7 +818,10 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   <title>{t('cases')} - openCRM</title>
 </svelte:head>
 
-<PageHeader title={t('cases')} subtitle={`${filteredCases.length} of ${casesData.length} ${t('cases')}`}>
+<PageHeader
+  title={t('cases')}
+  subtitle={`${t('countOfTotal', { current: filteredCases.length, total: casesData.length })} ${t('cases')}`}
+>
   {#snippet actions()}
     <div class="flex items-center gap-2">
       <!-- Status Filter Chips -->
@@ -1027,7 +1055,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   columns={drawerColumns}
   titleKey="subject"
   titlePlaceholder={t('caseTitle')}
-  headerLabel={drawer.mode === 'create' ? t('newCase') : t('case')}
+  headerLabel={drawer.mode === 'create' ? 'newCase' : 'case'}
   onFieldChange={handleDrawerFieldChange}
   onDelete={handleDelete}
   onClose={() => drawer.closeAll()}
@@ -1075,7 +1103,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   method="POST"
   action="?/create"
   bind:this={createForm}
-  use:enhance={createEnhanceHandler('Case created successfully')}
+  use:enhance={createEnhanceHandler('caseCreated')}
   class="hidden"
 >
   <input type="hidden" name="title" value={formState.title} />
@@ -1094,7 +1122,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   method="POST"
   action="?/update"
   bind:this={updateForm}
-  use:enhance={createEnhanceHandler('Case updated successfully')}
+  use:enhance={createEnhanceHandler('caseUpdated')}
   class="hidden"
 >
   <input type="hidden" name="caseId" value={formState.caseId} />
@@ -1114,7 +1142,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   method="POST"
   action="?/delete"
   bind:this={deleteForm}
-  use:enhance={createEnhanceHandler('Case deleted successfully', true)}
+  use:enhance={createEnhanceHandler('caseDeleted', true)}
   class="hidden"
 >
   <input type="hidden" name="caseId" value={formState.caseId} />
@@ -1124,7 +1152,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   method="POST"
   action="?/close"
   bind:this={closeForm}
-  use:enhance={createEnhanceHandler('Case closed successfully')}
+  use:enhance={createEnhanceHandler('caseClosedMsg')}
   class="hidden"
 >
   <input type="hidden" name="caseId" value={formState.caseId} />
@@ -1134,7 +1162,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   method="POST"
   action="?/reopen"
   bind:this={reopenForm}
-  use:enhance={createEnhanceHandler('Case reopened successfully')}
+  use:enhance={createEnhanceHandler('caseReopened')}
   class="hidden"
 >
   <input type="hidden" name="caseId" value={formState.caseId} />
@@ -1144,7 +1172,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   method="POST"
   action="?/moveCase"
   bind:this={moveCaseForm}
-  use:enhance={createEnhanceHandler('Case moved successfully', false)}
+  use:enhance={createEnhanceHandler('caseMoved', false)}
   class="hidden"
 >
   <input type="hidden" name="caseId" value={kanbanFormState.caseId} />
@@ -1155,4 +1183,4 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 </form>
 
 <!-- 自动刷新组件 -->
-<AutoRefresh interval={3000} enabled={true} />
+<AutoRefresh interval={3000} enabled={!drawer.detailOpen} />

@@ -33,8 +33,7 @@ function getIntlLocale(lang) {
 /**
  * Pick a default date format string based on current language
  */
-function getDefaultDateFormat() {
-  const lang = getCurrentLanguage();
+function getDefaultDateFormat(lang = getCurrentLanguage()) {
   if (lang && String(lang).toLowerCase().startsWith('zh')) {
     return 'yyyy年M月d日';
   }
@@ -42,16 +41,18 @@ function getDefaultDateFormat() {
 }
 
 /**
- * Format a date string to a human-readable format
+ * Format a date string to a human-readable format.
+ * Pass a reactive `lang` (from useI18n) so the value updates on language switch.
  * @param {string | Date | null | undefined} date - Date to format
  * @param {string} [formatStr] - date-fns format string (auto-selected if omitted)
+ * @param {string} [lang] - Language code, defaults to the current language
  * @returns {string} Formatted date string or '-' if no date
  */
-export function formatDate(date, formatStr) {
+export function formatDate(date, formatStr, lang = getCurrentLanguage()) {
   if (!date) return '-';
-  const fmt = formatStr || getDefaultDateFormat();
+  const fmt = formatStr || getDefaultDateFormat(lang);
   try {
-    return format(new Date(date), fmt, { locale: getDateLocale(getCurrentLanguage()) });
+    return format(new Date(date), fmt, { locale: getDateLocale(lang) });
   } catch {
     return '-';
   }
@@ -60,14 +61,15 @@ export function formatDate(date, formatStr) {
 /**
  * Format a date as relative time (e.g., "2 hours ago")
  * @param {string | Date | null | undefined} date - Date to format
+ * @param {string} [lang] - Language code, defaults to the current language
  * @returns {string} Relative time string or '-' if no date
  */
-export function formatRelativeDate(date) {
+export function formatRelativeDate(date, lang = getCurrentLanguage()) {
   if (!date) return '-';
   try {
     return formatDistanceToNow(new Date(date), {
       addSuffix: true,
-      locale: getDateLocale(getCurrentLanguage())
+      locale: getDateLocale(lang)
     });
   } catch {
     return '-';
@@ -79,16 +81,17 @@ export function formatRelativeDate(date) {
  * @param {number | string | null | undefined} amount - Amount to format
  * @param {string} [currency='USD'] - Currency code (ISO 4217)
  * @param {boolean} [compact=false] - Use compact notation (e.g., $1.2M)
+ * @param {string} [lang] - Language code, defaults to the current language
  * @returns {string} Formatted currency string or '-' if no amount
  */
-export function formatCurrency(amount, currency = 'USD', compact = false) {
+export function formatCurrency(amount, currency = 'USD', compact = false, lang = getCurrentLanguage()) {
   if (amount === null || amount === undefined) return '-';
 
   const numAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
   if (isNaN(numAmount)) return '-';
 
   const currencyCode = currency && currency.length === 3 ? currency : 'USD';
-  const locale = getIntlLocale(getCurrentLanguage());
+  const locale = getIntlLocale(lang);
 
   try {
     return new Intl.NumberFormat(locale, {

@@ -512,11 +512,11 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   use:enhance={() => {
     return async ({ result }) => {
       if (result.type === 'success') {
-        toast.success('Estimate created');
+        toast.success(t('estimateCreated'));
         closeDrawer();
         invalidateAll();
       } else if (result.type === 'failure') {
-        toast.error(/** @type {string} */ (result.data?.error) || 'Failed to create estimate');
+        toast.error(/** @type {string} */ (result.data?.error) || t('failedToCreateEstimate'));
       }
     };
   }}
@@ -542,11 +542,11 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   use:enhance={() => {
     return async ({ result }) => {
       if (result.type === 'success') {
-        toast.success('Estimate updated');
+        toast.success(t('estimateUpdated'));
         closeDrawer();
         invalidateAll();
       } else if (result.type === 'failure') {
-        toast.error(/** @type {string} */ (result.data?.error) || 'Failed to update estimate');
+        toast.error(/** @type {string} */ (result.data?.error) || t('failedToUpdateEstimate'));
       }
     };
   }}
@@ -573,11 +573,11 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   use:enhance={() => {
     return async ({ result }) => {
       if (result.type === 'success') {
-        toast.success('Estimate deleted');
+        toast.success(t('estimateDeleted'));
         closeDrawer();
         invalidateAll();
       } else if (result.type === 'failure') {
-        toast.error(/** @type {string} */ (result.data?.error) || 'Failed to delete estimate');
+        toast.error(/** @type {string} */ (result.data?.error) || t('failedToDeleteEstimate'));
       }
     };
   }}
@@ -593,10 +593,10 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   use:enhance={() => {
     return async ({ result }) => {
       if (result.type === 'success') {
-        toast.success('Estimate sent');
+        toast.success(t('estimateSent'));
         invalidateAll();
       } else if (result.type === 'failure') {
-        toast.error(/** @type {string} */ (result.data?.error) || 'Failed to send estimate');
+        toast.error(/** @type {string} */ (result.data?.error) || t('failedToSendEstimate'));
       }
     };
   }}
@@ -612,7 +612,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   use:enhance={() => {
     return async ({ result }) => {
       if (result.type === 'success') {
-        toast.success('Estimate converted to invoice');
+        toast.success(t('estimateConvertedToInvoice'));
         closeDrawer();
         invalidateAll();
         // Optionally navigate to the new invoice
@@ -620,7 +620,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
           goto(`/invoices?selected=${result.data.invoiceId}`);
         }
       } else if (result.type === 'failure') {
-        toast.error(/** @type {string} */ (result.data?.error) || 'Failed to convert estimate');
+        toast.error(/** @type {string} */ (result.data?.error) || t('failedToConvertEstimate'));
       }
     };
   }}
@@ -636,10 +636,10 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   use:enhance={() => {
     return async ({ result }) => {
       if (result.type === 'success') {
-        toast.success('Estimate accepted');
+        toast.success(t('estimateAccepted'));
         invalidateAll();
       } else if (result.type === 'failure') {
-        toast.error(/** @type {string} */ (result.data?.error) || 'Failed to accept estimate');
+        toast.error(/** @type {string} */ (result.data?.error) || t('failedToAcceptEstimate'));
       }
     };
   }}
@@ -655,10 +655,10 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   use:enhance={() => {
     return async ({ result }) => {
       if (result.type === 'success') {
-        toast.success('Estimate declined');
+        toast.success(t('estimateDeclined'));
         invalidateAll();
       } else if (result.type === 'failure') {
-        toast.error(/** @type {string} */ (result.data?.error) || 'Failed to decline estimate');
+        toast.error(/** @type {string} */ (result.data?.error) || t('failedToDeclineEstimate'));
       }
     };
   }}

@@ -2,6 +2,9 @@
   import { toast } from 'svelte-sonner';
   import KanbanColumn from './KanbanColumn.svelte';
   import { Loader2, TrendingUp, Users, Flame, Zap } from '@lucide/svelte';
+  import { useI18n } from '$lib/utils/i18n.svelte.js';
+
+  const { t } = useI18n();
 
   /**
    * @typedef {Object} Column
@@ -46,7 +49,7 @@
     onItemMove,
     onCardClick,
     CardComponent,
-    emptyMessage = 'No data available'
+    emptyMessage = t('noDataAvailable')
   } = $props();
 
   // Local mutable copy of columns for optimistic updates
@@ -200,7 +203,7 @@
       await onItemMove(item.id, targetColumnId, targetColumnId);
     } catch (error) {
       console.error(`Failed to move ${itemName}:`, error);
-      toast.error(`Failed to move ${itemName}`);
+      toast.error(t('failedToMoveItem'));
 
       // Revert optimistic update on error
       if (sourceCol && targetCol) {
@@ -263,7 +266,7 @@
     </div>
     <div>
       <p class="text-lg font-semibold text-gray-600 dark:text-gray-300">{emptyMessage}</p>
-      <p class="mt-1 text-sm text-gray-400 dark:text-gray-500">Add some {itemNamePlural} to get started</p>
+      <p class="mt-1 text-sm text-gray-400 dark:text-gray-500">{t('addItemsToStart')}</p>
     </div>
   </div>
 {:else}
@@ -277,7 +280,7 @@
             <TrendingUp class="h-4 w-4 text-white" />
           </div>
           <div>
-            <p class="text-[0.65rem] font-medium uppercase tracking-wider text-gray-400 dark:text-gray-500">Pipeline Value</p>
+            <p class="text-[0.65rem] font-medium uppercase tracking-wider text-gray-400 dark:text-gray-500">{t('pipelineValue')}</p>
             <p class="text-lg font-bold tracking-tight text-gray-800 dark:text-white">
               AED {formatValue(pipelineStats().totalValue)}
             </p>
@@ -291,7 +294,7 @@
             <Flame class="h-4 w-4 text-white" />
           </div>
           <div>
-            <p class="text-[0.65rem] font-medium uppercase tracking-wider text-gray-400 dark:text-gray-500">Hot Leads</p>
+            <p class="text-[0.65rem] font-medium uppercase tracking-wider text-gray-400 dark:text-gray-500">{t('hotLeadsCount')}</p>
             <p class="text-lg font-bold tracking-tight text-gray-800 dark:text-white">
               {pipelineStats().hotCount}
             </p>
@@ -305,7 +308,7 @@
             <Users class="h-4 w-4 text-white" />
           </div>
           <div>
-            <p class="text-[0.65rem] font-medium uppercase tracking-wider text-gray-400 dark:text-gray-500">Total {itemNamePlural}</p>
+            <p class="text-[0.65rem] font-medium uppercase tracking-wider text-gray-400 dark:text-gray-500">{t('totalItems')}</p>
             <p class="text-lg font-bold tracking-tight text-gray-800 dark:text-white">
               {totalCount}
             </p>
@@ -384,7 +387,7 @@
           >
             <div class="text-3xl opacity-30">📭</div>
             <span class="text-sm font-medium text-gray-400 dark:text-gray-500">
-              No {itemNamePlural} in this stage
+              {t('noItemsInStage')}
             </span>
           </div>
         {/if}
@@ -396,7 +399,7 @@
   <div class="mt-6 flex items-center justify-center gap-2 text-sm text-gray-400 dark:text-gray-500">
     <div class="h-px flex-1 bg-gradient-to-r from-transparent via-gray-200 to-transparent dark:via-white/10"></div>
     <span class="px-4 font-medium">
-      {totalCount} {totalCount !== 1 ? itemNamePlural : itemName} across {sortedColumns.length} stages
+      {t('itemsAcrossStages', { count: totalCount, stages: sortedColumns.length })}
     </span>
     <div class="h-px flex-1 bg-gradient-to-r from-transparent via-gray-200 to-transparent dark:via-white/10"></div>
   </div>

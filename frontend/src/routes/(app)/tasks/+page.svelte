@@ -50,8 +50,12 @@
   import { TASK_STATUSES as statuses, PRIORITIES as priorities } from '$lib/constants/filters.js';
   import { CrmTable } from '$lib/components/ui/crm-table';
   import { formatRelativeDate } from '$lib/utils/formatting.js';
-  import { t } from '$lib/utils/i18n.svelte.js';
+  import { useI18n } from '$lib/utils/i18n.svelte.js';
 import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
+
+  // Keep every existing t() call site, but make it reactive to language changes.
+  const i18n = useI18n();
+  const t = i18n.t;
 
   // Account from URL param (for quick action from account page)
   let accountFromUrl = $state(false);
@@ -59,20 +63,24 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   let accountIdFromUrl = $state('');
 
   // Status and priority options with colors - using design system tokens
+  // `labelKey` is resolved by CrmTable/SelectFilter; `label` stays as fallback.
   const statusOptions = [
     {
       value: 'New',
       label: 'New',
+      labelKey: 'statusNew',
       color: 'bg-[var(--task-upcoming-bg)] text-[var(--task-upcoming)] dark:bg-[var(--task-upcoming)]/15'
     },
     {
       value: 'In Progress',
       label: 'In Progress',
+      labelKey: 'statusInProgress',
       color: 'bg-[var(--task-due-today-bg)] text-[var(--task-due-today)] dark:bg-[var(--task-due-today)]/15'
     },
     {
       value: 'Completed',
       label: 'Completed',
+      labelKey: 'statusCompleted',
       color: 'bg-[var(--task-completed-bg)] text-[var(--task-completed)] dark:bg-[var(--task-completed)]/15'
     }
   ];
@@ -81,16 +89,19 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
     {
       value: 'High',
       label: 'High',
+      labelKey: 'priorityHigh',
       color: 'bg-[var(--priority-high-bg)] text-[var(--priority-high)] dark:bg-[var(--priority-high)]/15'
     },
     {
       value: 'Medium',
       label: 'Medium',
+      labelKey: 'priorityMedium',
       color: 'bg-[var(--priority-medium-bg)] text-[var(--priority-medium)] dark:bg-[var(--priority-medium)]/15'
     },
     {
       value: 'Low',
       label: 'Low',
+      labelKey: 'priorityLow',
       color: 'bg-[var(--priority-low-bg)] text-[var(--priority-low)] dark:bg-[var(--priority-low)]/15'
     }
   ];
@@ -114,7 +125,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 
   /**
    * @typedef {'text' | 'email' | 'number' | 'date' | 'select' | 'checkbox' | 'relation'} ColumnType
-   * @typedef {{ key: string, label: string, type: ColumnType, width?: string, canHide?: boolean, relationIcon?: string, getValue?: (row: any) => any, options?: { value: string, label: string, color: string }[] }} TaskColumn
+   * @typedef {{ key: string, label: string, type: ColumnType, width?: string, canHide?: boolean, relationIcon?: string, getValue?: (row: any) => any, options?: { value: string, label: string, labelKey?: string, color: string }[] }} TaskColumn
    */
 
   /**
@@ -122,26 +133,36 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
    * @param {any} row
    * @returns {{ name: string } | null}
    */
+  /**
+   * @param {string} labelKey
+   * @param {string} name
+   */
+  function relatedName(labelKey, name) {
+    return { name: t('relatedToLabel', { label: t(labelKey), name }) };
+  }
+
   function getRelatedEntity(row) {
     if (row.lead) {
       const leadName =
-        row.lead.title || `${row.lead.firstName || ''} ${row.lead.lastName || ''}`.trim() || 'Lead';
-      return { name: `Lead: ${leadName}` };
+        row.lead.title ||
+        `${row.lead.firstName || ''} ${row.lead.lastName || ''}`.trim() ||
+        t('leadLabel');
+      return relatedName('leadLabel', leadName);
     }
     if (row.opportunity) {
-      return { name: `Opp: ${row.opportunity.name || 'Opportunity'}` };
+      return relatedName('oppLabel', row.opportunity.name || t('opportunity'));
     }
     if (row.case_) {
-      return { name: `Case: ${row.case_.subject || row.case_.name || 'Case'}` };
+      return relatedName('case', row.case_.subject || row.case_.name || t('case'));
     }
     if (row.account) {
-      return { name: `Account: ${row.account.name || 'Account'}` };
+      return relatedName('account', row.account.name || t('account'));
     }
     return null;
   }
 
   /** @type {TaskColumn[]} */
-  const taskColumns = [
+  const taskColumns = $derived([
     { key: 'subject', label: t('task'), type: 'text', width: 'w-64', canHide: false },
     {
       key: 'relatedTo',
@@ -164,7 +185,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
         const assigned = row.assignedTo || [];
         if (assigned.length === 0) return null;
         if (assigned.length === 1) return assigned[0];
-        return { name: `${assigned.length} users` };
+        return { name: t('nUsers', { count: assigned.length }) };
       }
     },
     // Hidden by default
@@ -188,7 +209,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
         const contacts = row.contacts || [];
         if (contacts.length === 0) return null;
         if (contacts.length === 1) return contacts[0];
-        return { name: `${contacts.length} contacts` };
+        return { name: t('nContacts', { count: contacts.length }) };
       }
     },
     {
@@ -202,7 +223,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
         const teams = row.teams || [];
         if (teams.length === 0) return null;
         if (teams.length === 1) return teams[0];
-        return { name: `${teams.length} teams` };
+        return { name: t('nTeams', { count: teams.length }) };
       }
     },
     {
@@ -216,10 +237,10 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
         const tags = row.tags || [];
         if (tags.length === 0) return null;
         if (tags.length === 1) return tags[0];
-        return { name: `${tags.length} tags` };
+        return { name: t('nTags', { count: tags.length }) };
       }
     }
-  ];
+  ]);
 
   // Default visible columns (6 columns: Task, Related To, Due Date, Priority, Status, Assigned To)
   const DEFAULT_VISIBLE_COLUMNS = [
@@ -313,7 +334,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
     if (account) {
       accountNameFromUrl = account.name;
     } else {
-      accountNameFromUrl = 'Unknown Account';
+      accountNameFromUrl = t('unknownAccount');
     }
   }
 
@@ -334,11 +355,11 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   const filters = $derived(data.filters || {});
 
   // Status options for filter dropdown
-  const statusFilterOptions = $derived([{ value: '', label: 'All Statuses' }, ...statusOptions]);
+  const statusFilterOptions = $derived([{ value: '', label: t('allStatuses') }, ...statusOptions]);
 
   // Priority options for filter dropdown
   const priorityFilterOptions = $derived([
-    { value: '', label: 'All Priorities' },
+    { value: '', label: t('allPriorities') },
     ...priorityOptions
   ]);
 
@@ -543,12 +564,13 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   function formatDate(dateStr) {
     if (!dateStr) return '';
     const date = new Date(dateStr);
-    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    const locale = String(i18n.lang).toLowerCase().startsWith('zh') ? 'zh-CN' : 'en-US';
+    return date.toLocaleDateString(locale, { month: 'short', day: 'numeric', year: 'numeric' });
   }
 
   /**
    * @param {string} value
-   * @param {{ value: string, label: string, color: string }[]} options
+   * @param {{ value: string, label: string, labelKey?: string, color: string }[]} options
    */
   function getOptionStyle(value, options) {
     const option = options.find((o) => o.value === value);
@@ -557,10 +579,11 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 
   /**
    * @param {string} value
-   * @param {{ value: string, label: string, color: string }[]} options
+   * @param {{ value: string, label: string, labelKey?: string, color: string }[]} options
    */
   function getOptionLabel(value, options) {
     const option = options.find((o) => o.value === value);
+    if (option?.labelKey) return t(option.labelKey);
     return option?.label ?? value;
   }
 
@@ -650,7 +673,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 
   async function deleteSelectedTask() {
     if (!selectedTaskId) return;
-    if (!confirm('Are you sure you want to delete this task?')) return;
+    if (!confirm(t('confirmDeleteTask'))) return;
     formState.taskId = selectedTaskId;
     await tick();
     deleteForm.requestSubmit();
@@ -677,22 +700,22 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 
   /**
    * Create enhance handler for form actions
-   * @param {string} successMessage
+   * @param {string} successKey - i18n key, resolved with the current language
    * @param {boolean} closeSheet
    */
-  function createEnhanceHandler(successMessage, closeSheet = false) {
+  function createEnhanceHandler(successKey, closeSheet = false) {
     return () => {
       return async (/** @type {any} */ { result }) => {
         if (result.type === 'success') {
-          toast.success(successMessage);
+          toast.success(t(successKey));
           if (closeSheet) {
             closeTaskSheet();
           }
           await invalidateAll();
         } else if (result.type === 'failure') {
-          toast.error(result.data?.error || 'Operation failed');
+          toast.error(result.data?.error || t('operationFailed'));
         } else if (result.type === 'error') {
-          toast.error('An unexpected error occurred');
+          toast.error(t('unexpectedError'));
         }
       };
     };
@@ -703,20 +726,22 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   let currentDate = $state(new Date(today));
   let selectedDate = $state(today.toISOString().slice(0, 10));
 
-  const monthNames = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December'
-  ];
+  const calendarLocale = $derived(
+    String(i18n.lang).toLowerCase().startsWith('zh') ? 'zh-CN' : 'en-US'
+  );
+
+  const monthNames = $derived(
+    Array.from({ length: 12 }, (_, i) =>
+      new Intl.DateTimeFormat(calendarLocale, { month: 'long' }).format(new Date(2026, i, 1))
+    )
+  );
+
+  // 2024-01-07 was a Sunday, so this yields Sun..Sat in the active locale.
+  const weekDayNames = $derived(
+    Array.from({ length: 7 }, (_, i) =>
+      new Intl.DateTimeFormat(calendarLocale, { weekday: 'short' }).format(new Date(2024, 0, 7 + i))
+    )
+  );
 
   // Calendar computed values
   const calendarYear = $derived(currentDate.getFullYear());
@@ -816,7 +841,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 
   // Account options for sheet
   const accountOptions = $derived([
-    { value: '', label: 'None' },
+    { value: '', label: t('none') },
     ...accounts.map((/** @type {any} */ a) => ({ value: a.id, label: a.name }))
   ]);
 
@@ -837,19 +862,19 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 
   // Opportunity options for drawer
   const opportunityOptions = $derived([
-    { value: '', label: 'None' },
+    { value: '', label: t('none') },
     ...opportunities.map((/** @type {any} */ o) => ({ value: o.id, label: o.name }))
   ]);
 
   // Case options for drawer
   const caseOptions = $derived([
-    { value: '', label: 'None' },
+    { value: '', label: t('none') },
     ...cases.map((/** @type {any} */ c) => ({ value: c.id, label: c.name }))
   ]);
 
   // Lead options for drawer
   const leadOptions = $derived([
-    { value: '', label: 'None' },
+    { value: '', label: t('none') },
     ...leads.map((/** @type {any} */ l) => ({ value: l.id, label: l.name }))
   ]);
 
@@ -861,59 +886,75 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   // Drawer columns for NotionDrawer (derived to use dynamic options)
   // Parent entity fields (account, opportunity, case, lead) are only shown in edit mode
   // Exception: when creating from account quick action, show account as readonly and hide other parent fields
+  // CrmDrawer renders option.label directly; tables/filters resolve labelKey.
+  /**
+   * @param {{ value: string, label: string, labelKey?: string, color: string }[]} options
+   */
+  const localizeOptions = (options) =>
+    options.map((o) => ({ ...o, label: o.labelKey ? t(o.labelKey) : o.label }));
+
+  const drawerStatusOptions = $derived(localizeOptions(statusOptions));
+  const drawerPriorityOptions = $derived(localizeOptions(priorityOptions));
+
   const drawerColumns = $derived([
-    { key: 'subject', label: 'Subject', type: 'text', icon: FileText },
-    { key: 'status', label: 'Status', type: 'select', icon: Circle, options: statusOptions },
-    { key: 'priority', label: 'Priority', type: 'select', icon: Flag, options: priorityOptions },
-    { key: 'dueDate', label: 'Due Date', type: 'date', icon: Calendar },
+    { key: 'subject', label: t('subject'), type: 'text', icon: FileText },
+    { key: 'status', label: t('status'), type: 'select', icon: Circle, options: drawerStatusOptions },
+    {
+      key: 'priority',
+      label: t('priority'),
+      type: 'select',
+      icon: Flag,
+      options: drawerPriorityOptions
+    },
+    { key: 'dueDate', label: t('due_date'), type: 'date', icon: Calendar },
     // Parent entity field handling:
     // - In edit mode: show readonly for the existing parent entity
     // - In create mode with accountFromUrl: show account as readonly only
     // - In create mode without accountFromUrl: show nothing (parent fields not available in create)
     ...(selectedTaskId
       ? (() => {
-          const task = localTasks.find((t) => t.id === selectedTaskId);
+          const task = localTasks.find((item) => item.id === selectedTaskId);
           if (!task) return [];
           if (task.account)
-            return [{ key: 'accountName', label: 'Account', type: 'readonly', icon: Building2 }];
+            return [{ key: 'accountName', label: t('account'), type: 'readonly', icon: Building2 }];
           if (task.lead)
-            return [{ key: 'leadName', label: 'Lead', type: 'readonly', icon: UserPlus }];
+            return [{ key: 'leadName', label: t('leadLabel'), type: 'readonly', icon: UserPlus }];
           if (task.opportunity)
             return [
-              { key: 'opportunityName', label: 'Opportunity', type: 'readonly', icon: Target }
+              { key: 'opportunityName', label: t('opportunity'), type: 'readonly', icon: Target }
             ];
           if (task.case_)
-            return [{ key: 'caseName', label: 'Case', type: 'readonly', icon: Briefcase }];
+            return [{ key: 'caseName', label: t('case'), type: 'readonly', icon: Briefcase }];
           return [];
         })()
       : accountFromUrl
         ? [
             {
               key: 'accountDisplay',
-              label: 'Account',
+              label: t('account'),
               type: 'readonly',
               icon: Building2,
-              getValue: () => accountNameFromUrl || 'Loading...'
+              getValue: () => accountNameFromUrl || t('loading')
             }
           ]
         : []),
     {
       key: 'assignedTo',
-      label: 'Assigned To',
+      label: t('assigned_to'),
       type: 'multiselect',
       icon: User,
       options: userOptions
     },
     {
       key: 'contacts',
-      label: 'Contacts',
+      label: t('contacts'),
       type: 'multiselect',
       icon: Contact,
       options: contactOptions
     },
-    { key: 'teams', label: 'Teams', type: 'multiselect', icon: Users, options: teamOptions },
-    { key: 'tags', label: 'Tags', type: 'multiselect', icon: Tag, options: tagOptions },
-    { key: 'description', label: 'Description', type: 'textarea' }
+    { key: 'teams', label: t('teams'), type: 'multiselect', icon: Users, options: teamOptions },
+    { key: 'tags', label: t('tags'), type: 'multiselect', icon: Tag, options: tagOptions },
+    { key: 'description', label: t('description'), type: 'textarea' }
   ]);
 
   // Drawer form data state
@@ -1080,7 +1121,10 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   <title>{t('tasks')} - openCRM</title>
 </svelte:head>
 
-<PageHeader title={t('tasks')} subtitle={`${filteredTasks.length} of ${tasks.length} ${t('tasks')}`}>
+<PageHeader
+  title={t('tasks')}
+  subtitle={`${t('countOfTotal', { current: filteredTasks.length, total: tasks.length })} ${t('tasks')}`}
+>
   {#snippet actions()}
     <div class="flex items-center gap-2">
       <!-- Status Filter Chips -->
@@ -1327,14 +1371,14 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
               onclick={goToToday}
               class="text-primary-foreground bg-primary-foreground/10 hover:bg-primary-foreground/20"
             >
-              Today
+              {t('today')}
             </Button>
           </Card.Header>
 
           <Card.Content class="p-0">
             <!-- Days of Week -->
             <div class="bg-muted/50 grid grid-cols-7 border-b">
-              {#each ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] as day}
+              {#each weekDayNames as day}
                 <div
                   class="text-muted-foreground border-r p-3 text-center text-sm font-medium last:border-r-0"
                 >
@@ -1399,14 +1443,18 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
         <Card.Root class="h-fit">
           <Card.Header class="border-b pb-4">
             <Card.Title class="text-base">
-              Tasks for {new Date(selectedDate + 'T00:00:00').toLocaleDateString('en-US', {
-                weekday: 'long',
-                month: 'long',
-                day: 'numeric'
+              {t('tasksFor', {
+                date: new Date(selectedDate + 'T00:00:00').toLocaleDateString(calendarLocale, {
+                  weekday: 'long',
+                  month: 'long',
+                  day: 'numeric'
+                })
               })}
             </Card.Title>
             <p class="text-muted-foreground text-sm">
-              {selectedTasks.length} task{selectedTasks.length !== 1 ? 's' : ''}
+              {selectedTasks.length === 1
+                ? t('taskCountOne')
+                : t('taskCountMany', { count: selectedTasks.length })}
             </p>
           </Card.Header>
 
@@ -1445,7 +1493,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
                           )}"
                         >
                           <Flag class="h-3 w-3" />
-                          {task.priority}
+                          {getOptionLabel(task.priority, priorityOptions)}
                         </span>
                       {/if}
                       <span
@@ -1454,7 +1502,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
                           statusOptions
                         )}"
                       >
-                        {task.status}
+                        {getOptionLabel(task.status, statusOptions)}
                       </span>
                     </div>
                   </button>
@@ -1463,10 +1511,10 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
             {:else}
               <div class="py-12 text-center">
                 <Calendar class="text-muted-foreground/50 mx-auto mb-4 h-12 w-12" />
-                <p class="text-muted-foreground text-sm">No tasks scheduled for this date</p>
+                <p class="text-muted-foreground text-sm">{t('noTasksScheduled')}</p>
                 <Button onclick={addNewTask} variant="outline" size="sm" class="mt-4">
                   <Plus class="mr-2 h-4 w-4" />
-                  Add Task
+                  {t('addTask')}
                 </Button>
               </div>
             {/if}
@@ -1476,15 +1524,15 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
         <!-- Monthly Stats -->
         <Card.Root class="mt-4">
           <Card.Header class="pb-2">
-            <Card.Title class="text-base">This Month</Card.Title>
+            <Card.Title class="text-base">{t('thisMonth')}</Card.Title>
           </Card.Header>
           <Card.Content class="space-y-2">
             <div class="flex items-center justify-between">
-              <span class="text-muted-foreground text-sm">Total Tasks</span>
+              <span class="text-muted-foreground text-sm">{t('totalTasks')}</span>
               <span class="text-foreground font-medium">{totalMonthlyTasks}</span>
             </div>
             <div class="flex items-center justify-between">
-              <span class="text-muted-foreground text-sm">Days with Tasks</span>
+              <span class="text-muted-foreground text-sm">{t('daysWithTasks')}</span>
               <span class="text-foreground font-medium">{monthlyTaskDates.length}</span>
             </div>
           </Card.Content>
@@ -1510,7 +1558,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   data={drawerFormData}
   columns={drawerColumns}
   titleKey="subject"
-  titlePlaceholder="Task title"
+  titlePlaceholder={t('task')}
   headerLabel={isCreateMode ? 'new_task' : 'task'}
   mode={isCreateMode ? 'create' : 'view'}
   onFieldChange={handleDrawerFieldChange}
@@ -1576,7 +1624,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   method="POST"
   action="?/create"
   bind:this={createForm}
-  use:enhance={createEnhanceHandler('Task created successfully', true)}
+  use:enhance={createEnhanceHandler('taskCreated', true)}
   class="hidden"
 >
   <input type="hidden" name="subject" value={formState.subject} />
@@ -1598,7 +1646,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   method="POST"
   action="?/update"
   bind:this={updateForm}
-  use:enhance={createEnhanceHandler('Task updated successfully', true)}
+  use:enhance={createEnhanceHandler('taskUpdated', true)}
   class="hidden"
 >
   <input type="hidden" name="taskId" value={formState.taskId} />
@@ -1621,7 +1669,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   method="POST"
   action="?/delete"
   bind:this={deleteForm}
-  use:enhance={createEnhanceHandler('Task deleted successfully', true)}
+  use:enhance={createEnhanceHandler('taskDeleted', true)}
   class="hidden"
 >
   <input type="hidden" name="taskId" value={formState.taskId} />
@@ -1631,7 +1679,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   method="POST"
   action="?/complete"
   bind:this={completeForm}
-  use:enhance={createEnhanceHandler('Task completed successfully', true)}
+  use:enhance={createEnhanceHandler('taskCompletedMsg', true)}
   class="hidden"
 >
   <input type="hidden" name="taskId" value={formState.taskId} />
@@ -1641,7 +1689,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   method="POST"
   action="?/reopen"
   bind:this={reopenForm}
-  use:enhance={createEnhanceHandler('Task reopened successfully', true)}
+  use:enhance={createEnhanceHandler('taskReopened', true)}
   class="hidden"
 >
   <input type="hidden" name="taskId" value={formState.taskId} />
@@ -1651,7 +1699,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   method="POST"
   action="?/moveTask"
   bind:this={moveTaskForm}
-  use:enhance={createEnhanceHandler('Task moved successfully', false)}
+  use:enhance={createEnhanceHandler('taskMoved', false)}
   class="hidden"
 >
   <input type="hidden" name="taskId" value={kanbanFormState.taskId} />
@@ -1662,4 +1710,4 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 </form>
 
 <!-- 自动刷新组件 -->
-<AutoRefresh interval={3000} enabled={true} />
+<AutoRefresh interval={3000} enabled={!sheetOpen} />

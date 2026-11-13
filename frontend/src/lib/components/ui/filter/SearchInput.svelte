@@ -1,6 +1,7 @@
 <script>
   import { Search, X, Command } from '@lucide/svelte';
   import { cn } from '$lib/utils.js';
+  import { t } from '$lib/utils/i18n.svelte.js';
 
   /**
    * @type {{
@@ -16,8 +17,8 @@
    */
   let {
     value = $bindable(''),
-    placeholder = 'Search...',
-    label = 'Search',
+    placeholder = t('search'),
+    label = t('search'),
     showLabel = true,
     showShortcut = false,
     class: className,

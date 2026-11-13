@@ -5,6 +5,11 @@
   import Calendar from '$lib/components/ui/calendar/Calendar.svelte';
   import { Button } from '$lib/components/ui/button/index.js';
   import { today, getLocalTimeZone, parseDate } from '@internationalized/date';
+  import { formatDate as formatLocalizedDate } from '$lib/utils/formatting.js';
+  import { useI18n } from '$lib/utils/i18n.svelte.js';
+
+  const i18n = useI18n();
+  const tr = i18n.t;
 
   /**
    * @type {{
@@ -20,7 +25,7 @@
     startDate = $bindable(''),
     endDate = $bindable(''),
     label = '',
-    placeholder = 'Select dates',
+    placeholder = tr('selectDates'),
     class: className,
     onchange
   } = $props();
@@ -34,18 +39,18 @@
   const startDateValue = $derived(startDate ? parseDate(startDate) : undefined);
   const endDateValue = $derived(endDate ? parseDate(endDate) : undefined);
 
-  /** @type {{ label: string, shortLabel: string, getRange: () => { start: string, end: string } }[]} */
+  /** @type {{ labelKey: string, shortLabel: string, getRange: () => { start: string, end: string } }[]} */
   const presets = [
     {
-      label: 'Today',
-      shortLabel: 'Today',
+      labelKey: 'today',
+      shortLabel: '1d',
       getRange: () => {
         const d = todayDate.toString();
         return { start: d, end: d };
       }
     },
     {
-      label: 'Last 7 days',
+      labelKey: 'last7Days',
       shortLabel: '7d',
       getRange: () => ({
         start: todayDate.subtract({ days: 7 }).toString(),
@@ -53,7 +58,7 @@
       })
     },
     {
-      label: 'Last 30 days',
+      labelKey: 'last30Days',
       shortLabel: '30d',
       getRange: () => ({
         start: todayDate.subtract({ days: 30 }).toString(),
@@ -61,15 +66,15 @@
       })
     },
     {
-      label: 'This month',
-      shortLabel: 'Month',
+      labelKey: 'thisMonth',
+      shortLabel: 'M',
       getRange: () => ({
         start: todayDate.set({ day: 1 }).toString(),
         end: todayDate.toString()
       })
     },
     {
-      label: 'Last month',
+      labelKey: 'lastMonth',
       shortLabel: 'Prev',
       getRange: () => {
         const lastMonth = todayDate.subtract({ months: 1 });
@@ -84,7 +89,7 @@
       }
     },
     {
-      label: 'Last 90 days',
+      labelKey: 'last90Days',
       shortLabel: '90d',
       getRange: () => ({
         start: todayDate.subtract({ days: 90 }).toString(),
@@ -96,33 +101,24 @@
   const displayText = $derived.by(() => {
     if (!startDate && !endDate) return placeholder;
     if (startDate && endDate) {
-      if (startDate === endDate) return formatDate(startDate);
+      if (startDate === endDate) return formatLocalizedDate(startDate, undefined, i18n.lang);
       return `${formatDateShort(startDate)} - ${formatDateShort(endDate)}`;
     }
-    if (startDate) return `From ${formatDateShort(startDate)}`;
-    return `Until ${formatDateShort(endDate)}`;
+    if (startDate) return tr('fromDate', { date: formatDateShort(startDate) });
+    return tr('untilDate', { date: formatDateShort(endDate) });
   });
-
-  /**
-   * @param {string} dateStr
-   */
-  function formatDate(dateStr) {
-    if (!dateStr) return '';
-    const date = new Date(dateStr);
-    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-  }
 
   /**
    * @param {string} dateStr
    */
   function formatDateShort(dateStr) {
     if (!dateStr) return '';
-    const date = new Date(dateStr);
-    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    const isZh = String(i18n.lang).toLowerCase().startsWith('zh');
+    return formatLocalizedDate(dateStr, isZh ? 'M月d日' : 'MMM d', i18n.lang);
   }
 
   /**
-   * @param {{ label: string, shortLabel: string, getRange: () => { start: string, end: string } }} preset
+   * @param {{ labelKey: string, shortLabel: string, getRange: () => { start: string, end: string } }} preset
    */
   function handlePreset(preset) {
     const { start, end } = preset.getRange();
@@ -179,9 +175,10 @@
       if (!o) selectingEnd = false;
     }}
   >
-    <Popover.Trigger asChild class="">
+    <Popover.Trigger class="">
       {#snippet child({ props })}
         <button
+          {...props}
           type="button"
           class={cn(
             'date-filter-trigger group',
@@ -203,9 +200,9 @@
             // Active state
             hasValue && 'border-primary/40 bg-primary/[0.03] dark:border-primary/30 dark:bg-primary/[0.08]',
             // Open state
-            open && 'ring-2 ring-primary/20 dark:ring-primary/30'
+            open && 'ring-2 ring-primary/20 dark:ring-primary/30',
+            props.class
           )}
-          {...props}
         >
           <div class="flex items-center gap-2">
             <CalendarDays
@@ -288,7 +285,7 @@
         >
           <div class="mb-1 px-2 py-1">
             <span class="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/60">
-              Quick select
+              {tr('quickSelect')}
             </span>
           </div>
           {#each presets as preset, i}
@@ -306,7 +303,7 @@
               onclick={() => handlePreset(preset)}
             >
               <Clock class="mr-2 h-3 w-3 opacity-50" />
-              {preset.label}
+              {tr(preset.labelKey)}
             </Button>
           {/each}
         </div>
@@ -329,7 +326,7 @@
                 </span>
               </div>
             {:else}
-              <span class="text-xs text-muted-foreground">Start date</span>
+              <span class="text-xs text-muted-foreground">{tr('startDate')}</span>
             {/if}
 
             <ArrowRight class="h-3 w-3 text-muted-foreground/50" />
@@ -343,7 +340,7 @@
               </div>
             {:else}
               <span class="text-xs text-muted-foreground">
-                {selectingEnd ? 'Select end' : 'End date'}
+                {selectingEnd ? tr('selectEnd') : tr('endDate')}
               </span>
             {/if}
           </div>
@@ -357,9 +354,9 @@
             )}
           >
             {#if selectingEnd}
-              <span class="animate-pulse">Click to select end date</span>
+              <span class="animate-pulse">{tr('clickToSelectEndDate')}</span>
             {:else}
-              Select start date
+              {tr('selectStartDate')}
             {/if}
           </div>
 

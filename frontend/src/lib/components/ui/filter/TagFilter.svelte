@@ -3,6 +3,7 @@
   import { cn } from '$lib/utils.js';
   import * as Popover from '$lib/components/ui/popover/index.js';
   import { getTagColorClass } from '$lib/constants/colors.js';
+  import { t } from '$lib/utils/i18n.svelte.js';
 
   /**
    * @typedef {{
@@ -25,8 +26,8 @@
   let {
     tags = [],
     value = $bindable([]),
-    placeholder = 'Filter by tags...',
-    label = 'Tags',
+    placeholder = t('filterByTags'),
+    label = t('tagFilterLabel'),
     class: className,
     onchange
   } = $props();
@@ -41,7 +42,7 @@
       const tag = tags.find((t) => t.id === selectedIds[0]);
       return tag?.name || selectedIds[0];
     }
-    return `${selectedIds.length} tags`;
+    return t('tagsSelected', { count: selectedIds.length });
   });
 
   /**
@@ -90,9 +91,10 @@
     </span>
   {/if}
   <Popover.Root bind:open>
-    <Popover.Trigger asChild class="">
+    <Popover.Trigger class="">
       {#snippet child({ props })}
         <button
+          {...props}
           type="button"
           class={cn(
             'tag-filter-trigger group',
@@ -114,9 +116,9 @@
             // Active state
             hasSelection && 'border-primary/40 bg-primary/[0.03] dark:border-primary/30 dark:bg-primary/[0.08]',
             // Open state
-            open && 'ring-2 ring-primary/20 dark:ring-primary/30'
+            open && 'ring-2 ring-primary/20 dark:ring-primary/30',
+            props.class
           )}
-          {...props}
         >
           <div class="flex items-center gap-2">
             <Tag
@@ -200,8 +202,8 @@
       {#if tags.length === 0}
         <div class="flex flex-col items-center justify-center py-6 text-center">
           <Tag class="mb-2 h-8 w-8 text-muted-foreground/30" />
-          <p class="text-sm font-medium text-muted-foreground">No tags available</p>
-          <p class="mt-1 text-xs text-muted-foreground/60">Create tags to organize your leads</p>
+          <p class="text-sm font-medium text-muted-foreground">{t('noTagsAvailable')}</p>
+          <p class="mt-1 text-xs text-muted-foreground/60">{t('createTagsHint')}</p>
         </div>
       {:else}
         <!-- Header with selected count -->
@@ -213,14 +215,14 @@
             )}
           >
             <span class="text-xs font-medium text-primary">
-              {selectedIds.length} tag{selectedIds.length > 1 ? 's' : ''} selected
+              {t('tagsSelected', { count: selectedIds.length })}
             </span>
             <button
               type="button"
               onclick={clearAll}
               class="text-xs font-medium text-primary/70 hover:text-primary transition-colors"
             >
-              Clear all
+              {t('clearAll')}
             </button>
           </div>
         {/if}

@@ -1,5 +1,8 @@
 <script>
   import { Building2, AlertTriangle, ShieldAlert, HelpCircle, AlertOctagon, FileWarning, Timer } from '@lucide/svelte';
+  import { useI18n } from '$lib/utils/i18n.svelte.js';
+
+  const { t } = useI18n();
 
   /**
    * @typedef {Object} Case
@@ -60,25 +63,36 @@
       icon: HelpCircle,
       bg: 'bg-gradient-to-r from-violet-500/15 to-purple-500/15',
       text: 'text-violet-600 dark:text-violet-400',
-      label: 'Question'
+      labelKey: 'caseTypeQuestion'
     },
     Incident: {
       icon: FileWarning,
       bg: 'bg-gradient-to-r from-amber-500/15 to-yellow-500/15',
       text: 'text-amber-600 dark:text-amber-400',
-      label: 'Incident'
+      labelKey: 'caseTypeIncident'
     },
     Problem: {
       icon: AlertOctagon,
       bg: 'bg-gradient-to-r from-rose-500/15 to-red-500/15',
       text: 'text-rose-600 dark:text-rose-400',
-      label: 'Problem'
+      labelKey: 'caseTypeProblem'
     }
   };
 
+  /** @type {Record<string, string>} */
+  const priorityKeys = {
+    Urgent: 'priorityUrgent',
+    High: 'priorityHigh',
+    Normal: 'priorityNormal',
+    Low: 'priorityLow'
+  };
+
   // Computed values
-  const name = $derived(item.name || 'Untitled Case');
+  const name = $derived(item.name || t('untitledCase'));
   const priority = $derived(item.priority);
+  const priorityLabel = $derived(
+    priority && priorityKeys[priority] ? t(priorityKeys[priority]) : priority
+  );
   const caseType = $derived(item.case_type);
   const accountName = $derived(item.account_name);
   const isSlaBreached = $derived(
@@ -103,7 +117,7 @@
    * @param {any} assignee
    */
   function getAssigneeName(assignee) {
-    return assignee?.user_details?.email || assignee?.email || 'Unknown';
+    return assignee?.user_details?.email || assignee?.email || t('unknown');
   }
 
   // Generate a consistent color from email for avatar (matching LeadCard style)
@@ -166,7 +180,7 @@
       </h4>
 
       {#if isSlaBreached}
-        <div class="sla-warning flex shrink-0 items-center gap-1 rounded-full bg-gradient-to-r from-rose-500/25 to-red-500/25 px-2 py-0.5 text-rose-600 dark:text-rose-400" title="SLA Breached">
+        <div class="sla-warning flex shrink-0 items-center gap-1 rounded-full bg-gradient-to-r from-rose-500/25 to-red-500/25 px-2 py-0.5 text-rose-600 dark:text-rose-400" title={t('slaBreached')}>
           <Timer class="h-3.5 w-3.5" />
           <span class="text-[0.6rem] font-bold uppercase tracking-wider">SLA</span>
         </div>
@@ -187,7 +201,7 @@
         {@const TypeIcon = typeConfig.icon}
         <div class="flex items-center gap-1 rounded-lg px-2 py-1 {typeConfig.bg}">
           <TypeIcon class="h-3.5 w-3.5 {typeConfig.text}" />
-          <span class="text-xs font-medium {typeConfig.text}">{typeConfig.label}</span>
+          <span class="text-xs font-medium {typeConfig.text}">{t(typeConfig.labelKey)}</span>
         </div>
       {/if}
 
@@ -196,7 +210,7 @@
         <div class="priority-badge flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-[0.65rem] font-bold uppercase tracking-wider {config.bg} {config.text} {config.border} border"
           class:priority-pulse={config.pulse}>
           <PriorityIcon class="h-3 w-3" />
-          {priority}
+          {priorityLabel}
         </div>
       {/if}
     </div>
@@ -226,7 +240,7 @@
 
         <!-- Urgent indicator -->
         {#if priority === 'Urgent' && !isSlaBreached}
-          <div class="flex items-center gap-1 text-rose-500 dark:text-rose-400" title="Urgent priority">
+          <div class="flex items-center gap-1 text-rose-500 dark:text-rose-400" title={t('urgentPriority')}>
             <AlertOctagon class="h-4 w-4" />
           </div>
         {/if}

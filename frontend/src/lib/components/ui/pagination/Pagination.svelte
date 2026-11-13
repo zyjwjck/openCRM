@@ -3,7 +3,9 @@
   import { Button } from '$lib/components/ui/button/index.js';
   import * as Popover from '$lib/components/ui/popover/index.js';
   import { cn } from '$lib/utils.js';
-  import { t } from '$lib/utils/i18n.svelte.js';
+  import { useI18n } from '$lib/utils/i18n.svelte.js';
+
+  const { t: tr } = useI18n();
 
   /**
    * @type {{
@@ -65,7 +67,7 @@
     <!-- Left side: Results summary -->
     <div class="flex items-center gap-2">
       <p class="text-sm text-muted-foreground">
-        {t('pagination_info', { start: startItem, end: endItem, total })}
+        {tr('pagination_info', { start: startItem, end: endItem, total })}
       </p>
     </div>
 
@@ -73,14 +75,17 @@
     <div class="flex items-center gap-3">
       <!-- Rows per page selector -->
       <div class="flex items-center gap-2">
-        <span class="text-xs font-medium uppercase tracking-wide text-muted-foreground/70">{t('rows')}</span>
+        <span class="text-xs font-medium uppercase tracking-wide text-muted-foreground/70">{tr('rows')}</span>
         <Popover.Root bind:open={limitPopoverOpen}>
-          <Popover.Trigger asChild class="">
+          <Popover.Trigger class="">
             {#snippet child({ props })}
               <button
-                type="button"
-                class="group inline-flex h-9 items-center gap-1.5 rounded-lg border border-border/60 bg-card/50 px-3 text-sm font-medium text-foreground shadow-sm backdrop-blur-sm transition-all duration-150 hover:border-border hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
                 {...props}
+                type="button"
+                class={cn(
+                  'group inline-flex h-9 items-center gap-1.5 rounded-lg border border-border/60 bg-card/50 px-3 text-sm font-medium text-foreground shadow-sm backdrop-blur-sm transition-all duration-150 hover:border-border hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50',
+                  props.class
+                )}
               >
                 <span class="tabular-nums">{limit}</span>
                 <ChevronsUpDown class="h-3.5 w-3.5 text-muted-foreground transition-colors group-hover:text-foreground" />
@@ -117,7 +122,7 @@
           type="button"
           disabled={page <= 1}
           onclick={handlePrevious}
-          aria-label="Previous page"
+          aria-label={tr('previous')}
           class="group inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border/60 bg-card/50 text-muted-foreground shadow-sm backdrop-blur-sm transition-all duration-150 hover:border-border hover:bg-card hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-40"
         >
           <ChevronLeft class="h-4 w-4 transition-transform group-hover:-translate-x-0.5" />
@@ -134,7 +139,7 @@
           type="button"
           disabled={page >= totalPages}
           onclick={handleNext}
-          aria-label="Next page"
+          aria-label={tr('next')}
           class="group inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border/60 bg-card/50 text-muted-foreground shadow-sm backdrop-blur-sm transition-all duration-150 hover:border-border hover:bg-card hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-40"
         >
           <ChevronRight class="h-4 w-4 transition-transform group-hover:translate-x-0.5" />

@@ -11,8 +11,11 @@
 import { redirect } from '@sveltejs/kit';
 import axios from 'axios';
 import { env } from '$env/dynamic/public';
+import { refreshSession, clearSessionCookies, setSessionCookies } from '$lib/api-helpers.js';
 
-const API_BASE_URL = `${env.PUBLIC_DJANGO_API_URL}/api`;
+const API_BASE_URL = env.PUBLIC_DJANGO_API_URL
+  ? `${env.PUBLIC_DJANGO_API_URL}/api`
+  : 'http://localhost:8000/api';
 
 /**
  * @typedef {{ default_currency?: string, currency_symbol?: string, default_country?: string|null }} OrgSettingsPayload
@@ -71,21 +74,46 @@ function verifyTokenLocally(accessToken) {
   return payload;
 }
 
+const TOKEN_VERIFICATION_TTL = 5 * 60 * 1000;
+/** @type {Map<string, number>} */
+const verifiedTokens = new Map();
+
 /**
- * Refresh access token using refresh token
- * @param {string} refreshToken - JWT refresh token
- * @returns {Promise<string|null>} New access token or null if refresh failed
+ * Confirm with Django that the token is signed by the current backend.
+ *
+ * verifyTokenLocally() only base64-decodes the payload, so it also accepts
+ * tokens signed with an old SECRET_KEY or otherwise rejected by Django. Those
+ * tokens render the UI as "logged in" while every API call returns 401.
+ *
+ * @param {string} token
+ * @returns {Promise<'valid' | 'invalid' | 'unknown'>}
  */
-async function refreshAccessToken(refreshToken) {
+async function verifyTokenWithBackend(token) {
+  const cachedUntil = verifiedTokens.get(token);
+  if (cachedUntil && cachedUntil > Date.now()) {
+    return 'valid';
+  }
+  verifiedTokens.delete(token);
+  if (verifiedTokens.size > 500) {
+    verifiedTokens.clear();
+  }
+
   try {
-    const response = await axios.post(`${API_BASE_URL}/auth/refresh-token/`, {
-      refresh: refreshToken
+    const response = await fetch(`${API_BASE_URL}/auth/me/`, {
+      headers: { Authorization: `Bearer ${token}` }
     });
 
-    return response.data.access;
+    if (response.ok) {
+      verifiedTokens.set(token, Date.now() + TOKEN_VERIFICATION_TTL);
+      return 'valid';
+    }
+
+    // Only an explicit 401 means the token itself is unusable. A 5xx or a
+    // network failure must not invalidate the session.
+    return response.status === 401 ? 'invalid' : 'unknown';
   } catch (error) {
-    console.error('Token refresh failed:', error);
-    return null;
+    console.error('Token verification request failed:', error);
+    return 'unknown';
   }
 }
 
@@ -124,33 +152,29 @@ export async function handle({ event, resolve }) {
   let accessToken = event.cookies.get('jwt_access');
   const refreshToken = event.cookies.get('jwt_refresh');
   const orgId = event.cookies.get('org');
+  const isSessionRoute = event.url.pathname.startsWith('/login/session');
 
   /** @type {JWTPayload | null} */
   let jwtPayload = null;
 
   // Try to authenticate user (LOCAL JWT DECODE - no API call!)
-  if (accessToken) {
+  if (accessToken && !isSessionRoute) {
     jwtPayload = verifyTokenLocally(accessToken);
+
+    if (jwtPayload && (await verifyTokenWithBackend(accessToken)) === 'invalid') {
+      console.warn('Access token rejected by Django, refreshing session');
+      jwtPayload = null;
+    }
 
     // If access token expired, try to refresh
     if (!jwtPayload && refreshToken) {
-      const newAccessToken = await refreshAccessToken(refreshToken);
+      const newAccessToken = await refreshSession(event.cookies);
       if (newAccessToken) {
-        // Update cookie with new access token
-        event.cookies.set('jwt_access', newAccessToken, {
-          path: '/',
-          httpOnly: true,
-          sameSite: 'lax',
-          secure: process.env.NODE_ENV === 'production',
-          maxAge: 60 * 60 * 24 // 1 day
-        });
         accessToken = newAccessToken;
         jwtPayload = verifyTokenLocally(newAccessToken);
       } else {
-        // Refresh failed, clear cookies
-        event.cookies.delete('jwt_access', { path: '/' });
-        event.cookies.delete('jwt_refresh', { path: '/' });
-        event.cookies.delete('org', { path: '/' });
+        clearSessionCookies(event.cookies);
+        accessToken = undefined;
       }
     }
   }
@@ -191,21 +215,12 @@ export async function handle({ event, resolve }) {
         const switchResult = await switchOrg(token, orgId);
 
         if (switchResult) {
-          // Update cookies with new tokens that have org context
-          event.cookies.set('jwt_access', switchResult.access_token, {
-            path: '/',
-            httpOnly: true,
-            sameSite: 'lax',
-            secure: process.env.NODE_ENV === 'production',
-            maxAge: 60 * 60 * 24 // 1 day
+          setSessionCookies(event.cookies, {
+            accessToken: switchResult.access_token,
+            refreshToken: switchResult.refresh_token,
+            orgId
           });
-          event.cookies.set('jwt_refresh', switchResult.refresh_token, {
-            path: '/',
-            httpOnly: true,
-            sameSite: 'lax',
-            secure: process.env.NODE_ENV === 'production',
-            maxAge: 60 * 60 * 24 * 365 // 1 year
-          });
+          accessToken = switchResult.access_token;
 
           // Extract org info from switch result (no additional API call!)
           event.locals.org = switchResult.current_org;

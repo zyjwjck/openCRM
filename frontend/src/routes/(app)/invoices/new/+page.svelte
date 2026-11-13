@@ -3,6 +3,7 @@
   import { enhance } from '$app/forms';
   import { tick } from 'svelte';
   import { toast } from 'svelte-sonner';
+  import { t } from '$lib/utils/i18n.svelte.js';
 
   import { Button } from '$lib/components/ui/button';
   import { Input } from '$lib/components/ui/input';
@@ -198,11 +199,11 @@
   // Save as draft
   async function saveDraft() {
     if (!invoice.accountId || !invoice.contactId) {
-      toast.error('Please select an Account and Contact');
+      toast.error(t('selectAccountAndContact'));
       return;
     }
     if (!hasValidLineItems()) {
-      toast.error('Please add at least one line item with a name/description and rate');
+      toast.error(t('lineItemRequired'));
       return;
     }
     isSaving = true;
@@ -214,11 +215,11 @@
   // Send invoice
   async function sendInvoice() {
     if (!invoice.accountId || !invoice.contactId) {
-      toast.error('Please select an Account and Contact');
+      toast.error(t('selectAccountAndContact'));
       return;
     }
     if (!hasValidLineItems()) {
-      toast.error('Please add at least one line item with a name/description and rate');
+      toast.error(t('lineItemRequired'));
       return;
     }
     isSaving = true;

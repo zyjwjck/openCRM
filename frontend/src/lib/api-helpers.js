@@ -6,10 +6,136 @@
  */
 
 import { env } from '$env/dynamic/public';
+import { dev } from '$app/environment';
 
 const API_BASE_URL = env.PUBLIC_DJANGO_API_URL
   ? `${env.PUBLIC_DJANGO_API_URL}/api`
   : 'http://localhost:8000/api';
+
+const ACCESS_COOKIE = 'jwt_access';
+const REFRESH_COOKIE = 'jwt_refresh';
+const ORG_COOKIE = 'org';
+
+const COOKIE_SECURE = !dev;
+const ACCESS_COOKIE_MAX_AGE = 60 * 60 * 24;
+const REFRESH_COOKIE_MAX_AGE = 60 * 60 * 24 * 14;
+
+/**
+ * Accept either a locals-like object ({ cookies, org }) or the Cookies object itself.
+ * @param {{ cookies?: Cookies } | Cookies | undefined} locals
+ * @returns {Cookies | undefined}
+ */
+function resolveCookies(locals) {
+  if (!locals) return undefined;
+  const nested = /** @type {{ cookies?: Cookies }} */ (locals).cookies;
+  return nested || /** @type {Cookies} */ (locals);
+}
+
+/**
+ * Remove all auth cookies (server-side).
+ * @param {Cookies | undefined} cookies
+ */
+export function clearSessionCookies(cookies) {
+  if (!cookies) return;
+  for (const name of [ACCESS_COOKIE, REFRESH_COOKIE, ORG_COOKIE]) {
+    cookies.delete(name, { path: '/' });
+  }
+}
+
+/**
+ * Write auth cookies from the server.
+ *
+ * Deleting first is important: cookies previously written by document.cookie
+ * cannot overwrite httpOnly cookies of the same name, which leaves a stale
+ * (invalid) access token in the browser forever.
+ *
+ * @param {Cookies} cookies
+ * @param {{ accessToken: string, refreshToken: string, orgId?: string | null }} session
+ */
+export function setSessionCookies(cookies, { accessToken, refreshToken, orgId }) {
+  cookies.delete(ACCESS_COOKIE, { path: '/' });
+  cookies.delete(REFRESH_COOKIE, { path: '/' });
+
+  cookies.set(ACCESS_COOKIE, accessToken, {
+    path: '/',
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: COOKIE_SECURE,
+    maxAge: ACCESS_COOKIE_MAX_AGE
+  });
+  cookies.set(REFRESH_COOKIE, refreshToken, {
+    path: '/',
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: COOKIE_SECURE,
+    maxAge: REFRESH_COOKIE_MAX_AGE
+  });
+
+  if (orgId) {
+    cookies.delete(ORG_COOKIE, { path: '/' });
+    // SvelteKit defaults cookies to httpOnly; org is also read client-side.
+    cookies.set(ORG_COOKIE, orgId, {
+      path: '/',
+      httpOnly: false,
+      sameSite: 'lax',
+      secure: COOKIE_SECURE,
+      maxAge: REFRESH_COOKIE_MAX_AGE
+    });
+  }
+}
+
+/**
+ * Exchange the refresh token for a new token pair and update the cookies.
+ * Returns the new access token, or null when the session can no longer be recovered.
+ * @param {{ cookies?: Cookies } | Cookies | undefined} locals
+ * @returns {Promise<string | null>}
+ */
+export async function refreshSession(locals) {
+  const cookies = resolveCookies(locals);
+  const refreshToken = cookies?.get?.(REFRESH_COOKIE);
+  if (!cookies || !refreshToken) return null;
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/auth/refresh-token/`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refresh: refreshToken })
+    });
+
+    if (!response.ok) {
+      console.warn(`Token refresh failed with HTTP ${response.status}`);
+      clearSessionCookies(cookies);
+      return null;
+    }
+
+    const data = await response.json();
+    if (!data.access) {
+      clearSessionCookies(cookies);
+      return null;
+    }
+
+    // The backend rotates refresh tokens, so the new one must be stored as well.
+    setSessionCookies(cookies, {
+      accessToken: data.access,
+      refreshToken: data.refresh || refreshToken,
+      orgId: cookies.get(ORG_COOKIE)
+    });
+    return data.access;
+  } catch (error) {
+    console.error('Token refresh failed:', error);
+    clearSessionCookies(cookies);
+    return null;
+  }
+}
+
+/** Raised when the backend rejects the token and the session cannot be refreshed. */
+export class AuthenticationError extends Error {
+  constructor(message = 'Authentication session expired, please sign in again') {
+    super(message);
+    this.name = 'AuthenticationError';
+    this.status = 401;
+  }
+}
 
 /**
  * Simple in-memory cache for API responses
@@ -26,14 +152,15 @@ class ApiCache {
    * Generate cache key from endpoint and options
    * @param {string} endpoint
    * @param {{ method?: string, body?: Record<string, unknown> }} options
+   * @param {string} [tokenKey] - Fingerprint of the access token (cache must be per session)
    * @returns {string}
    */
-  generateKey(endpoint, options = {}) {
-    const { method = 'GET', body } = options;
+  generateKey(endpoint, options = {}, tokenKey = '') {
+    const { method = 'GET' } = options;
     // Only cache GET requests
     if (method !== 'GET') return null;
-    // For GET requests, include endpoint and query params in key
-    return endpoint;
+    // Include the token fingerprint so responses are never shared across users/orgs
+    return `${tokenKey}|${endpoint}`;
   }
 
   /**
@@ -100,53 +227,63 @@ const apiCache = new ApiCache();
  */
 export async function apiRequest(endpoint, options = {}, locals) {
   const { method = 'GET', body, headers = {} } = options;
+  const cookies = resolveCookies(locals);
 
-  // Check cache for GET requests
-  const cacheKey = apiCache.generateKey(endpoint, options);
+  /** @returns {string | undefined} */
+  const readAccessToken = () =>
+    // Support both naming conventions (jwt_access from login, access_token from legacy)
+    cookies?.get?.(ACCESS_COOKIE) || cookies?.get?.('access_token') || undefined;
+
+  let accessToken = readAccessToken();
+  const cacheKey = apiCache.generateKey(endpoint, options, accessToken?.slice(-32));
   const cachedData = apiCache.get(cacheKey);
   if (cachedData) {
     console.log(`Cache hit for ${endpoint}`);
     return cachedData;
   }
 
-  // Get access token from cookies (server-side)
-  // In server load functions, cookies is passed directly
-  /** @type {Cookies | undefined} */
-  const cookies = /** @type {Cookies | undefined} */ (
-    /** @type {{ cookies?: Cookies }} */ (locals).cookies || locals
-  );
-  // Support both naming conventions (jwt_access from login, access_token from legacy)
-  const accessToken = cookies?.get?.('jwt_access') || cookies?.get?.('access_token');
-
-  // Build request headers
-  /** @type {Record<string, string>} */
-  const requestHeaders = {
-    'Content-Type': 'application/json',
-    ...headers
-  };
-
-  // Add authentication
-  // Note: Organization context is now embedded in JWT token, not sent as header
-  if (accessToken) {
-    requestHeaders['Authorization'] = `Bearer ${accessToken}`;
-  }
-
-  // Build request options
-  /** @type {RequestInit} */
-  const requestOptions = {
-    method,
-    headers: requestHeaders
-  };
-
-  // Add body for non-GET requests
-  if (body && method !== 'GET') {
-    requestOptions.body = JSON.stringify(body);
-  }
-
   const url = `${API_BASE_URL}${endpoint}`;
 
+  /**
+   * @param {string | undefined} token
+   * @returns {Promise<Response>}
+   */
+  const performRequest = async (token) => {
+    /** @type {Record<string, string>} */
+    const requestHeaders = {
+      'Content-Type': 'application/json',
+      ...headers
+    };
+
+    // Organization context is embedded in the JWT, no extra header needed.
+    if (token) {
+      requestHeaders['Authorization'] = `Bearer ${token}`;
+    }
+
+    /** @type {RequestInit} */
+    const requestOptions = { method, headers: requestHeaders };
+    if (body && method !== 'GET') {
+      requestOptions.body = JSON.stringify(body);
+    }
+    return fetch(url, requestOptions);
+  };
+
   try {
-    const response = await fetch(url, requestOptions);
+    let response = await performRequest(accessToken);
+
+    // An invalid access token is recoverable: refresh the token pair once and retry.
+    if (response.status === 401 && cookies?.get?.(REFRESH_COOKIE)) {
+      const refreshedToken = await refreshSession(cookies);
+      if (refreshedToken) {
+        accessToken = refreshedToken;
+        response = await performRequest(refreshedToken);
+      }
+    }
+
+    if (response.status === 401) {
+      clearSessionCookies(cookies);
+      throw new AuthenticationError();
+    }
 
     // Handle error responses
     if (!response.ok) {
@@ -192,6 +329,17 @@ export async function apiRequest(endpoint, options = {}, locals) {
       throw new Error(errorMessage);
     }
 
+    // A successful mutation must invalidate the cached GET responses.
+    // apiCache is a server-side singleton with a 5-minute TTL, so without this
+    // every load() after a PATCH/POST/DELETE (including invalidateAll() and a
+    // full page reload) keeps serving the stale snapshot until the TTL expires.
+    // Clear the whole cache: keys are per-session but a mutation can affect
+    // list AND detail endpoints across several query strings, so a targeted
+    // delete would risk leaving a stale entry behind.
+    if (method !== 'GET') {
+      apiCache.clear();
+    }
+
     // Handle 204 No Content
     if (response.status === 204) {
       return null;
@@ -199,13 +347,13 @@ export async function apiRequest(endpoint, options = {}, locals) {
 
     // Return JSON response
     const data = await response.json();
-    
-    // Cache GET responses
-    if (cacheKey) {
-      console.log(`Caching response for ${endpoint}`);
-      apiCache.set(cacheKey, data);
+
+    // Cache GET responses under the token that actually served the request
+    const finalCacheKey = apiCache.generateKey(endpoint, options, accessToken?.slice(-32));
+    if (finalCacheKey) {
+      apiCache.set(finalCacheKey, data);
     }
-    
+
     return data;
   } catch (error) {
     console.error(`API request failed: ${method} ${endpoint}`, error);

@@ -1,5 +1,9 @@
 <script>
   import { Building2, DollarSign, Flame, Snowflake, Thermometer, Sparkles } from '@lucide/svelte';
+  import { useI18n } from '$lib/utils/i18n.svelte.js';
+
+  const i18n = useI18n();
+  const tr = i18n.t;
 
   /**
    * @typedef {Object} Lead
@@ -54,13 +58,22 @@
   };
 
   // Computed values
-  const title = $derived(item.title || item.full_name || item.fullName || 'Untitled Lead');
+  const title = $derived(item.title || item.full_name || item.fullName || tr('untitledLead'));
   const company = $derived(item.company_name || item.company || '');
   const amount = $derived(item.opportunity_amount || item.opportunityAmount);
   const currency = $derived(item.currency || 'AED');
   const followUp = $derived(item.next_follow_up || item.nextFollowUp);
   const isOverdue = $derived(item.is_follow_up_overdue || item.isFollowUpOverdue);
   const rating = $derived(item.rating);
+  const ratingLabel = $derived(
+    rating === 'HOT'
+      ? tr('ratingHot')
+      : rating === 'WARM'
+        ? tr('ratingWarm')
+        : rating === 'COLD'
+          ? tr('ratingCold')
+          : rating
+  );
   const assignees = $derived(item.assigned_to || item.assignedTo || []);
   const config = $derived(rating ? ratingConfig[rating] : null);
 
@@ -72,7 +85,8 @@
   function formatAmount(value, curr) {
     const num = typeof value === 'string' ? parseFloat(value) : value;
     if (isNaN(num)) return '';
-    return new Intl.NumberFormat('en-US', {
+    const locale = String(i18n.lang).toLowerCase().startsWith('zh') ? 'zh-CN' : 'en-US';
+    return new Intl.NumberFormat(locale, {
       style: 'currency',
       currency: curr,
       minimumFractionDigits: 0,
@@ -96,7 +110,7 @@
    * @param {any} assignee
    */
   function getAssigneeName(assignee) {
-    return assignee?.user_details?.email || assignee?.email || 'Unknown';
+    return assignee?.user_details?.email || assignee?.email || tr('unknown');
   }
 
   // Generate a consistent color from email for avatar
@@ -162,7 +176,7 @@
         <div class="rating-badge flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-[0.65rem] font-bold uppercase tracking-wider {config.bg} {config.text} {config.border} border"
           class:rating-pulse={config.pulse}>
           <RatingIcon class="h-3 w-3" />
-          {rating}
+          {ratingLabel}
         </div>
       {/if}
     </div>
@@ -212,7 +226,7 @@
 
         <!-- Quick sparkle indicator for high-value leads -->
         {#if amount && parseFloat(String(amount)) > 300000}
-          <div class="flex items-center gap-1 text-amber-500 dark:text-amber-400" title="High-value lead">
+          <div class="flex items-center gap-1 text-amber-500 dark:text-amber-400" title={tr('highValueLead')}>
             <Sparkles class="h-4 w-4" />
           </div>
         {/if}

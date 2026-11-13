@@ -1,6 +1,10 @@
 <script>
   import { KanbanBoard } from '$lib/components/ui/kanban';
   import LeadCard from './LeadCard.svelte';
+  import { useI18n } from '$lib/utils/i18n.svelte.js';
+
+  const i18n = useI18n();
+  const tr = i18n.t;
 
   /**
    * @typedef {Object} Column
@@ -58,5 +62,5 @@
   onItemMove={onStatusChange}
   {onCardClick}
   CardComponent={LeadCard}
-  emptyMessage="No kanban data available"
+  emptyMessage={tr('noKanbanData')}
 />

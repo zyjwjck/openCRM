@@ -2,11 +2,16 @@
   import { ChevronDown, Check, X, CircleDot } from '@lucide/svelte';
   import { cn } from '$lib/utils.js';
   import * as Popover from '$lib/components/ui/popover/index.js';
+  import { useI18n } from '$lib/utils/i18n.svelte.js';
+
+  const i18n = useI18n();
+  const tr = i18n.t;
 
   /**
    * @typedef {{
    *   value: string,
    *   label: string,
+   *   labelKey?: string,
    *   icon?: any,
    * }} Option
    */
@@ -27,14 +32,23 @@
     options = [],
     value = $bindable(''),
     multiple = false,
-    placeholder = 'Select...',
+    placeholder = tr('select'),
     label = '',
-    allLabel = 'All',
+    allLabel = tr('all'),
     class: className,
     onchange
   } = $props();
 
   let open = $state(false);
+
+  /**
+   * Localize an option when it carries an i18n key, otherwise keep its label.
+   * @param {Option | undefined} option
+   */
+  function optionLabel(option) {
+    if (!option) return '';
+    return option.labelKey ? tr(option.labelKey) : option.label;
+  }
 
   const selectedValues = $derived(
     multiple ? (Array.isArray(value) ? value : value ? [value] : []) : []
@@ -45,13 +59,13 @@
       if (selectedValues.length === 0) return placeholder;
       if (selectedValues.length === 1) {
         const opt = options.find((o) => o.value === selectedValues[0]);
-        return opt?.label || selectedValues[0];
+        return optionLabel(opt) || selectedValues[0];
       }
-      return `${selectedValues.length} selected`;
+      return tr('nSelected', { count: selectedValues.length });
     } else {
       if (!value || value === 'ALL') return allLabel;
       const opt = options.find((o) => o.value === value);
-      return opt?.label || value;
+      return optionLabel(opt) || value;
     }
   });
 
@@ -92,9 +106,10 @@
     </span>
   {/if}
   <Popover.Root bind:open>
-    <Popover.Trigger asChild class="">
+    <Popover.Trigger class="">
       {#snippet child({ props })}
         <button
+          {...props}
           type="button"
           class={cn(
             'select-filter-trigger group',
@@ -116,9 +131,9 @@
             // Active state
             hasValue && 'border-primary/40 bg-primary/[0.03] dark:border-primary/30 dark:bg-primary/[0.08]',
             // Open state
-            open && 'ring-2 ring-primary/20 dark:ring-primary/30'
+            open && 'ring-2 ring-primary/20 dark:ring-primary/30',
+            props.class
           )}
-          {...props}
         >
           <span
             class={cn(
@@ -253,7 +268,7 @@
               {/if}
             </div>
             <span class={cn('truncate', isSelected && 'font-medium')}>
-              {option.label}
+              {optionLabel(option)}
             </span>
           </button>
         {/each}
@@ -276,7 +291,7 @@
         )}
         style="animation-delay: {i * 50}ms"
       >
-        {opt?.label || val}
+        {optionLabel(opt) || val}
         <button
           type="button"
           onclick={() => handleSelect(val)}

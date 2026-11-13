@@ -243,27 +243,29 @@ export async function load({ url, cookies, locals }) {
       filters,
       viewMode,
       kanbanData: kanbanResponse,
+      // `labelKey` is resolved by the client with the current i18n language;
+      // `label` stays as a language-neutral English fallback.
       filterOptions: {
         statuses: [
-          { value: 'ASSIGNED', label: 'Assigned' },
-          { value: 'IN_PROCESS', label: 'In Process' },
-          { value: 'CONVERTED', label: 'Converted' },
-          { value: 'RECYCLED', label: 'Recycled' },
-          { value: 'CLOSED', label: 'Closed' }
+          { value: 'ASSIGNED', label: 'Assigned', labelKey: 'statusAssigned' },
+          { value: 'IN_PROCESS', label: 'In Process', labelKey: 'statusInProcess' },
+          { value: 'CONVERTED', label: 'Converted', labelKey: 'statusConverted' },
+          { value: 'RECYCLED', label: 'Recycled', labelKey: 'statusRecycled' },
+          { value: 'CLOSED', label: 'Closed', labelKey: 'statusClosed' }
         ],
         sources: [
-          { value: 'call', label: 'Call' },
-          { value: 'email', label: 'Email' },
-          { value: 'existing customer', label: 'Existing Customer' },
-          { value: 'partner', label: 'Partner' },
-          { value: 'public relations', label: 'Public Relations' },
-          { value: 'campaign', label: 'Campaign' },
-          { value: 'other', label: 'Other' }
+          { value: 'call', label: 'Call', labelKey: 'sourceCall' },
+          { value: 'email', label: 'Email', labelKey: 'sourceEmail' },
+          { value: 'existing customer', label: 'Existing Customer', labelKey: 'sourceExistingCustomer' },
+          { value: 'partner', label: 'Partner', labelKey: 'sourcePartner' },
+          { value: 'public relations', label: 'Public Relations', labelKey: 'sourcePublicRelations' },
+          { value: 'campaign', label: 'Campaign', labelKey: 'sourceCampaign' },
+          { value: 'other', label: 'Other', labelKey: 'sourceOther' }
         ],
         ratings: [
-          { value: 'HOT', label: 'Hot' },
-          { value: 'WARM', label: 'Warm' },
-          { value: 'COLD', label: 'Cold' }
+          { value: 'HOT', label: 'Hot', labelKey: 'ratingHot' },
+          { value: 'WARM', label: 'Warm', labelKey: 'ratingWarm' },
+          { value: 'COLD', label: 'Cold', labelKey: 'ratingCold' }
         ]
       },
       // Pre-loaded form options for drawer (avoids client-side auth issues)

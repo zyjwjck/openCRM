@@ -1,6 +1,10 @@
 <script>
   import { Calendar, Link, AlertCircle, Flag, Clock, CheckCircle2, Circle, Zap } from '@lucide/svelte';
   import { formatDate } from '$lib/utils/formatting.js';
+  import { useI18n } from '$lib/utils/i18n.svelte.js';
+
+  const i18n = useI18n();
+  const t = i18n.t;
 
   /**
    * @typedef {Object} Task
@@ -52,22 +56,68 @@
     Completed: { icon: CheckCircle2, color: 'text-emerald-500 dark:text-emerald-400' }
   };
 
-  // Entity type labels and icons
-  const entityLabels = {
-    account: 'Account',
-    lead: 'Lead',
-    opportunity: 'Opportunity',
-    case: 'Case'
+  // Entity type -> i18n key (resolved with the current language)
+  /** @type {Record<string, string>} */
+  const entityLabelKeys = {
+    account: 'account',
+    lead: 'leadLabel',
+    opportunity: 'oppLabel',
+    case: 'case'
+  };
+
+  /** @type {Record<string, string>} */
+  const priorityKeys = {
+    High: 'priorityHigh',
+    Medium: 'priorityMedium',
+    Low: 'priorityLow'
+  };
+
+  /** @type {Record<string, string>} */
+  const statusKeys = {
+    New: 'statusNew',
+    'In Progress': 'statusInProgress',
+    Completed: 'statusCompleted'
+  };
+
+  // The server sends English fallbacks for missing related entity names.
+  /** @type {Record<string, string>} */
+  const unknownNameKeys = {
+    'Unknown Account': 'unknownAccount',
+    'Unknown Opportunity': 'unknownOpportunity',
+    'Unknown Case': 'unknownCase',
+    'Unknown Lead': 'unknownLead',
+    Unknown: 'unknown'
   };
 
   // Computed values
-  const title = $derived(item.title || 'Untitled Task');
+  const title = $derived(item.title || t('untitledTask'));
   const priority = $derived(item.priority);
   const status = $derived(item.status || 'New');
   const dueDate = $derived(item.due_date);
+  const formattedDueDate = $derived(
+    dueDate ? formatDate(dueDate, undefined, i18n.lang) : ''
+  );
+  const priorityLabel = $derived(
+    priority && priorityKeys[priority] ? t(priorityKeys[priority]) : priority
+  );
+  const statusLabel = $derived(statusKeys[status] ? t(statusKeys[status]) : status);
   const isOverdue = $derived(item.is_overdue || false);
   const assignees = $derived(item.assigned_to || []);
   const relatedEntity = $derived(item.related_entity);
+  const relatedLabel = $derived(
+    relatedEntity
+      ? entityLabelKeys[relatedEntity.type]
+        ? t(entityLabelKeys[relatedEntity.type])
+        : relatedEntity.type
+      : ''
+  );
+  const relatedDisplayName = $derived(
+    relatedEntity
+      ? unknownNameKeys[relatedEntity.name]
+        ? t(unknownNameKeys[relatedEntity.name])
+        : relatedEntity.name
+      : ''
+  );
   const config = $derived(priority ? priorityConfig[priority] : null);
   const statusCfg = $derived(statusConfig[status] || statusConfig['New']);
 
@@ -86,7 +136,7 @@
    * @param {any} assignee
    */
   function getAssigneeName(assignee) {
-    return assignee?.user_details?.email || assignee?.email || 'Unknown';
+    return assignee?.user_details?.email || assignee?.email || t('unknown');
   }
 
   // Generate a consistent color from email for avatar (matching LeadCard style)
@@ -152,7 +202,7 @@
         <div class="priority-badge flex shrink-0 items-center gap-1 rounded-full px-2 py-0.5 text-[0.65rem] font-bold uppercase tracking-wider {config.bg} {config.text} {config.border} border"
           class:priority-pulse={config.pulse}>
           <PriorityIcon class="h-3 w-3" />
-          {priority}
+          {priorityLabel}
         </div>
       {/if}
     </div>
@@ -162,7 +212,7 @@
       <div class="mt-1.5 flex items-center gap-1.5">
         <Link class="h-3.5 w-3.5 shrink-0 text-gray-400 dark:text-gray-500" />
         <span class="truncate text-sm text-gray-600 dark:text-gray-400">
-          {entityLabels[relatedEntity.type] || relatedEntity.type}: {relatedEntity.name}
+          {t('relatedToLabel', { label: relatedLabel, name: relatedDisplayName })}
         </span>
       </div>
     {/if}
@@ -177,12 +227,12 @@
           {#if isOverdue}
             <AlertCircle class="h-4 w-4 text-rose-600 dark:text-rose-400" />
             <span class="text-sm font-bold tracking-tight text-rose-700 dark:text-rose-300">
-              Overdue: {formatDate(dueDate)}
+              {t('overdue')}: {formattedDueDate}
             </span>
           {:else}
             <Calendar class="h-4 w-4 text-slate-600 dark:text-slate-400" />
             <span class="text-sm font-medium tracking-tight text-slate-700 dark:text-slate-300">
-              {formatDate(dueDate)}
+              {formattedDueDate}
             </span>
           {/if}
         </div>
@@ -218,7 +268,7 @@
       <!-- Status indicator -->
       {#if statusCfg}
         {@const StatusIcon = statusCfg.icon}
-        <div class="flex items-center gap-1.5 {statusCfg.color}" title={status}>
+        <div class="flex items-center gap-1.5 {statusCfg.color}" title={statusLabel}>
           <StatusIcon class="h-4 w-4" />
         </div>
       {/if}

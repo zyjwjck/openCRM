@@ -17,6 +17,22 @@
 
 openCRM 是一个功能齐全的客户关系管理系统，专为初创企业和小型企业设计，**核心特色是内置 AI 智能体**。它结合了强大的 Django REST API 后端和现代化的 SvelteKit 前端，采用多租户架构和 PostgreSQL 行级安全性 (RLS) 实现企业级数据隔离，并将 [nanobot](https://github.com/HKUDS/nanobot) 智能体原生嵌入到 CRM 侧边栏的 `/agent` 路由，实现自动化工作流程和智能辅助决策。
 
+## 界面预览
+
+一睹 openCRM 的界面与其内置 AI 智能体的实际效果：
+
+| CRM 管理——线索、客户、联系人等 | 报价单、发票、产品等 |
+| :---: | :---: |
+| ![CRM 管理](.screenshots/crm管理，线索、客户、联系人等.png) | ![报价单、发票、产品等](.screenshots/报价单、发票、产品等.png) |
+
+| 发票编辑预览 | 系统报表 |
+| :---: | :---: |
+| ![发票编辑预览](.screenshots/发票编辑预览.png) | ![系统报表](.screenshots/系统报表.png) |
+
+**AI 智能体问答（含 MCP 工具）**
+
+![智能体问答（含MCP）](.screenshots/智能体问答（含MCP）.png)
+
 ## AI 智能体集成（核心特色）
 
 openCRM 的 AI 能力来自 [nanobot](https://github.com/HKUDS/nanobot) —— 一个超轻量级（约 4,000 行）的个人 AI 智能体框架。集成方式极简而强大：
@@ -175,6 +191,12 @@ python -m pip install -e .
 
 # 初始化配置和工作空间（交互式引导）
 nanobot onboard
+
+# 将 openCRM-MCP 服务注册到 nanobot（幂等、可移植）。
+# 该命令会把预置的 `openCRM-MCP` 条目（http://127.0.0.1:8100/mcp）
+# 同时写入全局 ~/.nanobot/config.json 与项目配置，使 CRM 的 AI 智能体
+# 开箱即可使用客户/线索/商机类工具——无需在新机器上手动配置 MCP。
+python .nanobot/setup_config.py
 ```
 
 启动 nanobot **网关**（监听 `http://127.0.0.1:8765`）：
@@ -197,7 +219,9 @@ nanobot gateway restart
 nanobot gateway stop
 ```
 
-**在 CRM 中使用**：侧边栏 → AI → Agent（或直接访问 `/agent`）。模型 / 提供商 / MCP 的配置都在 nanobot 自身的**设置**面板中完成。
+**在 CRM 中使用**：侧边栏 → AI → Agent（或直接访问 `/agent`）。模型 / 提供商的配置都在 nanobot 自身的**设置**面板中完成。
+
+> **MCP 已预配置。** openCRM 自带 `openCRM-MCP` 服务（`Agent/mcp/opencrm_server.py`，以 streamable-HTTP 运行在 `:8100`）。它由 `python .nanobot/setup_config.py` 自动注册、并由 `start-all.bat` 为你启动。如果你手动启动 nanobot（例如 `nanobot webui`），请先运行 `start-mcp.bat` 以启用 MCP 工具；否则 nanobot 的 MCP 面板会显示 *Connection failed*。
 
 ### 访问应用
 - **前端**：http://localhost:5173

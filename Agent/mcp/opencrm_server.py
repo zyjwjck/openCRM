@@ -1,5 +1,5 @@
 r"""
-openCRM MCP Server — v1 (Leads Module)
+openCRM MCP Server — v1 (Leads + 通用 CRM 模块)
 =======================================
 
 把 openCRM Django 后端 (http://127.0.0.1:8000) 的 REST API 暴露成 MCP tools,
@@ -9,8 +9,8 @@ openCRM MCP Server — v1 (Leads Module)
 认证:  email + password → 自动调用 /api/auth/login/ 拿 access_token
         也可以直接传入 access_token 跳过登录
 
-运行:  .openCRM-venv\Scripts\python.exe mcp\opencrm_server.py
-配置:  mcp\config.json (email/password/base_url) — 首次运行会自动生成 config.example.json
+运行:  .openCRM-venv\Scripts\python.exe Agent\mcp\opencrm_server.py
+配置:  Agent\mcp\config.json (email/password/base_url) — 首次运行会自动生成 config.example.json
 
 工具列表 (v1):
   --- Leads 线索 ---
@@ -34,9 +34,21 @@ openCRM MCP Server — v1 (Leads Module)
   lead_stage_delete     — 阶段删除
   lead_stage_reorder    — 阶段重排
 
-  --- Auth ---
+  --- 通用业务模块列表（具名工具，默认按创建倒序，limit 取前 N 即最新）---
+  contact_list      — 联系人(Contact)列表
+  account_list      — 客户/账户(Account)列表（返回活跃/关闭分组）
+  opportunity_list  — 商机(Opportunity)列表（需销售权限）
+  case_list         — 工单(Case)列表
+  task_list         — 任务(Task)列表
+
+  --- Auth / 权限 ---
   auth_status       — 检查 token 是否有效
   org_list          — 获取当前用户关联的组织
+  my_permissions    — 返回当前用户在组织内的权限(role/admin/sales/marketing)
+
+  --- 权限感知通用调用 (覆盖全部 230+ 业务接口) ---
+  crm_api           — 任意 REST 端点调用(GET/POST/PUT/PATCH/DELETE + path/params/body)，
+                      发送前按路径+方法做权限预检(admin/sales)，权限不足返回明确 403
 """
 
 from __future__ import annotations
@@ -48,6 +60,8 @@ import traceback
 from pathlib import Path
 from typing import Any
 
+import re
+
 import requests
 from mcp.server.fastmcp import FastMCP
 
@@ -56,16 +70,25 @@ from mcp.server.fastmcp import FastMCP
 # ============================================================
 
 # 默认 host/port — HTTP 模式时生效，stdio 模式时被忽略
-# 可以通过启动参数覆盖: python opencrm_server.py --http --port 8001
+# 端口由 DEFAULT_PORT 控制（当前 8100，HTTP 模式生效）；启动: python opencrm_server.py --http
 DEFAULT_HOST = "127.0.0.1"
-DEFAULT_PORT = 8001
+DEFAULT_PORT = 8100
 
 mcp = FastMCP(
-    "openCRM",
+    "openCRM-MCP",
     instructions=(
         "openCRM CRM 系统 API 工具集。"
-        "操作线索(Lead)的完整 CRUD + 看板管理 + 管道/阶段管理。"
-        "所有写入操作(create/update/delete/move)都会调用真实后端。"
+        "已为常用模块提供具名列表工具，请优先使用它们来回答查询类问题"
+        "(例如用户问「最新的客户是谁」时，应调用 account_list 或 contact_list，"
+        "而不要默认用 lead_list——线索只是其中一种对象)："
+        "lead_list(线索) / contact_list(联系人) / account_list(客户) / "
+        "opportunity_list(商机) / case_list(工单) / task_list(任务)。"
+        "这些列表默认按创建时间倒序，传 limit=5 即可拿到最新的 5 条。"
+        "当没有对应的具名工具，或需要写操作/访问其它端点(发票/报价/产品/用户/团队/标签/文档等)时，"
+        "用 crm_api 直接调用任意 REST 端点，路径形如 /api/contacts/、/api/accounts/、"
+        "/api/opportunities/、/api/invoices/ 等。"
+        "所有写入与管理操作会按当前登录用户的权限(管理员/销售/营销)做预检，"
+        "权限不足会返回明确错误，最终鉴权仍由后端兜底。"
     ),
     host=DEFAULT_HOST,
     port=DEFAULT_PORT,
@@ -90,6 +113,43 @@ CONFIG_EXAMPLE = {
 }
 
 
+# ============================================================
+# 权限规则 (permission-aware routing)
+# ============================================================
+# 每条业务接口在后端已有 JWT + RLS 鉴权；此处做 MCP 层 best-effort 预检，
+# 让 AI agent 在真正发请求前就拿到明确的「权限不足」提示，而不是盲区调用。
+# 规则: (编译后的路径正则, 需要的 HTTP 方法集合 或 None=全部方法, 所需权限)
+#   权限级别:
+#     "admin"     — role=ADMIN 或 is_organization_admin
+#     "sales"     — has_sales_access
+#     "marketing" — has_marketing_access
+# 设计原则: GET 等只读操作通常对所有成员开放，只对「写/管理」操作设限。
+PERMISSION_RULES = [
+    # --- 仅管理员可写/管理的接口 ---
+    (re.compile(r"^/api/api-settings/"), None, "admin"),
+    (re.compile(r"^/api/org/settings/"), {"PUT", "PATCH"}, "admin"),
+    (re.compile(r"^/api/org/$"), {"POST"}, "admin"),
+    (re.compile(r"^/api/tags/"), {"POST", "PUT", "DELETE"}, "admin"),
+    (re.compile(r"^/api/leads/pipelines/"), {"POST", "PUT", "PATCH", "DELETE"}, "admin"),
+    (re.compile(r"^/api/leads/stages/"), {"POST", "PUT", "PATCH", "DELETE"}, "admin"),
+    (re.compile(r"^/api/user/"), {"POST", "PUT", "PATCH", "DELETE"}, "admin"),
+    (re.compile(r"^/api/teams/"), {"POST", "PUT", "PATCH", "DELETE"}, "admin"),
+    # --- 销售模块（全部方法都需要销售权限）---
+    (re.compile(r"^/api/invoices/"), None, "sales"),
+    (re.compile(r"^/api/opportunities/"), None, "sales"),
+]
+
+
+def _required_permission(method: str, path: str):
+    """根据路径 + 方法返回所需权限级别；无限制返回 None。"""
+    m = (method or "GET").upper()
+    for rx, methods, perm in PERMISSION_RULES:
+        if rx.match(path):
+            if methods is None or m in methods:
+                return perm
+    return None
+
+
 class CRMClient:
     """openCRM API 客户端 — 处理 JWT 认证、headers、错误格式化。"""
 
@@ -101,38 +161,32 @@ class CRMClient:
         self.access_token = access_token
         self.org_name = org_name
         self.session = requests.Session()
+        self.permissions = {"resolved": False}
+        self._org = None
         self._login()
+        self._resolve_permissions()
 
     # --------- 认证 ---------
     def _login(self):
-        """JWT 登录拿 access_token。自动重试（兼容 Django 稍后启动的场景）。"""
+        """JWT 登录拿 access_token。"""
         if self.access_token:
             return  # 已有 token
         url = f"{self.base_url}/api/auth/login/"
-        import time as _time
-        last_err = None
-        for attempt in range(10):  # 最多重试 10 次，每次等 2 秒
-            try:
-                r = self.session.post(url, json={
-                    "email": self.email, "password": self.password
-                }, timeout=10)
-                if r.status_code == 200:
-                    data = r.json()
-                    self.access_token = data.get("access_token") or data.get("access")
-                    if not self.access_token:
-                        raise RuntimeError(f"登录成功但没拿到 token: {data}")
-                    return  # 登录成功
-                else:
-                    raise RuntimeError(f"登录失败 HTTP {r.status_code}: {r.text[:200]}")
-            except requests.ConnectionError as e:
-                last_err = e
-                if attempt < 9:
-                    print(f"  ⏳ 等待后端就绪... ({attempt + 1}/10)  [{e}]", file=sys.stderr)
-                    _time.sleep(2)
-                else:
-                    raise RuntimeError(
-                        f"无法连接后端 {self.base_url}（重试 10 次均失败）。请先启动 Django 服务 (manage.py runserver)。"
-                    ) from last_err
+        try:
+            r = self.session.post(url, json={
+                "email": self.email, "password": self.password
+            }, timeout=10)
+            if r.status_code == 200:
+                data = r.json()
+                self.access_token = data.get("access_token") or data.get("access")
+                if not self.access_token:
+                    raise RuntimeError(f"登录成功但没拿到 token: {data}")
+            else:
+                raise RuntimeError(f"登录失败 HTTP {r.status_code}: {r.text[:200]}")
+        except requests.ConnectionError:
+            raise RuntimeError(
+                f"无法连接后端 {self.base_url}。请先启动 Django 服务 (manage.py runserver)。"
+            )
 
     def _headers(self) -> dict:
         headers = {"Authorization": f"Bearer {self.access_token}"}
@@ -140,9 +194,75 @@ class CRMClient:
             headers["X-Org-Name"] = self.org_name
         return headers
 
+    # --------- 权限解析 ---------
+    def _resolve_permissions(self):
+        """从 /api/auth/me/ 拿到当前用户在每个组织的权限，挑出当前 org 的权限缓存。"""
+        try:
+            me = self.get("/api/auth/me/")
+            if isinstance(me, dict) and not me.get("__error__"):
+                orgs = me.get("organizations") or []
+                chosen = None
+                if self.org_name:
+                    chosen = next((o for o in orgs if o.get("name") == self.org_name), None)
+                if chosen is None and orgs:
+                    chosen = orgs[0]
+                if chosen:
+                    self._org = chosen.get("id")
+                    self.permissions = {
+                        "resolved": True,
+                        "org_id": chosen.get("id"),
+                        "org_name": chosen.get("name"),
+                        "role": chosen.get("role"),
+                        "is_organization_admin": chosen.get("is_organization_admin"),
+                        "has_sales_access": chosen.get("has_sales_access"),
+                        "has_marketing_access": chosen.get("has_marketing_access"),
+                        "is_active": chosen.get("is_active"),
+                    }
+                    return
+            self.permissions = {"resolved": False}
+        except Exception:
+            self.permissions = {"resolved": False}
+
+    def _check_permission(self, perm: str):
+        """返回 None 表示通过；否则返回权限不足的错误 dict（MCP 层 best-effort）。"""
+        p = self.permissions
+        if not p.get("resolved"):
+            return None  # 解析失败则放行，交由后端兜底鉴权
+        if perm == "active":
+            if p.get("is_active") is False:
+                return {"__error__": True, "status_code": 403,
+                        "message": "权限不足：当前账户已被停用 (is_active=False)"}
+            return None
+        if perm == "admin":
+            if p.get("role") == "ADMIN" or p.get("is_organization_admin"):
+                return None
+            return {"__error__": True, "status_code": 403,
+                    "message": "权限不足：需要管理员权限 (role=ADMIN 或 is_organization_admin=True)，"
+                               "当前 role=%s, is_organization_admin=%s" % (
+                                   p.get("role"), p.get("is_organization_admin"))}
+        if perm == "sales":
+            if p.get("has_sales_access"):
+                return None
+            return {"__error__": True, "status_code": 403,
+                    "message": "权限不足：需要销售访问权限 (has_sales_access=True)，"
+                               "当前 has_sales_access=%s" % p.get("has_sales_access")}
+        if perm == "marketing":
+            if p.get("has_marketing_access"):
+                return None
+            return {"__error__": True, "status_code": 403,
+                    "message": "权限不足：需要营销访问权限 (has_marketing_access=True)，"
+                               "当前 has_marketing_access=%s" % p.get("has_marketing_access")}
+        return None
+
     # --------- HTTP 封装 ---------
     def request(self, method: str, path: str, **kwargs) -> dict | list | Any:
         """统一请求封装：附加 headers、错误处理、返回解析后的 JSON。"""
+        # 权限预检（best-effort，后端仍会最终鉴权）
+        required = _required_permission(method, path)
+        if required:
+            denied = self._check_permission(required)
+            if denied:
+                return denied
         url = f"{self.base_url}{path}"
         kwargs.setdefault("headers", self._headers())
         kwargs.setdefault("timeout", 30)
@@ -603,6 +723,235 @@ def lead_stage_reorder(pipeline_pk: str, stage_ids: list[str]) -> dict:
     )
 
 
+# ============================================================
+# 4.1 通用业务模块列表工具（联系人/账户/商机/工单/任务）
+# ============================================================
+# 让 AI 能像使用 lead_list 一样自然查询非线索模块。
+# 后端统一使用 LimitOffsetPagination，标准返回 {count, next, previous, results}。
+
+def _build_params(**kwargs) -> dict:
+    """收集非 None、非空的 query 参数（空 list 也跳过）。"""
+    out: dict[str, Any] = {}
+    for k, v in kwargs.items():
+        if v is None:
+            continue
+        if isinstance(v, list) and len(v) == 0:
+            continue
+        out[k] = v
+    return out
+
+
+@mcp.tool()
+@safe_call
+def contact_list(
+    search: str | None = None,
+    assigned_to: list[str] | None = None,
+    tags: list[str] | None = None,
+    created_at_gte: str | None = None,
+    created_at_lte: str | None = None,
+    offset: int = 0,
+    limit: int = 10,
+) -> dict:
+    """查询联系人(Contact)列表，返回标准分页结构 {count, results, ...}（按 id 倒序，最新在前）。
+
+    取「最新联系人」：读 results[0]（字段含 first_name / last_name / email / created_at 等）。
+
+    Args:
+        search: 全文搜索（名/姓/邮箱/电话）
+        assigned_to: 分配给的用户 Profile ID 列表
+        tags: 标签 ID 列表
+        created_at_gte: 创建时间下限 YYYY-MM-DD
+        created_at_lte: 创建时间上限 YYYY-MM-DD
+        offset: 分页偏移，默认 0
+        limit: 每页数量，默认 10（取前 N 条即最新 N 条）
+    """
+    c = _get_client()
+    params = _build_params(
+        search=search,
+        assigned_to=assigned_to,
+        tags=tags,
+        created_at__gte=created_at_gte,
+        created_at__lte=created_at_lte,
+        offset=offset,
+        limit=limit,
+    )
+    return c.get("/api/contacts/", params=params)
+
+
+@mcp.tool()
+@safe_call
+def account_list(
+    search: str | None = None,
+    industry: str | None = None,
+    assigned_to: list[str] | None = None,
+    tags: list[str] | None = None,
+    status: str | None = None,
+    created_at_gte: str | None = None,
+    created_at_lte: str | None = None,
+    offset: int = 0,
+    limit: int = 10,
+) -> dict:
+    """查询客户/账户(Account)列表。返回结构包含活跃账户(active_accounts)与关闭账户(closed_accounts)两组，按 id 倒序（最新在前）。
+
+    取「最新客户」：读 active_accounts.open_accounts[0]（字段含 name / created_at / industry 等）；
+    关闭客户在 closed_accounts.closed_accounts。传 limit=5 即可拿到最新 5 个。
+
+    Args:
+        search: 全文搜索（名称/邮箱/电话/网站）
+        industry: 按行业筛选
+        assigned_to: 分配给的用户 Profile ID 列表
+        tags: 标签 ID 列表
+        status: 'open'（活跃客户）或 'closed'（已关闭）；不传返回全部
+        created_at_gte: 创建时间下限 YYYY-MM-DD
+        created_at_lte: 创建时间上限 YYYY-MM-DD
+        offset: 分页偏移，默认 0
+        limit: 每页数量，默认 10
+    """
+    c = _get_client()
+    params = _build_params(
+        search=search,
+        industry=industry,
+        assigned_to=assigned_to,
+        tags=tags,
+        status=status,
+        created_at__gte=created_at_gte,
+        created_at__lte=created_at_lte,
+        offset=offset,
+        limit=limit,
+    )
+    return c.get("/api/accounts/", params=params)
+
+
+@mcp.tool()
+@safe_call
+def opportunity_list(
+    search: str | None = None,
+    stage: str | None = None,
+    account: str | None = None,
+    assigned_to: list[str] | None = None,
+    tags: list[str] | None = None,
+    created_at_gte: str | None = None,
+    created_at_lte: str | None = None,
+    closed_on_gte: str | None = None,
+    closed_on_lte: str | None = None,
+    offset: int = 0,
+    limit: int = 10,
+) -> dict:
+    """查询商机(Opportunity)列表，返回标准分页结构（按 id 倒序，最新在前）。注意：商机模块需要销售权限(sales access)。
+
+    结果在 opportunities 字段（{opportunities, opportunities_count, ...}），取最新读 opportunities[0]。
+
+    Args:
+        search: 全文搜索
+        stage: 按阶段筛选（如 PROSPECTING/QUALIFICATION/PROPOSAL/NEGOTIATION/WON/LOST）
+        account: 关联账户(Account) ID
+        assigned_to: 分配给的用户 Profile ID 列表
+        tags: 标签 ID 列表
+        created_at_gte/lte: 创建时间范围 YYYY-MM-DD
+        closed_on_gte/lte: 预计/实际成交日期范围 YYYY-MM-DD
+        offset: 分页偏移，默认 0
+        limit: 每页数量，默认 10
+    """
+    c = _get_client()
+    params = _build_params(
+        search=search,
+        stage=stage,
+        account=account,
+        assigned_to=assigned_to,
+        tags=tags,
+        created_at__gte=created_at_gte,
+        created_at__lte=created_at_lte,
+        closed_on__gte=closed_on_gte,
+        closed_on__lte=closed_on_lte,
+        offset=offset,
+        limit=limit,
+    )
+    return c.get("/api/opportunities/", params=params)
+
+
+@mcp.tool()
+@safe_call
+def case_list(
+    search: str | None = None,
+    status: str | None = None,
+    priority: str | None = None,
+    case_type: str | None = None,
+    assigned_to: list[str] | None = None,
+    tags: list[str] | None = None,
+    created_at_gte: str | None = None,
+    created_at_lte: str | None = None,
+    offset: int = 0,
+    limit: int = 10,
+) -> dict:
+    """查询工单(Case)列表，返回标准分页结构（按 id 倒序，最新在前）。结果在 cases 字段，取最新读 cases[0]。
+
+    Args:
+        search: 全文搜索
+        status: 状态 New/Assigned/Pending/Closed/Rejected/Duplicate
+        priority: 优先级 Low/Normal/High/Urgent
+        case_type: 类型 Question/Incident/Problem
+        assigned_to: 分配给的用户 Profile ID 列表
+        tags: 标签 ID 列表
+        created_at_gte/lte: 创建时间范围 YYYY-MM-DD
+        offset: 分页偏移，默认 0
+        limit: 每页数量，默认 10
+    """
+    c = _get_client()
+    params = _build_params(
+        search=search,
+        status=status,
+        priority=priority,
+        case_type=case_type,
+        assigned_to=assigned_to,
+        tags=tags,
+        created_at__gte=created_at_gte,
+        created_at__lte=created_at_lte,
+        offset=offset,
+        limit=limit,
+    )
+    return c.get("/api/cases/", params=params)
+
+
+@mcp.tool()
+@safe_call
+def task_list(
+    search: str | None = None,
+    status: str | None = None,
+    priority: str | None = None,
+    assigned_to: list[str] | None = None,
+    tags: list[str] | None = None,
+    due_date_gte: str | None = None,
+    due_date_lte: str | None = None,
+    offset: int = 0,
+    limit: int = 10,
+) -> dict:
+    """查询任务(Task)列表，返回标准分页结构（按 id 倒序，最新在前）。结果在 tasks 字段，取最新读 tasks[0]。
+
+    Args:
+        search: 全文搜索
+        status: 状态 New/In Progress/Completed/Deferred
+        priority: 优先级 Low/Normal/High/Urgent
+        assigned_to: 分配给的用户 Profile ID 列表
+        tags: 标签 ID 列表
+        due_date_gte/lte: 截止日期范围 YYYY-MM-DD
+        offset: 分页偏移，默认 0
+        limit: 每页数量，默认 10
+    """
+    c = _get_client()
+    params = _build_params(
+        search=search,
+        status=status,
+        priority=priority,
+        assigned_to=assigned_to,
+        tags=tags,
+        due_date__gte=due_date_gte,
+        due_date__lte=due_date_lte,
+        offset=offset,
+        limit=limit,
+    )
+    return c.get("/api/tasks/", params=params)
+
+
 # ---------- Auth ----------
 
 @mcp.tool()
@@ -627,6 +976,72 @@ def org_list() -> dict:
 
 
 # ============================================================
+# 4.5 权限 & 通用 API 工具
+# ============================================================
+
+@mcp.tool()
+@safe_call
+def my_permissions() -> dict:
+    """返回当前登录用户在所属组织内的权限信息，用于在调用写/管理操作前确认自己是否有权限。
+
+    返回字段:
+        resolved                — 权限是否成功解析
+        org_id / org_name       — 当前生效的组织
+        role                    — 'ADMIN' | 'USER'
+        is_organization_admin   — 是否组织管理员
+        has_sales_access        — 是否有销售访问权限
+        has_marketing_access    — 是否有营销访问权限
+        is_active               — 账户是否启用
+    """
+    c = _get_client()
+    return c.permissions
+
+
+@mcp.tool()
+@safe_call
+def crm_api(
+    method: str,
+    path: str,
+    params: Any = None,
+    body: Any = None,
+) -> dict:
+    """通用 REST 调用工具：覆盖 openCRM 全部业务接口
+    （联系人/账户/商机/工单/任务/销售发票/报价/产品/循环发票/模板/报表/用户/团队/标签/文档/组织 等 230+ 端点）。
+
+    优先使用具名列表工具（lead_list / contact_list / account_list / opportunity_list / case_list / task_list）；
+    当没有对应的具名工具，或需要写操作/访问其它端点时，用本工具直接调用对应 REST 端点。
+    MCP 会在发送前按「路径 + HTTP 方法」做权限预检（管理员 / 销售），权限不足会返回明确的 403 错误；
+    最终鉴权仍由后端兜底。
+
+    Args:
+        method: HTTP 方法 — GET / POST / PUT / PATCH / DELETE（大小写不限）
+        path: 接口路径，必须以 / 开头，例如 /api/contacts/ 或 /api/opportunities/42/
+        params: query 参数（dict 或 JSON 字符串），例如 {"status": "open", "limit": 20}
+        body: 请求体（dict 或 JSON 字符串，POST/PUT/PATCH 用），例如 {"name": "张三", "email": "a@b.com"}
+    """
+    c = _get_client()
+    method = (method or "GET").upper()
+    if not path.startswith("/"):
+        return {"__error__": True, "message": "path 必须以 / 开头，例如 /api/contacts/"}
+    kw: dict[str, Any] = {}
+    if params:
+        if isinstance(params, str):
+            try:
+                params = json.loads(params)
+            except Exception:
+                return {"__error__": True, "message": "params 不是合法 JSON"}
+        kw["params"] = params
+    if body is not None and method in ("POST", "PUT", "PATCH"):
+        if isinstance(body, str):
+            try:
+                body = json.loads(body)
+            except Exception:
+                return {"__error__": True, "message": "body 不是合法 JSON"}
+        kw["json"] = body
+    return c.request(method, path, **kw)
+
+
+# ============================================================
 # 5. 启动入口
 # ============================================================
 
@@ -648,7 +1063,7 @@ if __name__ == "__main__":
     args = _parse_args()
     transport = "streamable-http" if args.http else "stdio"
     url_hint = f"http://127.0.0.1:{DEFAULT_PORT}/mcp" if transport == "streamable-http" else "(stdio)"
-    print(f"openCRM MCP Server ({transport}) — v1 Leads", file=sys.stderr)
+    print(f"openCRM MCP Server ({transport}) — v1", file=sys.stderr)
     print(f"  endpoint: {url_hint}", file=sys.stderr)
     try:
         cfg = _load_config()

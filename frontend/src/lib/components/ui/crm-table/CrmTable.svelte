@@ -4,7 +4,11 @@
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
   import { expandButtonClasses } from '$lib/utils/drag-drop.js';
   import { getOptionStyle, getOptionLabel, getOptionBgColor } from '$lib/utils/table-helpers.js';
-  import { formatCurrency } from '$lib/utils/formatting.js';
+  import { formatCurrency, formatDate } from '$lib/utils/formatting.js';
+  import { useI18n } from '$lib/utils/i18n.svelte.js';
+
+  const i18n = useI18n();
+  const tr = i18n.t;
 
   /**
    * @typedef {Object} ColumnDef
@@ -75,18 +79,9 @@
   function formatValue(value, column, row) {
     if (value == null || value === '') return null;
     if (column.format) return column.format(value, row);
-    if (column.type === 'number') return formatCurrency(value);
-    if (column.type === 'date') return formatDate(value);
+    if (column.type === 'number') return formatCurrency(value, 'USD', false, i18n.lang);
+    if (column.type === 'date') return formatDate(value, undefined, i18n.lang);
     return value;
-  }
-
-  /**
-   * @param {string} dateStr
-   */
-  function formatDate(dateStr) {
-    if (!dateStr) return '';
-    const date = new Date(dateStr);
-    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
   }
 
   /**
@@ -199,7 +194,7 @@
       {@render emptyState()}
     {:else}
       <div class="flex flex-col items-center justify-center py-16 text-center">
-        <p class="text-muted-foreground text-sm">No items found</p>
+        <p class="text-muted-foreground text-sm">{tr('noItemsFound')}</p>
       </div>
     {/if}
   {:else}
@@ -279,7 +274,7 @@
                       {#if formattedValue}
                         {formattedValue}
                       {:else}
-                        <span class="text-gray-400">{column.emptyText || 'Empty'}</span>
+                        <span class="text-gray-400">{column.emptyText || tr('empty')}</span>
                       {/if}
                     </button>
                   {:else}
@@ -287,7 +282,7 @@
                       {#if formattedValue}
                         {formattedValue}
                       {:else}
-                        <span class="text-gray-400">{column.emptyText || 'Empty'}</span>
+                        <span class="text-gray-400">{column.emptyText || tr('empty')}</span>
                       {/if}
                     </span>
                   {/if}
@@ -310,7 +305,7 @@
                       {#if formattedValue}
                         {formattedValue}
                       {:else}
-                        <span class="text-gray-400">{column.emptyText || 'Empty'}</span>
+                        <span class="text-gray-400">{column.emptyText || tr('empty')}</span>
                       {/if}
                     </button>
                   {:else}
@@ -318,7 +313,7 @@
                       {#if formattedValue}
                         {formattedValue}
                       {:else}
-                        <span class="text-gray-400">{column.emptyText || 'Empty'}</span>
+                        <span class="text-gray-400">{column.emptyText || tr('empty')}</span>
                       {/if}
                     </span>
                   {/if}
@@ -335,7 +330,7 @@
                               column.options
                             )}"
                           >
-                            {getOptionLabel(value, column.options)}
+                            {getOptionLabel(value, column.options, tr)}
                             <ChevronDown class="h-3 w-3 opacity-60" />
                           </button>
                         {/snippet}
@@ -351,7 +346,7 @@
                                 option
                               ])}"
                             ></span>
-                            {option.label}
+                            {getOptionLabel(option.value, [option], tr)}
                             {#if value === option.value}
                               <Check class="ml-auto h-4 w-4" />
                             {/if}
@@ -366,7 +361,7 @@
                         column.options
                       )}"
                     >
-                      {getOptionLabel(value, column.options)}
+                      {getOptionLabel(value, column.options, tr)}
                     </span>
                   {/if}
                 {:else if column.type === 'checkbox'}

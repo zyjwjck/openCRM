@@ -9,7 +9,8 @@
  *   mv +page.server.api.js +page.server.js
  */
 
-import { apiRequest } from '$lib/api-helpers.js';
+import { redirect } from '@sveltejs/kit';
+import { apiRequest, AuthenticationError } from '$lib/api-helpers.js';
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ locals, cookies }) {
@@ -171,6 +172,9 @@ export async function load({ locals, cookies }) {
       hotLeads: hotLeads
     };
   } catch (error) {
+    if (error instanceof AuthenticationError) {
+      throw redirect(307, '/login');
+    }
     console.error('Dashboard load error:', error);
     return {
       error: 'Failed to load dashboard data'

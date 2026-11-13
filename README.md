@@ -17,6 +17,22 @@ A modern, **AI-agent-driven** CRM platform built with Django REST Framework and 
 
 openCRM is a full-featured Customer Relationship Management system designed for startups and small businesses, whose **defining feature is a built-in AI agent**. It combines a powerful Django REST API backend with a modern SvelteKit frontend, featuring multi-tenant architecture with PostgreSQL Row-Level Security (RLS) for enterprise-grade data isolation. The [nanobot](https://github.com/HKUDS/nanobot) agent is natively embedded into the CRM sidebar at the `/agent` route for automated workflows and intelligent decision support.
 
+## Screenshots
+
+A quick look at openCRM's interface and its built-in AI agent in action:
+
+| CRM management — leads, accounts, contacts | Quotations, invoices, products |
+| :---: | :---: |
+| ![CRM management](.screenshots/crm管理，线索、客户、联系人等.png) | ![Quotations, invoices, products](.screenshots/报价单、发票、产品等.png) |
+
+| Invoice edit preview | System reports |
+| :---: | :---: |
+| ![Invoice edit preview](.screenshots/发票编辑预览.png) | ![System reports](.screenshots/系统报表.png) |
+
+**AI agent Q&A (with MCP tools)**
+
+![AI agent Q&A with MCP](.screenshots/智能体问答（含MCP）.png)
+
 ## AI Agent Integration (Core Feature)
 
 openCRM's AI capabilities come from [nanobot](https://github.com/HKUDS/nanobot) — an ultra-lightweight (~4,000 lines) personal AI agent framework. The integration is minimal yet powerful:
@@ -175,6 +191,13 @@ python -m pip install -e .
 
 # Initialise config & workspace (interactive onboarding)
 nanobot onboard
+
+# Register the openCRM-MCP server into nanobot (idempotent, portable).
+# This adds the preconfigured `openCRM-MCP` entry (http://127.0.0.1:8100/mcp)
+# to BOTH your global ~/.nanobot/config.json and the project config, so the
+# CRM's AI agent has customer/lead/opportunity tools out of the box — no manual
+# MCP setup required on a new machine.
+python .nanobot/setup_config.py
 ```
 
 Launch the nanobot **Gateway** (serves WebUI + websocket channels + automations on `http://127.0.0.1:8765`):
@@ -197,7 +220,9 @@ nanobot gateway restart
 nanobot gateway stop
 ```
 
-**Inside the CRM**: sidebar → AI → Agent (or visit `/agent` directly). Model / Provider / MCP configuration happens inside nanobot's own **Settings** panel.
+**Inside the CRM**: sidebar → AI → Agent (or visit `/agent` directly). Model / Provider configuration happens inside nanobot's own **Settings** panel.
+
+> **MCP is preconfigured.** openCRM ships with an `openCRM-MCP` server (`Agent/mcp/opencrm_server.py`, streamable-HTTP on `:8100`). It is registered automatically by `python .nanobot/setup_config.py` and started for you by `start-all.bat`. If you launch nanobot manually (e.g. `nanobot webui`), run `start-mcp.bat` first so the MCP tools are available; otherwise nanobot's MCP panel will show *Connection failed*.
 
 ### Access the Application
 - **Frontend**: http://localhost:5173

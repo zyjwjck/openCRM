@@ -1,5 +1,8 @@
 <script>
   import { TrendingUp, DollarSign } from '@lucide/svelte';
+  import { useI18n } from '$lib/utils/i18n.svelte.js';
+
+  const { t } = useI18n();
 
   /**
    * @typedef {Object} Column
@@ -116,7 +119,7 @@
   ondragleave={onDragLeave}
   ondrop={onDrop}
   role="region"
-  aria-label="{column.name} column with {itemCount} {itemCount !== 1 ? 'items' : itemName}"
+  aria-label={t('columnAriaLabel', { name: column.name, count: itemCount })}
 >
   <!-- Column Header - Glass with gradient accent -->
   <div class="column-header relative overflow-hidden rounded-t-2xl">
@@ -209,7 +212,7 @@
       >
         <div class="text-2xl opacity-30">📭</div>
         <span class="text-xs font-medium text-gray-400 dark:text-gray-500">
-          No {itemName}s yet
+          {t('noItemsYet')}
         </span>
       </div>
     {/if}
@@ -222,7 +225,7 @@
       border border-t-0 border-white/20 dark:border-white/[0.04]"
   >
     <span class="text-[0.65rem] font-medium uppercase tracking-wider text-gray-400 dark:text-gray-500">
-      {itemCount} {itemCount === 1 ? itemName : itemName + 's'}
+      {t('itemCount', { count: itemCount })}
     </span>
   </div>
 </div>

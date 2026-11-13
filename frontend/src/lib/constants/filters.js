@@ -3,6 +3,8 @@
  * @module lib/constants/filters
  */
 
+import { t } from '$lib/utils/i18n.svelte.js';
+
 /** @type {{ value: string, label: string }[]} */
 export const LEAD_STATUSES = [
   { value: 'ALL', label: 'All Statuses' },
@@ -46,7 +48,7 @@ export const CASE_STATUSES = [
 
 /** @type {{ value: string, label: string }[]} */
 export const CASE_TYPES = [
-  { value: '', label: 'Select Type' },
+  { value: '', label: t('selectType') },
   { value: 'Question', label: 'Question' },
   { value: 'Incident', label: 'Incident' },
   { value: 'Problem', label: 'Problem' }
@@ -81,7 +83,7 @@ export const TASK_STATUSES = [
 
 /** @type {{ value: string, label: string }[]} */
 export const OPPORTUNITY_TYPES = [
-  { value: '', label: 'Select Type' },
+  { value: '', label: t('selectType') },
   { value: 'NEW_BUSINESS', label: 'New Business' },
   { value: 'EXISTING_BUSINESS', label: 'Existing Business' },
   { value: 'RENEWAL', label: 'Renewal' },
@@ -91,7 +93,7 @@ export const OPPORTUNITY_TYPES = [
 
 /** @type {{ value: string, label: string }[]} */
 export const OPPORTUNITY_SOURCES = [
-  { value: '', label: 'Select Source' },
+  { value: '', label: t('selectSource') },
   { value: 'NONE', label: 'None' },
   { value: 'CALL', label: 'Call' },
   { value: 'EMAIL', label: 'Email' },
@@ -105,7 +107,7 @@ export const OPPORTUNITY_SOURCES = [
 
 /** @type {{ value: string, label: string }[]} */
 export const CURRENCY_CODES = [
-  { value: '', label: 'Select Currency' },
+  { value: '', label: t('selectCurrency') },
   { value: 'USD', label: 'USD - Dollar' },
   { value: 'EUR', label: 'EUR - Euro' },
   { value: 'GBP', label: 'GBP - Pound' },

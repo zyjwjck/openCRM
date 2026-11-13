@@ -154,13 +154,13 @@
         );
       }
 
-      toast.success('Comment added');
+      toast.success(t('commentAdded'));
     } catch (err) {
       // Revert on error
       comments = comments.filter(c => c.id !== tempId);
       newComment = commentText; // Restore the text
       console.error('Failed to add comment:', err);
-      toast.error(err?.message || 'Failed to add comment');
+      toast.error(err?.message || t('failedToAddComment'));
     } finally {
       isSubmitting = false;
     }
@@ -189,12 +189,12 @@
     try {
       const apiModule = getApiModule();
       await apiModule.deleteComment(commentId);
-      toast.success('Comment deleted');
+      toast.success(t('commentDeleted'));
     } catch (err) {
       // Revert on error
       comments = originalComments;
       console.error('Failed to delete comment:', err);
-      toast.error(err?.message || 'Failed to delete comment');
+      toast.error(err?.message || t('failedToDeleteComment'));
     } finally {
       deletingCommentId = null;
       commentToDelete = null;

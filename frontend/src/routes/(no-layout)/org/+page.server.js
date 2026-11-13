@@ -12,6 +12,7 @@
 import { env as publicEnv } from '$env/dynamic/public';
 import { redirect, fail } from '@sveltejs/kit';
 import axios from 'axios';
+import { setSessionCookies } from '$lib/api-helpers.js';
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ cookies, locals }) {
@@ -89,30 +90,12 @@ export const actions = {
         }
       );
 
-      const { access_token, refresh_token, current_org } = response.data;
+      const { access_token, refresh_token } = response.data;
 
-      // Update cookies with new tokens that have org context embedded
-      cookies.set('jwt_access', access_token, {
-        path: '/',
-        httpOnly: true,
-        sameSite: 'lax',
-        secure: process.env.NODE_ENV === 'production',
-        maxAge: 60 * 60 * 24 // 1 day
-      });
-
-      cookies.set('jwt_refresh', refresh_token, {
-        path: '/',
-        httpOnly: true,
-        sameSite: 'lax',
-        secure: process.env.NODE_ENV === 'production',
-        maxAge: 60 * 60 * 24 * 365 // 1 year
-      });
-
-      // Set org cookie for reference
-      cookies.set('org', orgId, {
-        path: '/',
-        sameSite: 'strict',
-        maxAge: 60 * 60 * 24 * 365
+      setSessionCookies(cookies, {
+        accessToken: access_token,
+        refreshToken: refresh_token,
+        orgId
       });
 
       // Redirect to app

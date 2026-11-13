@@ -1,5 +1,9 @@
 <script>
   import { LayoutGrid, Table2 } from '@lucide/svelte';
+  import { useI18n } from '$lib/utils/i18n.svelte.js';
+
+  const i18n = useI18n();
+  const tr = i18n.t;
 
   /**
    * @typedef {'table' | 'kanban'} ViewMode
@@ -22,7 +26,7 @@
 <div
   class="flex rounded-lg border border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-900"
   role="group"
-  aria-label="View mode toggle"
+  aria-label={tr('viewModeToggle')}
 >
   <button
     type="button"
@@ -32,10 +36,10 @@
       ? 'bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-gray-100'
       : 'text-gray-500 hover:bg-gray-50 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-800/50 dark:hover:text-gray-300'}"
     aria-pressed={view === 'table'}
-    aria-label="Table view"
+    aria-label={tr('tableView')}
   >
     <Table2 class="h-4 w-4" />
-    <span class="hidden sm:inline">Table</span>
+    <span class="hidden sm:inline">{tr('table')}</span>
   </button>
   <button
     type="button"
@@ -45,9 +49,9 @@
       ? 'bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-gray-100'
       : 'text-gray-500 hover:bg-gray-50 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-800/50 dark:hover:text-gray-300'}"
     aria-pressed={view === 'kanban'}
-    aria-label="Kanban view"
+    aria-label={tr('kanbanView')}
   >
     <LayoutGrid class="h-4 w-4" />
-    <span class="hidden sm:inline">Kanban</span>
+    <span class="hidden sm:inline">{tr('kanban')}</span>
   </button>
 </div>

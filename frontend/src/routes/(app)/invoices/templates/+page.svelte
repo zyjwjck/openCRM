@@ -229,7 +229,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   async function handleDelete() {
     if (!selectedTemplate) return;
 
-    if (!confirm('Are you sure you want to delete this template?')) return;
+    if (!confirm(t('confirmDeleteTemplate'))) return;
 
     formState.templateId = selectedTemplate.id;
     await tick();
@@ -246,11 +246,11 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   use:enhance={() => {
     return async ({ result }) => {
       if (result.type === 'success') {
-        toast.success('Template created');
+        toast.success(t('templateCreated'));
         closeDrawer();
         invalidateAll();
       } else if (result.type === 'failure') {
-        toast.error(/** @type {string} */ (result.data?.error) || 'Failed to create template');
+        toast.error(/** @type {string} */ (result.data?.error) || t('failedToCreateTemplate'));
       }
     };
   }}
@@ -272,11 +272,11 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   use:enhance={() => {
     return async ({ result }) => {
       if (result.type === 'success') {
-        toast.success('Template updated');
+        toast.success(t('templateUpdated'));
         closeDrawer();
         invalidateAll();
       } else if (result.type === 'failure') {
-        toast.error(/** @type {string} */ (result.data?.error) || 'Failed to update template');
+        toast.error(/** @type {string} */ (result.data?.error) || t('failedToUpdateTemplate'));
       }
     };
   }}
@@ -299,11 +299,11 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   use:enhance={() => {
     return async ({ result }) => {
       if (result.type === 'success') {
-        toast.success('Template deleted');
+        toast.success(t('templateDeleted'));
         closeDrawer();
         invalidateAll();
       } else if (result.type === 'failure') {
-        toast.error(/** @type {string} */ (result.data?.error) || 'Failed to delete template');
+        toast.error(/** @type {string} */ (result.data?.error) || t('failedToDeleteTemplate'));
       }
     };
   }}
@@ -393,7 +393,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   >
     <SearchInput
       value={filters.search}
-      placeholder="Search templates..."
+      placeholder={t('searchTemplates')}
       onchange={(value) => updateFilters({ ...filters, search: value })}
     />
   </FilterBar>
@@ -405,8 +405,8 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
         <div class="mb-4 flex size-16 items-center justify-center rounded-[var(--radius-xl)] bg-[var(--surface-sunken)]">
           <span class="text-4xl">🎨</span>
         </div>
-        <h3 class="text-[var(--text-primary)] text-lg font-medium">No templates yet</h3>
-        <p class="text-[var(--text-secondary)] text-sm">Create your first invoice template</p>
+        <h3 class="text-[var(--text-primary)] text-lg font-medium">{t('noTemplatesYet')}</h3>
+        <p class="text-[var(--text-secondary)] text-sm">{t('createFirstTemplate')}</p>
       </div>
     {/snippet}
     {#snippet cellContent(row, column)}
@@ -448,8 +448,8 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   data={drawerFormData}
   columns={drawerFields}
   titleKey="name"
-  titlePlaceholder="New Template"
-  headerLabel="Invoice Template"
+  titlePlaceholder={t('new_template')}
+  headerLabel="invoiceTemplate"
   mode={drawerMode}
   onFieldChange={handleFieldChange}
   onDelete={handleDelete}
@@ -467,7 +467,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   {#snippet activitySection()}
     {#if selectedTemplate}
       <div class="border-t pt-4">
-        <h4 class="text-muted-foreground mb-3 text-sm font-medium">Preview</h4>
+        <h4 class="text-muted-foreground mb-3 text-sm font-medium">{t('preview')}</h4>
         <div
           class="rounded-lg border p-4"
           style="background: linear-gradient(135deg, {selectedTemplate.primaryColor}22, {selectedTemplate.secondaryColor}22);"

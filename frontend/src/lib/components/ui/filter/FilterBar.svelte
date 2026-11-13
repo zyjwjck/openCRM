@@ -2,6 +2,7 @@
   import { Filter, X, ChevronDown, ChevronUp, Sparkles } from '@lucide/svelte';
   import { cn } from '$lib/utils.js';
   import { Button } from '$lib/components/ui/button/index.js';
+  import { t } from '$lib/utils/i18n.svelte.js';
 
   /**
    * @type {{
@@ -67,7 +68,7 @@
           >
             <Sparkles class="text-primary h-3 w-3" />
             <span class="text-primary text-xs font-semibold">
-              {activeCount} active
+              {t('activeFilters', { count: activeCount })}
             </span>
           </div>
           <Button
@@ -77,7 +78,7 @@
             class="group/clear text-muted-foreground hover:bg-destructive/10 hover:text-destructive dark:hover:bg-destructive/20 h-8 gap-1.5 rounded-lg px-3 text-xs font-medium transition-all"
           >
             <X class="h-3.5 w-3.5 transition-transform group-hover/clear:rotate-90" />
-            Clear all
+            {t('clearAll')}
           </Button>
         </div>
       {/if}
@@ -127,7 +128,7 @@
         >
           <Filter class="h-3.5 w-3.5" />
         </div>
-        <span class="tracking-tight">Filters</span>
+        <span class="tracking-tight">{t('filters')}</span>
         {#if activeCount > 0}
           <span
             class={cn(
@@ -155,7 +156,7 @@
           class="group/clear text-muted-foreground hover:bg-destructive/10 hover:text-destructive h-7 gap-1.5 rounded-lg px-2.5 text-xs font-medium transition-all"
         >
           <X class="h-3 w-3 transition-transform group-hover/clear:rotate-90" />
-          Clear all
+          {t('clearAll')}
         </Button>
       {/if}
     </div>

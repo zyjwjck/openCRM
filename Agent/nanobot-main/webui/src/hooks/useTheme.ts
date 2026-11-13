@@ -33,6 +33,12 @@ export function useTheme(): {
   setTheme: (t: Theme) => void;
 } {
   const [theme, setThemeState] = useState<Theme>(() => {
+    if (typeof window !== "undefined") {
+      // Honor ?theme= (e.g. when embedded in openCRM's /agent iframe) so the
+      // embedded app follows the host app's theme.
+      const urlTheme = new URLSearchParams(window.location.search).get("theme");
+      if (urlTheme === "light" || urlTheme === "dark") return urlTheme;
+    }
     const stored = readStored();
     if (stored) return stored;
     if (typeof window !== "undefined" && window.matchMedia) {

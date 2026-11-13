@@ -1,6 +1,9 @@
 <script>
   import { KanbanBoard } from '$lib/components/ui/kanban';
   import CaseCard from './CaseCard.svelte';
+  import { useI18n } from '$lib/utils/i18n.svelte.js';
+
+  const { t } = useI18n();
 
   /**
    * @typedef {Object} Column
@@ -33,6 +36,16 @@
    */
   let { data = null, loading = false, onStatusChange, onCardClick } = $props();
 
+  /** @type {Record<string, string>} */
+  const columnNameKeys = {
+    New: 'statusNew',
+    Assigned: 'statusAssigned',
+    Pending: 'statusPending',
+    Closed: 'statusClosed',
+    Rejected: 'statusRejected',
+    Duplicate: 'statusDuplicate'
+  };
+
   // Transform data to use generic field names
   const transformedData = $derived(() => {
     if (!data) return null;
@@ -42,6 +55,7 @@
       pipeline: data.pipeline,
       columns: data.columns.map((col) => ({
         ...col,
+        name: columnNameKeys[col.name] ? t(columnNameKeys[col.name]) : col.name,
         items: col.cases || [],
         item_count: col.case_count || col.cases?.length || 0
       })),
@@ -58,5 +72,5 @@
   onItemMove={onStatusChange}
   {onCardClick}
   CardComponent={CaseCard}
-  emptyMessage="No kanban data available"
+  emptyMessage={t('noKanbanData')}
 />

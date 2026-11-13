@@ -62,6 +62,13 @@ export function readStoredLocale(): SupportedLocale | null {
 }
 
 export function resolveInitialLocale(): SupportedLocale {
+  if (typeof window !== "undefined") {
+    // Honor ?lang= (e.g. when embedded in openCRM's /agent iframe) so the
+    // embedded app follows the host app's language. Stored value / default
+    // are used as fallbacks when the param is absent.
+    const urlLang = new URLSearchParams(window.location.search).get("lang");
+    if (urlLang) return normalizeLocale(urlLang);
+  }
   return readStoredLocale() ?? defaultLocale;
 }
 

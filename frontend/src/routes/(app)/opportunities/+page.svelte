@@ -387,7 +387,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
       label: 'Notes',
       type: 'textarea',
       icon: FileText,
-      placeholder: 'Add notes...'
+      placeholder: t('addNotes')
     }
   ]);
 
@@ -686,14 +686,14 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
       const result = await response.json();
 
       if (result.type === 'success' || result.data?.success) {
-        toast.success('Changes saved');
+        toast.success(t('changesSaved'));
         await invalidateAll();
       } else {
-        toast.error(result.data?.message || 'Failed to save changes');
+        toast.error(result.data?.message || t('failedToSaveChanges'));
       }
     } catch (err) {
       console.error('Error saving field:', err);
-      toast.error('Failed to save changes');
+      toast.error(t('failedToSaveChanges'));
     }
   }
 
@@ -810,15 +810,15 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
       const result = await response.json();
 
       if (result.type === 'success' || result.data?.success) {
-        toast.success('Opportunity updated');
+        toast.success(t('opportunityUpdated'));
         closeDrawer();
         await invalidateAll();
       } else {
-        toast.error(result.data?.message || 'Failed to update opportunity');
+        toast.error(result.data?.message || t('failedToUpdateOpportunity'));
       }
     } catch (err) {
       console.error('Update error:', err);
-      toast.error('An error occurred');
+      toast.error(t('anErrorOccurred'));
     } finally {
       isLoading = false;
     }
@@ -875,15 +875,15 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
       const result = await response.json();
 
       if (result.type === 'success' || result.data?.success) {
-        toast.success('Opportunity created');
+        toast.success(t('opportunityCreated'));
         closeDrawer();
         await invalidateAll();
       } else {
-        toast.error(result.data?.message || 'Failed to create opportunity');
+        toast.error(result.data?.message || t('failedToCreateOpportunity'));
       }
     } catch (err) {
       console.error('Create error:', err);
-      toast.error('An error occurred');
+      toast.error(t('anErrorOccurred'));
     } finally {
       isLoading = false;
     }
@@ -895,7 +895,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   async function handleMarkWon() {
     if (!selectedRowId) return;
     await saveFieldValue(selectedRowId, 'stage', 'CLOSED_WON');
-    toast.success('Opportunity marked as won!');
+    toast.success(t('opportunityMarkedAsWon'));
   }
 
   /**
@@ -904,7 +904,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   async function handleMarkLost() {
     if (!selectedRowId) return;
     await saveFieldValue(selectedRowId, 'stage', 'CLOSED_LOST');
-    toast.success('Opportunity marked as lost');
+    toast.success(t('opportunityMarkedAsLost'));
   }
 
   async function deleteSelectedRow() {
@@ -918,15 +918,15 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
       const result = await response.json();
 
       if (result.type === 'success' || result.data?.success) {
-        toast.success('Opportunity deleted');
+        toast.success(t('opportunityDeleted'));
         closeDrawer();
         await invalidateAll();
       } else {
-        toast.error(result.data?.message || 'Failed to delete opportunity');
+        toast.error(result.data?.message || t('failedToDeleteOpportunity'));
       }
     } catch (err) {
       console.error('Delete error:', err);
-      toast.error('An error occurred while deleting');
+      toast.error(t('anErrorOccurredWhileDeleting'));
     } finally {
       isLoading = false;
     }
@@ -1004,18 +1004,18 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
       const result = await response.json();
 
       if (result.type === 'success' || result.data?.success) {
-        toast.success('Product added');
+        toast.success(t('productAdded'));
         // Reset form
         newLineItemProductId = '';
         newLineItemQty = 1;
         newLineItemPrice = 0;
         await invalidateAll();
       } else {
-        toast.error(result.data?.message || 'Failed to add product');
+        toast.error(result.data?.message || t('failedToAddProduct'));
       }
     } catch (err) {
       console.error('Add line item error:', err);
-      toast.error('An error occurred');
+      toast.error(t('anErrorOccurred'));
     } finally {
       isAddingLineItem = false;
     }
@@ -1038,14 +1038,14 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
       const result = await response.json();
 
       if (result.type === 'success' || result.data?.success) {
-        toast.success('Product removed');
+        toast.success(t('productRemoved'));
         await invalidateAll();
       } else {
-        toast.error(result.data?.message || 'Failed to remove product');
+        toast.error(result.data?.message || t('failedToRemoveProduct'));
       }
     } catch (err) {
       console.error('Delete line item error:', err);
-      toast.error('An error occurred');
+      toast.error(t('anErrorOccurred'));
     } finally {
       isDeletingLineItem = '';
     }
@@ -1067,7 +1067,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
       const result = await response.json();
 
       if (result.type === 'success' || result.data?.success) {
-        toast.success('Invoice created');
+        toast.success(t('invoiceCreated'));
         // Navigate to the new invoice
         if (result.data?.invoiceId) {
           goto(`/invoices/${result.data.invoiceId}`);
@@ -1075,11 +1075,11 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
           goto('/invoices');
         }
       } else {
-        toast.error(result.data?.message || 'Failed to create invoice');
+        toast.error(result.data?.message || t('failedToCreateInvoice'));
       }
     } catch (err) {
       console.error('Create invoice error:', err);
-      toast.error('An error occurred');
+      toast.error(t('anErrorOccurred'));
     } finally {
       isLoading = false;
     }
@@ -1585,4 +1585,4 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 </CrmDrawer>
 
 <!-- 自动刷新组件 -->
-<AutoRefresh interval={3000} enabled={true} />
+<AutoRefresh interval={3000} enabled={!drawerOpen} />

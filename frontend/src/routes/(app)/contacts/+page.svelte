@@ -33,8 +33,11 @@
 import { goto } from '$app/navigation';
 import { COUNTRIES, getCountryName } from '$lib/constants/countries.js';
 import { browser } from '$app/environment';
-import { t } from '$lib/utils/i18n.svelte.js';
+import { useI18n } from '$lib/utils/i18n.svelte.js';
 import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
+
+  const i18n = useI18n();
+  const tr = i18n.t;
 
   // Column visibility configuration
   const STORAGE_KEY = 'contacts-column-config';
@@ -45,30 +48,30 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
    */
 
   /** @type {ColumnDef[]} */
-  const columns = [
+  const columns = $derived([
     {
       key: 'name',
-      label: t('contact'),
+      label: tr('contact'),
       type: 'text',
       width: 'w-48',
       editable: false,
       canHide: false,
       getValue: (row) => `${row.firstName || ''} ${row.lastName || ''}`.trim(),
-      emptyText: 'Unnamed'
+      emptyText: tr('unnamed')
     },
     {
       key: 'organization',
-      label: t('company'),
+      label: tr('company'),
       type: 'text',
       width: 'w-40',
       emptyText: ''
     },
-    { key: 'title', label: t('title'), type: 'text', width: 'w-36', emptyText: '' },
-    { key: 'email', label: t('email'), type: 'email', width: 'w-52', emptyText: '' },
-    { key: 'phone', label: t('phone'), type: 'text', width: 'w-36', emptyText: '' },
+    { key: 'title', label: tr('job_title'), type: 'text', width: 'w-36', emptyText: '' },
+    { key: 'email', label: tr('email'), type: 'email', width: 'w-52', emptyText: '' },
+    { key: 'phone', label: tr('phone'), type: 'text', width: 'w-36', emptyText: '' },
     {
       key: 'createdAt',
-      label: t('created'),
+      label: tr('created'),
       type: 'date',
       width: 'w-32',
       editable: false
@@ -76,7 +79,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
     // Hidden by default
     {
       key: 'owner',
-      label: t('owner'),
+      label: tr('owner'),
       type: 'relation',
       width: 'w-36',
       relationIcon: 'user',
@@ -84,7 +87,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
       getValue: (row) => row.owner?.name || row.owner?.email,
       emptyText: ''
     }
-  ];
+  ]);
 
   // Default visible columns (excludes owner)
   const DEFAULT_VISIBLE_COLUMNS = ['name', 'organization', 'title', 'email', 'phone', 'createdAt'];
@@ -158,7 +161,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
     if (account) {
       accountName = account.name;
     } else {
-      accountName = 'Unknown Account';
+      accountName = tr('unknownAccount');
     }
   }
 
@@ -182,70 +185,92 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
       ? [
           {
             key: 'accountDisplay',
-            label: 'Account',
+            label: tr('account'),
             type: 'readonly',
             icon: Building2,
-            getValue: () => accountName || 'Loading...'
+            getValue: () => accountName || tr('loading')
           }
         ]
       : []),
-    { key: 'firstName', label: 'First Name', type: 'text', icon: User, placeholder: 'First name' },
-    { key: 'lastName', label: 'Last Name', type: 'text', placeholder: 'Last name' },
-    { key: 'email', label: 'Email', type: 'email', icon: Mail, placeholder: 'email@example.com' },
-    { key: 'phone', label: 'Phone', type: 'text', icon: Phone, placeholder: '+1 (555) 000-0000' },
+    {
+      key: 'firstName',
+      label: tr('first_name'),
+      type: 'text',
+      icon: User,
+      placeholder: tr('addField', { field: tr('first_name') })
+    },
+    {
+      key: 'lastName',
+      label: tr('last_name'),
+      type: 'text',
+      placeholder: tr('addField', { field: tr('last_name') })
+    },
+    { key: 'email', label: tr('email'), type: 'email', icon: Mail, placeholder: 'email@example.com' },
+    { key: 'phone', label: tr('phone'), type: 'text', icon: Phone, placeholder: '+1 (555) 000-0000' },
     {
       key: 'organization',
-      label: 'Company',
+      label: tr('company'),
       type: 'text',
       icon: Building2,
-      placeholder: 'Company name'
+      placeholder: tr('addField', { field: tr('company') })
     },
-    { key: 'title', label: 'Job Title', type: 'text', icon: Briefcase, placeholder: 'Job title' },
-    { key: 'department', label: 'Department', type: 'text', placeholder: 'Department' },
+    {
+      key: 'title',
+      label: tr('job_title'),
+      type: 'text',
+      icon: Briefcase,
+      placeholder: tr('addField', { field: tr('job_title') })
+    },
+    {
+      key: 'department',
+      label: tr('department'),
+      type: 'text',
+      placeholder: tr('addField', { field: tr('department') })
+    },
     {
       key: 'doNotCall',
-      label: 'Do Not Call',
+      label: tr('doNotCall'),
       type: 'checkbox',
       icon: PhoneOff
     },
     {
       key: 'linkedInUrl',
-      label: 'LinkedIn',
+      label: tr('linkedIn'),
       type: 'text',
       icon: Linkedin,
       placeholder: 'https://linkedin.com/in/...'
     },
     {
       key: 'addressLine',
-      label: 'Address',
+      label: tr('address'),
       type: 'text',
       icon: MapPin,
-      placeholder: 'Street address'
+      placeholder: tr('street_address')
     },
-    { key: 'city', label: 'City', type: 'text', placeholder: 'City' },
-    { key: 'state', label: 'State', type: 'text', placeholder: 'State/Province' },
-    { key: 'postcode', label: 'Postal Code', type: 'text', placeholder: 'Postal code' },
+    { key: 'city', label: tr('city'), type: 'text', placeholder: tr('city') },
+    { key: 'state', label: tr('state'), type: 'text', placeholder: tr('state') },
+    { key: 'postcode', label: tr('postal_code'), type: 'text', placeholder: tr('postal_code') },
     {
       key: 'country',
-      label: 'Country',
+      label: tr('country'),
       type: 'select',
       options: countryOptions,
-      placeholder: 'Select country'
+      placeholder: tr('selectCountry')
     },
     {
       key: 'tags',
-      label: 'Tags',
+      label: tr('tags'),
       type: 'multiselect',
       icon: Tag,
       options: allTags.map((/** @type {any} */ t) => ({ id: t.id, name: t.name })),
-      emptyText: 'No tags'
+      emptyText: tr('no_tags')
     },
     {
       key: 'description',
-      label: 'Notes',
+      label: tr('notes'),
       type: 'textarea',
       icon: FileText,
-      placeholder: 'Add notes about this contact...'
+      placeholder: tr('addField', { field: tr('notes') })
     }
   ]);
 
@@ -657,7 +682,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
       updateForm.requestSubmit();
     } catch (error) {
       isSubmitting = false;
-      toast.error('Failed to submit form');
+      toast.error(tr('failedToSubmitForm'));
     }
   }
 
@@ -691,7 +716,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
       createForm.requestSubmit();
     } catch (error) {
       isSubmitting = false;
-      toast.error('Failed to submit form');
+      toast.error(tr('failedToSubmitForm'));
     }
   }
 
@@ -700,7 +725,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
    */
   async function handleDelete() {
     if (!selectedContact) return;
-    if (!confirm(`Are you sure you want to delete ${getFullName(selectedContact)}?`)) return;
+    if (!confirm(tr('confirmDeleteContact', { name: getFullName(selectedContact) }))) return;
 
     formState.contactId = selectedContact.id;
     await tick();
@@ -709,28 +734,28 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 
   /**
    * Create enhance handler for form actions
-   * @param {string} successMessage
+   * @param {string} successKey - i18n key, resolved with the current language at toast time
    * @param {boolean} closeOnSuccess
    */
-  function createEnhanceHandler(successMessage, closeOnSuccess = true) {
+  function createEnhanceHandler(successKey, closeOnSuccess = true) {
     return () => {
       return async ({ result }) => {
         try {
           isSubmitting = false;
           if (result.type === 'success') {
-            toast.success(successMessage);
+            toast.success(tr(successKey));
             if (closeOnSuccess) {
               await closeDrawer();
             }
             await invalidateAll();
           } else if (result.type === 'failure') {
-            toast.error(result.data?.error || 'Operation failed');
+            toast.error(result.data?.error || tr('operationFailed'));
           } else if (result.type === 'error') {
-            toast.error('An unexpected error occurred');
+            toast.error(tr('unexpectedError'));
           }
         } catch (error) {
           isSubmitting = false;
-          toast.error('An error occurred while processing the response');
+          toast.error(tr('errorProcessingResponse'));
         }
       };
     };
@@ -738,10 +763,13 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 </script>
 
 <svelte:head>
-  <title>{t('contacts')} - openCRM</title>
+  <title>{tr('contacts')} - openCRM</title>
 </svelte:head>
 
-<PageHeader title={t('contacts')} subtitle="{filteredContacts.length} of {contacts.length} {t('contacts')}">
+<PageHeader
+  title={tr('contacts')}
+  subtitle="{tr('countOfTotal', { current: filteredContacts.length, total: contacts.length })} {tr('contacts')}"
+>
   {#snippet actions()}
     <div class="flex items-center gap-2">
       <!-- Filter Toggle Button -->
@@ -752,7 +780,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
         onclick={() => (filtersExpanded = !filtersExpanded)}
       >
         <Filter class="h-4 w-4" />
-        {t('filters')}
+        {tr('filters')}
         {#if activeFiltersCount > 0}
           <span
             class="rounded-full bg-[var(--color-primary-light)] px-1.5 py-0.5 text-xs font-medium text-[var(--color-primary-default)] dark:bg-[var(--color-primary-default)]/15"
@@ -768,7 +796,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
           {#snippet child({ props })}
             <Button {...props} variant="outline" size="sm" class="gap-2">
               <Eye class="h-4 w-4" />
-              {t('columns')}
+              {tr('columns')}
               {#if visibleColumns.length < columns.length}
                 <span
                   class="rounded-full bg-[var(--color-primary-light)] px-1.5 py-0.5 text-xs font-medium text-[var(--color-primary-default)] dark:bg-[var(--color-primary-default)]/15"
@@ -780,7 +808,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
           {/snippet}
         </DropdownMenu.Trigger>
         <DropdownMenu.Content align="end" class="w-48">
-          <DropdownMenu.Label>{t('toggleColumns')}</DropdownMenu.Label>
+          <DropdownMenu.Label>{tr('toggleColumns')}</DropdownMenu.Label>
           <DropdownMenu.Separator />
           {#each columns as column (column.key)}
             <DropdownMenu.CheckboxItem
@@ -797,7 +825,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 
       <Button onclick={openCreate}>
         <Plus class="mr-2 h-4 w-4" />
-        {t('newContact')}
+        {tr('newContact')}
       </Button>
     </div>
   {/snippet}
@@ -814,12 +842,12 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   >
     <SearchInput
       value={filters.search}
-      placeholder={t('searchContacts')}
+      placeholder={tr('searchContacts')}
       onchange={(value) => updateFilters({ ...filters, search: value })}
       class="w-64"
     />
     <DateRangeFilter
-      label={t('created')}
+      label={tr('created')}
       startDate={filters.created_at_gte}
       endDate={filters.created_at_lte}
       onchange={(start, end) =>
@@ -839,8 +867,8 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
         <div class="mb-4 flex size-16 items-center justify-center rounded-[var(--radius-xl)] bg-[var(--surface-sunken)]">
           <User class="size-8 text-[var(--text-tertiary)]" />
         </div>
-        <h3 class="text-lg font-medium text-[var(--text-primary)]">{t('noContactsFound')}</h3>
-        <p class="mt-1 text-sm text-[var(--text-secondary)]">{t('createNewContact')}</p>
+        <h3 class="text-lg font-medium text-[var(--text-primary)]">{tr('noContactsFound')}</h3>
+        <p class="mt-1 text-sm text-[var(--text-secondary)]">{tr('createNewContact')}</p>
       </div>
   {:else}
     <CrmTable
@@ -855,7 +883,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
               <div class="mb-4 flex size-12 items-center justify-center rounded-[var(--radius-lg)] bg-[var(--surface-sunken)]">
                 <User class="size-6 text-[var(--text-tertiary)]" />
               </div>
-              <h3 class="text-lg font-medium text-[var(--text-primary)]">{t('noContactsFound')}</h3>
+              <h3 class="text-lg font-medium text-[var(--text-primary)]">{tr('noContactsFound')}</h3>
             </div>
           {/snippet}
     </CrmTable>
@@ -878,9 +906,9 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   data={{ ...drawerFormData, displayName: drawerTitle }}
   columns={drawerColumns}
   titleKey="displayName"
-  titlePlaceholder={t('newContact')}
+  titlePlaceholder={tr('newContact')}
   titleEditable={false}
-  headerLabel={t('contact')}
+  headerLabel={tr('contact')}
   mode={drawerMode}
   loading={drawerLoading || isSubmitting}
   onFieldChange={handleDrawerFieldChange}
@@ -894,19 +922,19 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
         <p
           class="mb-2 text-xs font-medium tracking-wider text-[var(--text-tertiary)] uppercase"
         >
-          {t('details')}
+          {tr('details')}
         </p>
         <div class="grid grid-cols-2 gap-3 text-sm">
           <div>
-            <p class="text-xs text-[var(--text-tertiary)]">{t('owner')}</p>
+            <p class="text-xs text-[var(--text-tertiary)]">{tr('owner')}</p>
             <p class="font-medium text-[var(--text-primary)]">
-              {selectedContact.owner?.name || t('unassigned')}
+              {selectedContact.owner?.name || tr('unassigned')}
             </p>
           </div>
           <div>
-            <p class="text-xs text-[var(--text-tertiary)]">{t('created')}</p>
+            <p class="text-xs text-[var(--text-tertiary)]">{tr('created')}</p>
             <p class="font-medium text-[var(--text-primary)]">
-              {formatRelativeDate(selectedContact.createdAt)}
+              {formatRelativeDate(selectedContact.createdAt, i18n.lang)}
             </p>
           </div>
         </div>
@@ -927,20 +955,20 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 
   {#snippet footerActions()}
     {#if drawerMode === 'create'}
-      <Button variant="outline" onclick={closeDrawer} disabled={isSubmitting}>{t('cancel')}</Button>
+      <Button variant="outline" onclick={closeDrawer} disabled={isSubmitting}>{tr('cancel')}</Button>
       <Button
         onclick={handleDrawerSave}
         disabled={isSubmitting || !drawerFormData.firstName?.trim()}
       >
-        {isSubmitting ? t('creating') : t('createContact')}
+        {isSubmitting ? tr('creating') : tr('createContact')}
       </Button>
     {:else}
-      <Button variant="outline" onclick={closeDrawer} disabled={isSubmitting}>{t('cancel')}</Button>
+      <Button variant="outline" onclick={closeDrawer} disabled={isSubmitting}>{tr('cancel')}</Button>
       <Button
         onclick={handleDrawerUpdate}
         disabled={isSubmitting || !drawerFormData.firstName?.trim()}
       >
-        {isSubmitting ? t('saving') : t('save')}
+        {isSubmitting ? tr('saving') : tr('save')}
       </Button>
     {/if}
   {/snippet}
@@ -951,7 +979,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   method="POST"
   action="?/create"
   bind:this={createForm}
-  use:enhance={createEnhanceHandler('Contact created successfully')}
+  use:enhance={createEnhanceHandler('contactCreated')}
   class="hidden"
 >
   <input type="hidden" name="accountId" value={formState.accountId} />
@@ -977,7 +1005,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   method="POST"
   action="?/update"
   bind:this={updateForm}
-  use:enhance={createEnhanceHandler('Contact updated successfully', true)}
+  use:enhance={createEnhanceHandler('contactUpdated', true)}
   class="hidden"
 >
   <input type="hidden" name="contactId" value={formState.contactId} />
@@ -1003,11 +1031,11 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   method="POST"
   action="?/delete"
   bind:this={deleteForm}
-  use:enhance={createEnhanceHandler('Contact deleted successfully')}
+  use:enhance={createEnhanceHandler('contactDeleted')}
   class="hidden"
 >
   <input type="hidden" name="contactId" value={formState.contactId} />
 </form>
 
 <!-- 自动刷新组件 -->
-<AutoRefresh interval={3000} enabled={true} />
+<AutoRefresh interval={3000} enabled={!drawerOpen} />

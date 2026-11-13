@@ -80,51 +80,42 @@
       console.log('Tokens stored in localStorage');
       console.log('Access token stored:', localStorage.getItem('access_token') ? 'Yes' : 'No');
 
-      // Store tokens in cookies for server-side authentication
-      // This is critical for SvelteKit's server-side auth logic
-      console.log('Storing tokens in cookies...');
-      // 不设置 httpOnly 标志，因为 document.cookie 无法设置这个标志
-      document.cookie = `jwt_access=${data.access_token}; path=/; SameSite=Lax`;
-      document.cookie = `jwt_refresh=${data.refresh_token}; path=/; SameSite=Lax`;
-      
-      // Get org ID from response data or from token payload
-      let orgId = null;
-      
-      // First try to get org ID from response data (most reliable)
-      if (data.current_org && data.current_org.id) {
-        orgId = data.current_org.id;
-        console.log('Org ID from response data:', orgId);
-      } else {
-        // Fallback: try to extract from token payload
-        function getOrgIdFromToken(token) {
-          try {
-            const payload = JSON.parse(atob(token.split('.')[1]));
-            return payload.org_id || null;
-          } catch (e) {
-            console.log('Error extracting org ID from token:', e);
-            return null;
-          }
-        }
-        
-        orgId = getOrgIdFromToken(data.access_token);
-        if (orgId) {
-          console.log('Org ID from token payload:', orgId);
+      // Get org ID from response data or from the token payload
+      let orgId = data.current_org?.id || null;
+      if (!orgId) {
+        try {
+          orgId = JSON.parse(atob(data.access_token.split('.')[1])).org_id || null;
+        } catch (e) {
+          console.log('Error extracting org ID from token:', e);
         }
       }
-      
-      if (orgId) {
-          document.cookie = `org=${orgId}; path=/; SameSite=Lax`;
-          console.log('Org ID stored in cookie:', orgId);
-        } else {
-          console.log('No org ID found in response or token, redirecting to org selection');
-          // If no org ID found, redirect to org selection page
-          setTimeout(() => {
-            window.location.href = '/org';
-          }, 100);
-          return;
-        }
-        
-        console.log('Tokens stored in cookies');
+
+      // Cookies are written by the SvelteKit server, not by document.cookie.
+      // A stale httpOnly cookie from an earlier session cannot be overwritten
+      // by JavaScript, which would keep sending an invalid token to Django.
+      console.log('Establishing server-side session...');
+      const sessionResponse = await fetch('/login/session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          access_token: data.access_token,
+          refresh_token: data.refresh_token,
+          org_id: orgId
+        }),
+        credentials: 'include'
+      });
+
+      if (!sessionResponse.ok) {
+        throw new Error('Failed to establish login session');
+      }
+
+      if (!orgId) {
+        console.log('No org ID found, redirecting to org selection');
+        window.location.href = '/org';
+        return;
+      }
+
+      console.log('Session established');
 
         // Preload common data to reduce first load time
         console.log('Preloading common data...');
@@ -154,13 +145,9 @@
           // Continue with redirect even if preloading fails
         }
 
-        // 强制重定向，使用setTimeout确保所有代码都执行完毕
+        // All session cookies are written before navigating to the dashboard
         console.log('Redirecting to dashboard...');
-        setTimeout(() => {
-          console.log('Inside setTimeout, redirecting now...');
-          window.location.href = '/';
-          console.log('Redirect initiated');
-        }, 100);
+        window.location.href = '/';
     } catch (err) {
       console.log('Login error:', err);
       console.log('Error name:', err.name);
