@@ -197,7 +197,7 @@ nanobot onboard
 # to BOTH your global ~/.nanobot/config.json and the project config, so the
 # CRM's AI agent has customer/lead/opportunity tools out of the box — no manual
 # MCP setup required on a new machine.
-python .nanobot/setup_config.py
+python Agent/mcp/setup_mcp.py
 ```
 
 Launch the nanobot **Gateway** (serves WebUI + websocket channels + automations on `http://127.0.0.1:8765`):
@@ -222,7 +222,7 @@ nanobot gateway stop
 
 **Inside the CRM**: sidebar → AI → Agent (or visit `/agent` directly). Model / Provider configuration happens inside nanobot's own **Settings** panel.
 
-> **MCP is preconfigured.** openCRM ships with an `openCRM-MCP` server (`Agent/mcp/opencrm_server.py`, streamable-HTTP on `:8100`). It is registered automatically by `python .nanobot/setup_config.py` and started for you by `start-all.bat`. If you launch nanobot manually (e.g. `nanobot webui`), run `start-mcp.bat` first so the MCP tools are available; otherwise nanobot's MCP panel will show *Connection failed*.
+> **MCP is preconfigured.** openCRM ships with an `openCRM-MCP` server (`Agent/mcp/opencrm_server.py`, streamable-HTTP on `:8100`). It is registered automatically by `python Agent/mcp/setup_mcp.py` and started for you by `start-all.bat`. If you launch nanobot manually (e.g. `nanobot webui`), run `start-mcp.bat` first so the MCP tools are available; otherwise nanobot's MCP panel will show *Connection failed*.
 
 ### Access the Application
 - **Frontend**: http://localhost:5173

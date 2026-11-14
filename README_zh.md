@@ -196,7 +196,7 @@ nanobot onboard
 # 该命令会把预置的 `openCRM-MCP` 条目（http://127.0.0.1:8100/mcp）
 # 同时写入全局 ~/.nanobot/config.json 与项目配置，使 CRM 的 AI 智能体
 # 开箱即可使用客户/线索/商机类工具——无需在新机器上手动配置 MCP。
-python .nanobot/setup_config.py
+python Agent/mcp/setup_mcp.py
 ```
 
 启动 nanobot **网关**（监听 `http://127.0.0.1:8765`）：
@@ -221,7 +221,7 @@ nanobot gateway stop
 
 **在 CRM 中使用**：侧边栏 → AI → Agent（或直接访问 `/agent`）。模型 / 提供商的配置都在 nanobot 自身的**设置**面板中完成。
 
-> **MCP 已预配置。** openCRM 自带 `openCRM-MCP` 服务（`Agent/mcp/opencrm_server.py`，以 streamable-HTTP 运行在 `:8100`）。它由 `python .nanobot/setup_config.py` 自动注册、并由 `start-all.bat` 为你启动。如果你手动启动 nanobot（例如 `nanobot webui`），请先运行 `start-mcp.bat` 以启用 MCP 工具；否则 nanobot 的 MCP 面板会显示 *Connection failed*。
+> **MCP 已预配置。** openCRM 自带 `openCRM-MCP` 服务（`Agent/mcp/opencrm_server.py`，以 streamable-HTTP 运行在 `:8100`）。它由 `python Agent/mcp/setup_mcp.py` 自动注册、并由 `start-all.bat` 为你启动。如果你手动启动 nanobot（例如 `nanobot webui`），请先运行 `start-mcp.bat` 以启用 MCP 工具；否则 nanobot 的 MCP 面板会显示 *Connection failed*。
 
 ### 访问应用
 - **前端**：http://localhost:5173

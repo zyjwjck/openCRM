@@ -107,15 +107,12 @@
             <div class="flex size-10 items-center justify-center rounded-[var(--radius-lg)] bg-gradient-to-br from-[var(--color-primary-default)] to-[var(--stage-contacted)] shadow-lg dark:shadow-[var(--color-primary-default)]/20">
               <Sparkles class="size-5 text-white" />
             </div>
-            <div>
-              <p class="text-[var(--text-secondary)] text-sm font-medium">{getTranslatedGreeting(currentLang)}</p>
-              <h1 class="text-[var(--text-primary)] text-2xl font-bold tracking-tight md:text-3xl">
-                {t('dashboard', undefined, currentLang)}
-              </h1>
-            </div>
+            <h1 class="text-[var(--text-primary)] text-2xl font-bold tracking-tight md:text-3xl">
+              {t('dashboard', undefined, currentLang)}
+            </h1>
           </div>
           <p class="text-[var(--text-secondary)] max-w-md text-sm">
-            {t('dashboardDescription', undefined, currentLang)}
+            {getTranslatedGreeting(currentLang)}{currentLang === 'zh' ? '，' : ', '}{t('dashboardDescription', undefined, currentLang)}
           </p>
         </div>
       </div>
