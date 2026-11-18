@@ -18,7 +18,7 @@
   import { Input } from '$lib/components/ui/input/index.js';
   import { Label } from '$lib/components/ui/label/index.js';
   import { CURRENCY_CODES } from '$lib/constants/filters.js';
-  import { t } from '$lib/utils/i18n.js';
+  import { t } from '$lib/utils/i18n.svelte.js';
 
   /** @type {{ data: any, form: any }} */
   let { data, form } = $props();
@@ -105,7 +105,7 @@
 </script>
 
 <svelte:head>
-  <title>{t('organizationSettings')} - BottleCRM</title>
+  <title>{t('organizationSettings')} - openCRM</title>
 </svelte:head>
 
 <style>

@@ -10,49 +10,21 @@
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
   import { formatCurrency, formatDate } from '$lib/utils/formatting.js';
   import { Plus, Filter, Columns3 } from '@lucide/svelte';
-  import { t } from '$lib/utils/i18n.js';
-import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
+  import { t } from '$lib/utils/i18n.svelte.js';
+  import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 
   /** @type {{ data: import('./$types').PageData }} */
   let { data } = $props();
 
-  // Invoice status options - using design system tokens
+  // Invoice status options
   const INVOICE_STATUSES = [
-    {
-      value: 'Draft',
-      label: t('draft'),
-      color: 'bg-[var(--surface-sunken)] text-[var(--text-secondary)]'
-    },
-    {
-      value: 'Sent',
-      label: t('sent'),
-      color: 'bg-[var(--stage-contacted-bg)] text-[var(--stage-contacted)] dark:bg-[var(--stage-contacted)]/15'
-    },
-    {
-      value: 'Viewed',
-      label: t('viewed'),
-      color: 'bg-[var(--stage-qualified-bg)] text-[var(--stage-qualified)] dark:bg-[var(--stage-qualified)]/15'
-    },
-    {
-      value: 'Partially_Paid',
-      label: t('partially_paid'),
-      color: 'bg-[var(--stage-negotiation-bg)] text-[var(--stage-negotiation)] dark:bg-[var(--stage-negotiation)]/15'
-    },
-    {
-      value: 'Paid',
-      label: t('paid'),
-      color: 'bg-[var(--color-success-light)] text-[var(--color-success-default)] dark:bg-[var(--color-success-default)]/15'
-    },
-    {
-      value: 'Overdue',
-      label: t('overdue'),
-      color: 'bg-[var(--color-negative-light)] text-[var(--color-negative-default)] dark:bg-[var(--color-negative-default)]/15'
-    },
-    {
-      value: 'Cancelled',
-      label: t('cancelled'),
-      color: 'bg-[var(--surface-sunken)] text-[var(--text-tertiary)]'
-    }
+    { value: 'Draft', label: t('draft'), color: 'bg-[var(--surface-sunken)] text-[var(--text-secondary)]' },
+    { value: 'Sent', label: t('sent'), color: 'bg-[var(--stage-contacted-bg)] text-[var(--stage-contacted)] dark:bg-[var(--stage-contacted)]/15' },
+    { value: 'Viewed', label: t('viewed'), color: 'bg-[var(--stage-qualified-bg)] text-[var(--stage-qualified)] dark:bg-[var(--stage-qualified)]/15' },
+    { value: 'Partially_Paid', label: t('partially_paid'), color: 'bg-[var(--stage-negotiation-bg)] text-[var(--stage-negotiation)] dark:bg-[var(--stage-negotiation)]/15' },
+    { value: 'Paid', label: t('paid'), color: 'bg-[var(--color-success-light)] text-[var(--color-success-default)] dark:bg-[var(--color-success-default)]/15' },
+    { value: 'Overdue', label: t('overdue'), color: 'bg-[var(--color-negative-light)] text-[var(--color-negative-default)] dark:bg-[var(--color-negative-default)]/15' },
+    { value: 'Cancelled', label: t('cancelled'), color: 'bg-[var(--surface-sunken)] text-[var(--text-tertiary)]' }
   ];
 
   /**
@@ -62,70 +34,14 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 
   /** @type {ColumnDef[]} */
   const columns = [
-    {
-      key: 'invoiceNumber',
-      label: t('invoice_number'),
-      type: 'text',
-      width: 'w-28',
-      editable: false,
-      canHide: false
-    },
-    {
-      key: 'clientName',
-      label: t('client'),
-      type: 'text',
-      width: 'w-40',
-      editable: false,
-      canHide: false
-    },
-    {
-      key: 'account',
-      label: t('account'),
-      type: 'relation',
-      width: 'w-36',
-      relationIcon: 'building',
-      canHide: true,
-      getValue: (row) => row.account?.name
-    },
-    {
-      key: 'status',
-      label: t('status'),
-      type: 'select',
-      width: 'w-28',
-      options: INVOICE_STATUSES,
-      canHide: true,
-      getValue: (row) => row.status
-    },
-    {
-      key: 'issueDate',
-      label: t('issue_date'),
-      type: 'date',
-      width: 'w-28',
-      canHide: true,
-      getValue: (row) => row.issueDate
-    },
-    {
-      key: 'dueDate',
-      label: t('due_date'),
-      type: 'date',
-      width: 'w-28',
-      canHide: true,
-      getValue: (row) => row.dueDate
-    },
-    {
-      key: 'totalAmount',
-      label: t('total'),
-      type: 'number',
-      width: 'w-28',
-      canHide: false
-    },
-    {
-      key: 'amountDue',
-      label: t('amount_due'),
-      type: 'number',
-      width: 'w-28',
-      canHide: true
-    }
+    { key: 'invoiceNumber', label: t('invoice_number'), type: 'text', width: 'w-28', editable: false, canHide: false },
+    { key: 'clientName', label: t('client'), type: 'text', width: 'w-40', editable: false, canHide: false },
+    { key: 'account', label: t('account'), type: 'relation', width: 'w-36', relationIcon: 'building', canHide: true, getValue: (row) => row.account?.name },
+    { key: 'status', label: t('status'), type: 'select', width: 'w-28', options: INVOICE_STATUSES, canHide: true, getValue: (row) => row.status },
+    { key: 'issueDate', label: t('issue_date'), type: 'date', width: 'w-28', canHide: true, getValue: (row) => row.issueDate },
+    { key: 'dueDate', label: t('due_date'), type: 'date', width: 'w-28', canHide: true, getValue: (row) => row.dueDate },
+    { key: 'totalAmount', label: t('total'), type: 'number', width: 'w-28', canHide: false },
+    { key: 'amountDue', label: t('amount_due'), type: 'number', width: 'w-28', canHide: true }
   ];
 
   // Default visible columns
@@ -294,7 +210,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 </script>
 
 <svelte:head>
-  <title>Invoices | BottleCRM</title>
+  <title>{t('invoices')} | openCRM</title>
 </svelte:head>
 
 <!-- Page Content -->

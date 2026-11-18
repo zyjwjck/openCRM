@@ -27,7 +27,7 @@
   import * as Tabs from '$lib/components/ui/tabs/index.js';
   import { getInitials, formatDate } from '$lib/utils/formatting.js';
   import { TeamCard, TeamFormDialog } from '$lib/components/users/index.js';
-  import { t } from '$lib/utils/i18n.js';
+  import { t } from '$lib/utils/i18n.svelte.js';
 
   /** @type {{ data: import('./$types').PageData, form: any }} */
   let { data, form } = $props();
@@ -219,7 +219,7 @@
 </script>
 
 <svelte:head>
-  <title>{t('usersAndTeams')} - BottleCRM</title>
+  <title>{t('usersAndTeams')} - openCRM</title>
 </svelte:head>
 
 <PageHeader title={t('usersAndTeams')} subtitle={t('manageUsersAndTeamsInYourOrganization')} />

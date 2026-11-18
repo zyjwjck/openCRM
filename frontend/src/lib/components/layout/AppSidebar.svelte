@@ -2,11 +2,10 @@
   import { page } from '$app/stores';
   import { afterNavigate, goto } from '$app/navigation';
   import imgLogo from '$lib/assets/images/logo.png';
-  import { t } from '$lib/utils/i18n.js';
+  import { t } from '$lib/utils/i18n.svelte.js';
 
   import * as Sidebar from '$lib/components/ui/sidebar/index.js';
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
-  import * as Collapsible from '$lib/components/ui/collapsible/index.js';
   import { Button } from '$lib/components/ui/button/index.js';
 
   import {
@@ -18,7 +17,6 @@
     CheckSquare,
     HelpCircle,
     ChevronRight,
-    ChevronDown,
     PanelLeftClose,
     PanelLeft,
     Moon,
@@ -36,8 +34,7 @@
     BarChart3,
     Tag,
     Sparkles,
-    Home,
-    MessageSquare
+    Home
   } from '@lucide/svelte';
 
   /**
@@ -47,7 +44,7 @@
    */
 
   /** @type {Props} */
-  let { user = {}, org_name = 'BottleCRM' } = $props();
+  let { user = {}, org_name = 'openCRM' } = $props();
 
   const sidebar = Sidebar.useSidebar();
 
@@ -121,6 +118,7 @@
     theme = newTheme;
     if (typeof localStorage !== 'undefined') {
       localStorage.setItem('theme', newTheme);
+      window.dispatchEvent(new CustomEvent('themeChange', { detail: { theme: newTheme } }));
     }
   };
 
@@ -135,9 +133,6 @@
   };
 
   let currentPath = $derived($page.url.pathname);
-
-  /** @type {{ [key: string]: boolean }} */
-  let openDropdowns = $state({});
 
   /** Track if profile image failed to load */
   let profileImageError = $state(false);
@@ -155,18 +150,6 @@
     return name.slice(0, 2).toUpperCase();
   };
 
-  // Auto-open dropdown if a child is active
-  $effect(() => {
-    navigationItems.forEach((item) => {
-      if (item.type === 'dropdown' && item.children && item.key) {
-        const hasActiveChild = item.children.some((child) => currentPath === child.href);
-        if (hasActiveChild && !openDropdowns[item.key]) {
-          openDropdowns[item.key] = true;
-        }
-      }
-    });
-  });
-
   // Close mobile sidebar after navigation
   afterNavigate(() => {
     if (sidebar.isMobile) {
@@ -175,114 +158,80 @@
   });
 
   // HubSpot-style navigation structure with sections
-  const aiItems = [
-    {
-      href: '/chat',
-      label: '对话',
-      icon: MessageSquare,
-      type: 'link',
-      preload: 'off'
-    },
+  // Use $derived so labels re-evaluate when language changes
+  const aiItems = $derived([
     {
       href: '/agent',
-      label: t('agent'),
+      label: t('agent', undefined, language),
       icon: Sparkles,
       type: 'link',
       preload: 'off'
     }
-  ];
+  ]);
 
-  const crmItems = [
+  const crmItems = $derived([
     {
       href: '/',
-      label: t('dashboard'),
+      label: t('dashboard', undefined, language),
       icon: Home,
       type: 'link',
       preload: 'off'
     },
     {
       href: '/leads',
-      label: t('leads'),
+      label: t('leads', undefined, language),
       icon: Target,
       type: 'link',
       preload: 'off'
     },
     {
       href: '/contacts',
-      label: t('contacts'),
+      label: t('contacts', undefined, language),
       icon: Users,
       type: 'link',
       preload: 'off'
     },
     {
       href: '/accounts',
-      label: t('accounts'),
+      label: t('accounts', undefined, language),
       icon: Building,
       type: 'link',
       preload: 'off'
     },
     {
       href: '/opportunities',
-      label: t('deals'),
+      label: t('deals', undefined, language),
       icon: Sparkles,
       type: 'link',
       preload: 'off'
     },
     {
       href: '/cases',
-      label: t('tickets'),
+      label: t('tickets', undefined, language),
       icon: Briefcase,
       type: 'link',
       preload: 'off'
     },
     {
       href: '/tasks',
-      label: t('tasksMenu'),
+      label: t('tasksMenu', undefined, language),
       icon: CheckSquare,
       type: 'link',
       preload: 'off'
     }
-  ];
+  ]);
 
-  const salesItems = [
-    {
-      key: 'invoices',
-      label: t('invoices'),
-      icon: FileText,
-      type: 'dropdown',
-      children: [
-        { href: '/invoices', label: t('allInvoices'), icon: FileText, preload: 'off' },
-        { href: '/invoices/estimates', label: t('estimates'), icon: FileEdit, preload: 'off' },
-        { href: '/invoices/products', label: t('products'), icon: Package, preload: 'off' },
-        { href: '/invoices/recurring', label: t('recurring'), icon: RefreshCw, preload: 'off' },
-        { href: '/invoices/templates', label: t('templates'), icon: FileCode, preload: 'off' },
-        { href: '/invoices/reports', label: t('reports'), icon: BarChart3, preload: 'off' }
-      ]
-    }
-  ];
+  const salesItems = $derived([
+    { href: '/invoices', label: t('allInvoices', undefined, language), icon: FileText, type: 'link', preload: 'off' },
+    { href: '/invoices/estimates', label: t('estimates', undefined, language), icon: FileEdit, type: 'link', preload: 'off' },
+    { href: '/invoices/products', label: t('products', undefined, language), icon: Package, type: 'link', preload: 'off' },
+    { href: '/invoices/recurring', label: t('recurring', undefined, language), icon: RefreshCw, type: 'link', preload: 'off' },
+    { href: '/invoices/templates', label: t('templates', undefined, language), icon: FileCode, type: 'link', preload: 'off' },
+    { href: '/invoices/reports', label: t('reports', undefined, language), icon: BarChart3, type: 'link', preload: 'off' }
+  ]);
 
-  const supportItems = [
-    {
-      href: '/support',
-      label: t('helpDesk'),
-      icon: HelpCircle,
-      type: 'link',
-      preload: 'off'
-    }
-  ];
-
-  // Combine for iteration
-  const navigationItems = [...aiItems, ...crmItems, ...salesItems, ...supportItems];
-
-  /**
-   * Check if any child route is active
-   * @param {Array<{href: string}>} children
-   */
-  const hasActiveChild = (children) => {
-    return children.some(
-      (child) => currentPath === child.href || currentPath.startsWith(child.href + '/')
-    );
-  };
+  // Combine for iteration - also reactive via $derived
+  const navigationItems = $derived([...aiItems, ...crmItems, ...salesItems]);
 
   /**
    * Navigate to URL
@@ -316,7 +265,7 @@
                   >{org_name}</span
                 >
                 <span class="text-sidebar-foreground/50 truncate text-[11px] font-medium">
-                  OpenCRM 
+                  {t('productBrand', undefined, language)}
                 </span>
               </div>
             </a>
@@ -332,7 +281,7 @@
       <Sidebar.GroupLabel
         class="text-sidebar-foreground/40 mb-0 px-3 text-[10px] font-bold tracking-widest uppercase group-data-[collapsible=icon]:hidden"
       >
-        {t('aiGroup')}
+        {t('aiGroup', undefined, language)}
       </Sidebar.GroupLabel>
       <Sidebar.GroupContent>
         <Sidebar.Menu class="space-y-0.5">
@@ -379,7 +328,7 @@
       <Sidebar.GroupLabel
         class="text-sidebar-foreground/40 mb-0 px-3 text-[10px] font-bold tracking-widest uppercase group-data-[collapsible=icon]:hidden"
       >
-        {t('crmGroup')}
+        {t('crmGroup', undefined, language)}
       </Sidebar.GroupLabel>
       <Sidebar.GroupContent>
         <Sidebar.Menu class="space-y-0.5">
@@ -426,95 +375,11 @@
       <Sidebar.GroupLabel
         class="text-sidebar-foreground/40 mb-0 px-3 text-[10px] font-bold tracking-widest uppercase group-data-[collapsible=icon]:hidden"
       >
-        {t('salesGroup')}
+        {t('salesGroup', undefined, language)}
       </Sidebar.GroupLabel>
       <Sidebar.GroupContent>
         <Sidebar.Menu class="space-y-0.5">
           {#each salesItems as item}
-            {#if item.type === 'dropdown' && item.children}
-              <Collapsible.Root
-                open={openDropdowns[item.key ?? ''] || false}
-                onOpenChange={(open) => {
-                  if (item.key) openDropdowns[item.key] = open;
-                }}
-                class="group/collapsible"
-              >
-                <Sidebar.MenuItem>
-                  <Collapsible.Trigger>
-                    {#snippet child({ props })}
-                      <Sidebar.MenuButton
-                        {...props}
-                        isActive={hasActiveChild(item.children ?? [])}
-                        tooltipContent={item.label}
-                        class="nav-item group/item h-9 rounded-lg px-2.5 transition-all duration-200
-                          {hasActiveChild(item.children ?? [])
-                          ? 'text-[var(--color-primary-default)]'
-                          : 'text-sidebar-foreground/70 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground'}"
-                      >
-                        {#snippet child({ props: btnProps })}
-                          <button {...btnProps} class="flex w-full items-center gap-2.5">
-                            <div
-                              class="flex size-6 items-center justify-center rounded-md transition-all duration-200
-                                {hasActiveChild(item.children ?? [])
-                                ? 'bg-[var(--color-primary-default)] text-white shadow-sm shadow-[var(--color-primary-default)]/25'
-                                : 'text-current group-hover/item:bg-sidebar-accent'}"
-                            >
-                              <item.icon class="size-[15px]" strokeWidth={2} />
-                            </div>
-                            <span class="text-[13px] {hasActiveChild(item.children ?? []) ? 'font-semibold' : 'font-medium'}">{item.label}</span>
-                            <ChevronDown
-                              class="text-sidebar-foreground/40 ml-auto size-4 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-180"
-                            />
-                          </button>
-                        {/snippet}
-                      </Sidebar.MenuButton>
-                    {/snippet}
-                  </Collapsible.Trigger>
-                  <Collapsible.Content>
-                    <Sidebar.MenuSub
-                      class="mt-1.5 ml-[11px] space-y-0.5 border-l border-sidebar-border/40 py-1 pl-3"
-                    >
-                      {#each item.children as navChild}
-                        <Sidebar.MenuSubItem>
-                          <Sidebar.MenuSubButton
-                            isActive={currentPath === navChild.href}
-                            class="nav-subitem group/subitem relative h-7 rounded-md px-2 transition-all duration-200
-                              {currentPath === navChild.href
-                              ? 'bg-[var(--color-primary-default)]/[0.08] text-[var(--color-primary-default)] dark:bg-[var(--color-primary-default)]/15'
-                              : 'text-sidebar-foreground/60 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground'}"
-                          >
-                            {#snippet child({ props })}
-                              <a href={navChild.href} {...props} class="flex items-center gap-2">
-                                <navChild.icon
-                                  class="size-3.5 transition-colors duration-200"
-                                  strokeWidth={currentPath === navChild.href ? 2.25 : 1.75}
-                                />
-                                <span class="text-[12px] {currentPath === navChild.href ? 'font-semibold' : 'font-medium'}">{navChild.label}</span>
-                              </a>
-                            {/snippet}
-                          </Sidebar.MenuSubButton>
-                        </Sidebar.MenuSubItem>
-                      {/each}
-                    </Sidebar.MenuSub>
-                  </Collapsible.Content>
-                </Sidebar.MenuItem>
-              </Collapsible.Root>
-            {/if}
-          {/each}
-        </Sidebar.Menu>
-      </Sidebar.GroupContent>
-    </Sidebar.Group>
-
-    <!-- Support Section -->
-    <Sidebar.Group class="mt-2">
-      <Sidebar.GroupLabel
-        class="text-sidebar-foreground/40 mb-0 px-3 text-[10px] font-bold tracking-widest uppercase group-data-[collapsible=icon]:hidden"
-      >
-        {t('supportGroup')}
-      </Sidebar.GroupLabel>
-      <Sidebar.GroupContent>
-        <Sidebar.Menu class="space-y-0.5">
-          {#each supportItems as item}
             <Sidebar.MenuItem>
               <Sidebar.MenuButton
                 isActive={currentPath === item.href}
@@ -559,13 +424,13 @@
       <Sidebar.MenuItem class="group-data-[collapsible=icon]:hidden">
         <Sidebar.MenuButton
           onclick={() => sidebar.toggle()}
-          tooltipContent={t('collapseSidebar')}
+          tooltipContent={t('collapseSidebar', undefined, language)}
           class="text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-foreground h-8 rounded-lg px-3 transition-all duration-150"
         >
           {#snippet child({ props })}
             <button {...props} class="flex w-full items-center gap-3">
               <PanelLeftClose class="size-4" strokeWidth={1.75} />
-              <span class="text-[12px] font-medium">{t('collapse')}</span>
+              <span class="text-[12px] font-medium">{t('collapse', undefined, language)}</span>
             </button>
           {/snippet}
         </Sidebar.MenuButton>
@@ -575,7 +440,7 @@
       <Sidebar.MenuItem class="hidden group-data-[collapsible=icon]:block">
         <Sidebar.MenuButton
           onclick={() => sidebar.toggle()}
-          tooltipContent="Expand sidebar"
+          tooltipContent={t('expandSidebar', undefined, language)}
           class="text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-foreground flex h-8 w-full items-center justify-center rounded-lg transition-all duration-150"
         >
           {#snippet child({ props })}
@@ -635,7 +500,7 @@
             <DropdownMenu.Label
               class="text-muted-foreground text-[10px] font-bold tracking-wider uppercase"
             >
-              {t('myAccount')}
+              {t('myAccount', undefined, language)}
             </DropdownMenu.Label>
             <DropdownMenu.Separator />
             <DropdownMenu.Group>
@@ -645,15 +510,15 @@
                 class="gap-2.5"
               >
                 <User class="size-4" />
-                <span>Profile</span>
+                <span>{t('profile', undefined, language)}</span>
               </DropdownMenu.Item>
               <DropdownMenu.Item inset={false} onclick={() => navigateTo('/users')} class="gap-2.5">
                 <Users class="size-4" />
-                <span>Users & Teams</span>
+                <span>{t('usersAndTeams', undefined, language)}</span>
               </DropdownMenu.Item>
               <DropdownMenu.Item inset={false} onclick={() => navigateTo('/org')} class="gap-2.5">
                 <Building class="size-4" />
-                <span>Organizations</span>
+                <span>{t('organizations', undefined, language)}</span>
               </DropdownMenu.Item>
               <DropdownMenu.Item
                 inset={false}
@@ -661,7 +526,7 @@
                 class="gap-2.5"
               >
                 <Settings class="size-4" />
-                <span>Settings</span>
+                <span>{t('settings', undefined, language)}</span>
               </DropdownMenu.Item>
               <DropdownMenu.Item
                 inset={false}
@@ -669,14 +534,14 @@
                 class="gap-2.5"
               >
                 <Tag class="size-4" />
-                <span>Tags</span>
+                <span>{t('tags', undefined, language)}</span>
               </DropdownMenu.Item>
             </DropdownMenu.Group>
             <DropdownMenu.Separator />
             <DropdownMenu.Label
               class="text-muted-foreground text-[10px] font-bold tracking-wider uppercase"
             >
-              {t('theme')}
+              {t('theme', undefined, language)}
             </DropdownMenu.Label>
             <DropdownMenu.Group class="flex gap-1 px-2 py-1.5">
               <button
@@ -684,28 +549,28 @@
                 class="flex flex-1 flex-col items-center gap-1 rounded-md px-2 py-2 transition-colors {theme === 'light' ? 'bg-[#ff7a59]/10 text-[#ff7a59]' : 'hover:bg-sidebar-accent text-muted-foreground hover:text-foreground'}"
               >
                 <Sun class="size-4" />
-                <span class="text-[10px] font-medium">{t('light')}</span>
+                <span class="text-[10px] font-medium">{t('light', undefined, language)}</span>
               </button>
               <button
                 onclick={() => setTheme('dark')}
                 class="flex flex-1 flex-col items-center gap-1 rounded-md px-2 py-2 transition-colors {theme === 'dark' ? 'bg-[#ff7a59]/10 text-[#ff7a59]' : 'hover:bg-sidebar-accent text-muted-foreground hover:text-foreground'}"
               >
                 <Moon class="size-4" />
-                <span class="text-[10px] font-medium">{t('dark')}</span>
+                <span class="text-[10px] font-medium">{t('dark', undefined, language)}</span>
               </button>
               <button
                 onclick={() => setTheme('system')}
                 class="flex flex-1 flex-col items-center gap-1 rounded-md px-2 py-2 transition-colors {theme === 'system' ? 'bg-[#ff7a59]/10 text-[#ff7a59]' : 'hover:bg-sidebar-accent text-muted-foreground hover:text-foreground'}"
               >
                 <Monitor class="size-4" />
-                <span class="text-[10px] font-medium">{t('system')}</span>
+                <span class="text-[10px] font-medium">{t('system', undefined, language)}</span>
               </button>
             </DropdownMenu.Group>
             <DropdownMenu.Separator />
             <DropdownMenu.Label
               class="text-muted-foreground text-[10px] font-bold tracking-wider uppercase"
             >
-              {t('language')}
+              {t('language', undefined, language)}
             </DropdownMenu.Label>
             <DropdownMenu.Group class="flex gap-1 px-2 py-1.5">
               <button
@@ -713,16 +578,25 @@
                 class="flex flex-1 flex-col items-center gap-1 rounded-md px-2 py-2 transition-colors {language === 'en' ? 'bg-[#ff7a59]/10 text-[#ff7a59]' : 'hover:bg-sidebar-accent text-muted-foreground hover:text-foreground'}"
               >
                 <span class="text-[14px] font-bold">EN</span>
-                <span class="text-[10px] font-medium">English</span>
+                <span class="text-[10px] font-medium">{t('english', undefined, language)}</span>
               </button>
               <button
                 onclick={() => setLanguage('zh')}
                 class="flex flex-1 flex-col items-center gap-1 rounded-md px-2 py-2 transition-colors {language === 'zh' ? 'bg-[#ff7a59]/10 text-[#ff7a59]' : 'hover:bg-sidebar-accent text-muted-foreground hover:text-foreground'}"
               >
                 <span class="text-[14px] font-bold">中文</span>
-                <span class="text-[10px] font-medium">Chinese</span>
+                <span class="text-[10px] font-medium">{t('chinese', undefined, language)}</span>
               </button>
             </DropdownMenu.Group>
+            <DropdownMenu.Separator />
+            <DropdownMenu.Item
+              inset={false}
+              onclick={() => navigateTo('/support')}
+              class="gap-2.5"
+            >
+              <HelpCircle class="size-4" />
+              <span>{t('helpDesk', undefined, language)}</span>
+            </DropdownMenu.Item>
             <DropdownMenu.Separator />
             <DropdownMenu.Item
               class="text-destructive focus:bg-destructive/10 focus:text-destructive gap-2.5"
@@ -730,7 +604,7 @@
               onclick={() => navigateTo('/logout')}
             >
               <LogOut class="size-4" />
-              <span>Sign out</span>
+              <span>{t('signOut', undefined, language)}</span>
             </DropdownMenu.Item>
           </DropdownMenu.Content>
         </DropdownMenu.Root>

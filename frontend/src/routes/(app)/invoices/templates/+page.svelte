@@ -11,7 +11,7 @@
   import { FilterBar, SearchInput } from '$lib/components/ui/filter';
   import { Pagination } from '$lib/components/ui/pagination';
   import { Button } from '$lib/components/ui/button';
-  import { t } from '$lib/utils/i18n.js';
+  import { t } from '$lib/utils/i18n.svelte.js';
 import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 
   /** @type {{ data: import('./$types').PageData }} */

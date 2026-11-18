@@ -3,6 +3,7 @@
   import { Button } from '$lib/components/ui/button/index.js';
   import * as Popover from '$lib/components/ui/popover/index.js';
   import { cn } from '$lib/utils.js';
+  import { t } from '$lib/utils/i18n.svelte.js';
 
   /**
    * @type {{
@@ -61,16 +62,10 @@
       className
     )}
   >
-    <!-- Left side: Results summary with refined typography -->
+    <!-- Left side: Results summary -->
     <div class="flex items-center gap-2">
       <p class="text-sm text-muted-foreground">
-        Showing
-        <span class="mx-1 inline-flex items-center justify-center rounded-md bg-muted/50 px-2 py-0.5 font-semibold tabular-nums text-foreground">
-          {startItem}–{endItem}
-        </span>
-        of
-        <span class="ml-1 font-semibold text-foreground">{total}</span>
-        results
+        {t('pagination_info', { start: startItem, end: endItem, total })}
       </p>
     </div>
 
@@ -78,7 +73,7 @@
     <div class="flex items-center gap-3">
       <!-- Rows per page selector -->
       <div class="flex items-center gap-2">
-        <span class="text-xs font-medium uppercase tracking-wide text-muted-foreground/70">Rows</span>
+        <span class="text-xs font-medium uppercase tracking-wide text-muted-foreground/70">{t('rows')}</span>
         <Popover.Root bind:open={limitPopoverOpen}>
           <Popover.Trigger asChild class="">
             {#snippet child({ props })}

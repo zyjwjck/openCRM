@@ -5,7 +5,7 @@
   import { PageHeader } from '$lib/components/layout';
   import { Button } from '$lib/components/ui/button';
   import { formatCurrency, formatDate } from '$lib/utils/formatting.js';
-  import { t } from '$lib/utils/i18n.js';
+  import { t } from '$lib/utils/i18n.svelte.js';
 import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 
   /** @type {{ data: import('./$types').PageData }} */
@@ -48,7 +48,26 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
     };
     return colors[status] || 'bg-[var(--text-tertiary)]';
   }
+
+  // Translate invoice status codes via i18n
+  const STATUS_LABEL_KEY = {
+    Draft: 'draft',
+    Sent: 'sent',
+    Viewed: 'viewed',
+    Partially_Paid: 'partially_paid',
+    Paid: 'paid',
+    Overdue: 'overdue',
+    Cancelled: 'cancelled'
+  };
+  function getStatusLabel(status) {
+    const key = STATUS_LABEL_KEY[status];
+    return key ? t(key) : status.replace('_', ' ');
+  }
 </script>
+
+<svelte:head>
+  <title>{t('invoiceReports')} | openCRM</title>
+</svelte:head>
 
 <div class="flex flex-col gap-6 p-6">
   <!-- Header -->
@@ -234,7 +253,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
         {#each Object.entries(dashboard.status_counts || {}) as [status, count]}
           <div class="flex items-center gap-3">
             <div class="h-3 w-3 rounded-full {getStatusColor(status)}"></div>
-            <span class="flex-1 text-[var(--text-secondary)]">{status.replace('_', ' ')}</span>
+            <span class="flex-1 text-[var(--text-secondary)]">{getStatusLabel(status)}</span>
             <span class="font-medium text-[var(--text-primary)]">{count}</span>
           </div>
         {/each}
@@ -331,7 +350,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
         <p class="mt-1 text-xl font-bold text-[var(--color-success-default)]">
           {formatCurrency(Number(aging.current?.amount || 0), 'USD')}
         </p>
-        <p class="text-sm text-[var(--color-success-default)]/80">{aging.current?.count || 0} invoices</p>
+        <p class="text-sm text-[var(--color-success-default)]/80">{t('invoice_count', { count: aging.current?.count || 0 })}</p>
       </div>
 
       <!-- 1-30 Days -->
@@ -340,7 +359,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
         <p class="mt-1 text-xl font-bold text-[var(--stage-negotiation)]">
           {formatCurrency(Number(aging['1_30_days']?.amount || 0), 'USD')}
         </p>
-        <p class="text-sm text-[var(--stage-negotiation)]/80">{aging['1_30_days']?.count || 0} invoices</p>
+        <p class="text-sm text-[var(--stage-negotiation)]/80">{t('invoice_count', { count: aging['1_30_days']?.count || 0 })}</p>
       </div>
 
       <!-- 31-60 Days -->
@@ -349,7 +368,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
         <p class="mt-1 text-xl font-bold text-[var(--color-primary-default)]">
           {formatCurrency(Number(aging['31_60_days']?.amount || 0), 'USD')}
         </p>
-        <p class="text-sm text-[var(--color-primary-default)]/80">{aging['31_60_days']?.count || 0} invoices</p>
+        <p class="text-sm text-[var(--color-primary-default)]/80">{t('invoice_count', { count: aging['31_60_days']?.count || 0 })}</p>
       </div>
 
       <!-- 61-90 Days -->
@@ -358,7 +377,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
         <p class="mt-1 text-xl font-bold text-[var(--color-negative-default)]">
           {formatCurrency(Number(aging['61_90_days']?.amount || 0), 'USD')}
         </p>
-        <p class="text-sm text-[var(--color-negative-default)]/80">{aging['61_90_days']?.count || 0} invoices</p>
+        <p class="text-sm text-[var(--color-negative-default)]/80">{t('invoice_count', { count: aging['61_90_days']?.count || 0 })}</p>
       </div>
 
       <!-- Over 90 Days -->
@@ -367,7 +386,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
         <p class="mt-1 text-xl font-bold text-[var(--color-negative-default)]">
           {formatCurrency(Number(aging['over_90_days']?.amount || 0), 'USD')}
         </p>
-        <p class="text-sm text-[var(--color-negative-default)]/80">{aging['over_90_days']?.count || 0} invoices</p>
+        <p class="text-sm text-[var(--color-negative-default)]/80">{t('invoice_count', { count: aging['over_90_days']?.count || 0 })}</p>
       </div>
     </div>
 
@@ -378,7 +397,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
         <p class="text-2xl font-bold text-[var(--text-primary)]">
           {formatCurrency(Number(aging.total?.amount || 0), 'USD')}
         </p>
-        <p class="text-sm text-[var(--text-secondary)]">{aging.total?.count || 0} invoices</p>
+        <p class="text-sm text-[var(--text-secondary)]">{t('invoice_count', { count: aging.total?.count || 0 })}</p>
       </div>
     </div>
   </div>

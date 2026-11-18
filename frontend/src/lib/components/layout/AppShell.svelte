@@ -10,7 +10,7 @@
    */
 
   /** @type {Props & { children?: import('svelte').Snippet }} */
-  let { user = {}, org_name = 'BottleCRM', children } = $props();
+  let { user = {}, org_name = 'openCRM', children } = $props();
 
   // Get initial sidebar state from cookie (set by server or previous session)
   let defaultOpen = $state(true);

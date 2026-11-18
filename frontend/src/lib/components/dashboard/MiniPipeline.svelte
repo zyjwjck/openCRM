@@ -2,6 +2,9 @@
   import { Badge } from '$lib/components/ui/badge/index.js';
   import { ChevronRight, Trophy, XCircle } from '@lucide/svelte';
   import { formatCurrency } from '$lib/utils/formatting.js';
+  import { useI18n } from '$lib/utils/i18n.svelte.js';
+
+  const { t: tr } = useI18n();
 
   /**
    * @typedef {Object} StageData
@@ -23,6 +26,7 @@
   const stages = [
     {
       id: 'PROSPECTING',
+      labelKey: 'stageProspecting',
       color: 'bg-[var(--stage-new)]',
       textColor: 'text-[var(--stage-new)]',
       bgColor: 'bg-[var(--stage-new-bg)] dark:bg-[var(--stage-new)]/15',
@@ -31,6 +35,7 @@
     },
     {
       id: 'QUALIFICATION',
+      labelKey: 'stageQualification',
       color: 'bg-[var(--stage-qualified)]',
       textColor: 'text-[var(--stage-qualified)]',
       bgColor: 'bg-[var(--stage-qualified-bg)] dark:bg-[var(--stage-qualified)]/15',
@@ -39,6 +44,7 @@
     },
     {
       id: 'PROPOSAL',
+      labelKey: 'stageProposal',
       color: 'bg-[var(--stage-proposal)]',
       textColor: 'text-[var(--stage-proposal)]',
       bgColor: 'bg-[var(--stage-proposal-bg)] dark:bg-[var(--stage-proposal)]/15',
@@ -47,6 +53,7 @@
     },
     {
       id: 'NEGOTIATION',
+      labelKey: 'stageNegotiation',
       color: 'bg-[var(--stage-negotiation)]',
       textColor: 'text-[var(--stage-negotiation)]',
       bgColor: 'bg-[var(--stage-negotiation-bg)] dark:bg-[var(--stage-negotiation)]/15',
@@ -55,6 +62,7 @@
     },
     {
       id: 'CLOSED_WON',
+      labelKey: 'stageWon',
       color: 'bg-[var(--stage-won)]',
       textColor: 'text-[var(--stage-won)]',
       bgColor: 'bg-[var(--stage-won-bg)] dark:bg-[var(--stage-won)]/15',
@@ -64,6 +72,7 @@
     },
     {
       id: 'CLOSED_LOST',
+      labelKey: 'stageLost',
       color: 'bg-[var(--stage-lost)]',
       textColor: 'text-[var(--stage-lost)]',
       bgColor: 'bg-[var(--stage-lost-bg)] dark:bg-[var(--stage-lost)]/15',
@@ -77,7 +86,7 @@
 <div class="overflow-x-auto">
   <div class="flex min-w-max items-center gap-2">
     {#each stages as stage, index}
-      {@const data = pipelineData[stage.id] || { count: 0, value: 0, label: stage.id }}
+      {@const data = pipelineData[stage.id] || /** @type {StageData} */ ({ count: 0, value: 0, label: '' })}
       <a
         href="/opportunities?stage={stage.id}"
         class="group relative min-w-[130px] flex-1 overflow-hidden rounded-[var(--radius-lg)] border px-4 py-3.5 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg {stage.borderColor} {stage.bgColor} {stage.glowColor}"
@@ -91,7 +100,7 @@
             <div class="flex items-center gap-2">
               <div class="size-2.5 rounded-full {stage.color} shadow-sm"></div>
               <span class="text-[var(--text-primary)] text-xs font-semibold tracking-tight">
-                {data.label || stage.id.replace('_', ' ')}
+                {tr(stage.labelKey)}
               </span>
             </div>
             <Badge
@@ -125,7 +134,7 @@
       {#if index === 3}
         <div class="flex flex-shrink-0 flex-col items-center gap-1 px-2">
           <div class="h-4 w-px bg-[var(--border-default)]/50"></div>
-          <span class="text-[var(--text-tertiary)]/50 text-[8px] font-medium uppercase tracking-widest">Closed</span>
+          <span class="text-[var(--text-tertiary)]/50 text-[8px] font-medium uppercase tracking-widest">{tr('closedLabel')}</span>
           <div class="h-4 w-px bg-[var(--border-default)]/50"></div>
         </div>
       {/if}

@@ -52,7 +52,7 @@
     CURRENCY_CODES
   } from '$lib/constants/filters.js';
   import { orgSettings } from '$lib/stores/org.js';
-  import { t } from '$lib/utils/i18n.js';
+  import { t } from '$lib/utils/i18n.svelte.js';
 import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 
   const STORAGE_KEY = 'opportunities-crm-columns';
@@ -66,32 +66,32 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   const stageOptions = [
     {
       value: 'PROSPECTING',
-      label: 'Prospecting',
+      label: t('stageProspecting'),
       color: 'bg-[var(--stage-new-bg)] text-[var(--stage-new)] dark:bg-[var(--stage-new)]/15'
     },
     {
       value: 'QUALIFICATION',
-      label: 'Qualification',
+      label: t('stageQualification'),
       color: 'bg-[var(--stage-qualified-bg)] text-[var(--stage-qualified)] dark:bg-[var(--stage-qualified)]/15'
     },
     {
       value: 'PROPOSAL',
-      label: 'Proposal',
+      label: t('stageProposal'),
       color: 'bg-[var(--stage-proposal-bg)] text-[var(--stage-proposal)] dark:bg-[var(--stage-proposal)]/15'
     },
     {
       value: 'NEGOTIATION',
-      label: 'Negotiation',
+      label: t('stageNegotiation'),
       color: 'bg-[var(--stage-negotiation-bg)] text-[var(--stage-negotiation)] dark:bg-[var(--stage-negotiation)]/15'
     },
     {
       value: 'CLOSED_WON',
-      label: 'Won',
+      label: t('stageWon'),
       color: 'bg-[var(--stage-won-bg)] text-[var(--stage-won)] dark:bg-[var(--stage-won)]/15'
     },
     {
       value: 'CLOSED_LOST',
-      label: 'Lost',
+      label: t('stageLost'),
       color: 'bg-[var(--stage-lost-bg)] text-[var(--stage-lost)] dark:bg-[var(--stage-lost)]/15'
     }
   ];
@@ -301,7 +301,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
         },
     {
       key: 'stage',
-      label: 'Stage',
+      label: t('stage'),
       type: 'select',
       icon: Target,
       options: stageOptions
@@ -395,7 +395,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   const filters = $derived(data.filters || {});
 
   // Stage options for filter dropdown (includes ALL option)
-  const stageFilterOptions = $derived([{ value: '', label: 'All Stages' }, ...stageOptions]);
+  const stageFilterOptions = $derived([{ value: '', label: t('allStages') }, ...stageOptions]);
 
   // Count active filters (excluding stage since it's handled via chips in header)
   const activeFiltersCount = $derived.by(() => {

@@ -6,7 +6,7 @@
   import * as AlertDialog from '$lib/components/ui/alert-dialog/index.js';
   import { Separator } from '$lib/components/ui/separator/index.js';
   import { formatRelativeDate, getInitials } from '$lib/utils/formatting.js';
-  import { t, getCurrentLanguage } from '$lib/utils/i18n.js';
+  import { t, getCurrentLanguage } from '$lib/utils/i18n.svelte.js';
   import * as api from '$lib/api.js';
   
   // Reactive language tracking

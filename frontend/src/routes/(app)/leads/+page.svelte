@@ -59,7 +59,7 @@
   import { orgSettings } from '$lib/stores/org.js';
   import { ViewToggle } from '$lib/components/ui/view-toggle';
   import { LeadKanban } from '$lib/components/ui/lead-kanban';
-  import { t } from '$lib/utils/i18n.js';
+  import { t } from '$lib/utils/i18n.svelte.js';
   import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 
   // Column visibility configuration

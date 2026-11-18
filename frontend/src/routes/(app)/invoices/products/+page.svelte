@@ -13,7 +13,7 @@
   import { Button } from '$lib/components/ui/button';
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu';
   import { formatCurrency } from '$lib/utils/formatting.js';
-  import { t } from '$lib/utils/i18n.js';
+  import { t } from '$lib/utils/i18n.svelte.js';
 import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 
   /** @type {{ data: import('./$types').PageData }} */
@@ -21,8 +21,8 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 
   // Status options
   const STATUS_OPTIONS = [
-    { value: 'true', label: 'Active' },
-    { value: 'false', label: 'Inactive' }
+    { value: 'true', label: t('active') },
+    { value: 'false', label: t('inactive') }
   ];
 
   /**
@@ -76,13 +76,13 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 
   // Drawer field definitions
   const drawerFields = [
-    { key: 'name', label: 'Name', type: 'text', section: 'core', required: true },
-    { key: 'sku', label: 'SKU', type: 'text', section: 'core' },
-    { key: 'category', label: 'Category', type: 'text', section: 'core' },
-    { key: 'price', label: 'Price', type: 'number', section: 'pricing' },
-    { key: 'currency', label: 'Currency', type: 'text', section: 'pricing' },
-    { key: 'isActive', label: 'Active', type: 'boolean', section: 'settings' },
-    { key: 'description', label: 'Description', type: 'textarea', section: 'details' }
+    { key: 'name', label: t('name'), type: 'text', section: 'core', required: true },
+    { key: 'sku', label: t('sku'), type: 'text', section: 'core' },
+    { key: 'category', label: t('category'), type: 'text', section: 'core' },
+    { key: 'price', label: t('price'), type: 'number', section: 'pricing' },
+    { key: 'currency', label: t('currency'), type: 'text', section: 'pricing' },
+    { key: 'isActive', label: t('active'), type: 'boolean', section: 'settings' },
+    { key: 'description', label: t('description'), type: 'textarea', section: 'details' }
   ];
 
   // Default visible columns
@@ -248,7 +248,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   async function handleDelete() {
     if (!selectedProduct) return;
 
-    if (!confirm('Are you sure you want to delete this product?')) return;
+    if (!confirm(t('are_you_sure_delete_product'))) return;
 
     formState.productId = selectedProduct.id;
     await tick();
@@ -302,11 +302,11 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   use:enhance={() => {
     return async ({ result }) => {
       if (result.type === 'success') {
-        toast.success('Product created');
+        toast.success(t('product_created'));
         closeDrawer();
         invalidateAll();
       } else if (result.type === 'failure') {
-        toast.error(/** @type {string} */ (result.data?.error) || 'Failed to create product');
+        toast.error(/** @type {string} */ (result.data?.error) || t('failed_to_create_product'));
       }
     };
   }}
@@ -328,11 +328,11 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   use:enhance={() => {
     return async ({ result }) => {
       if (result.type === 'success') {
-        toast.success('Product updated');
+        toast.success(t('product_updated'));
         closeDrawer();
         invalidateAll();
       } else if (result.type === 'failure') {
-        toast.error(/** @type {string} */ (result.data?.error) || 'Failed to update product');
+        toast.error(/** @type {string} */ (result.data?.error) || t('failed_to_update_product'));
       }
     };
   }}
@@ -355,11 +355,11 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   use:enhance={() => {
     return async ({ result }) => {
       if (result.type === 'success') {
-        toast.success('Product deleted');
+        toast.success(t('product_deleted'));
         closeDrawer();
         invalidateAll();
       } else if (result.type === 'failure') {
-        toast.error(/** @type {string} */ (result.data?.error) || 'Failed to delete product');
+        toast.error(/** @type {string} */ (result.data?.error) || t('failed_to_delete_product'));
       }
     };
   }}
@@ -411,7 +411,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
         >
           <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
         </svg>
-        Filters
+        {t('filters')}
         {#if activeFiltersCount() > 0}
           <span class="rounded-full bg-[var(--color-primary-light)] px-2 py-0.5 text-xs text-[var(--color-primary-default)]">
             {activeFiltersCount()}
@@ -438,7 +438,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
                 <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
                 <line x1="9" y1="3" x2="9" y2="21" />
               </svg>
-              Columns
+              {t('columns')}
             </Button>
           {/snippet}
         </DropdownMenu.Trigger>
@@ -472,7 +472,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
           <line x1="12" y1="5" x2="12" y2="19" />
         <line x1="5" y1="12" x2="19" y2="12" />
         </svg>
-        New {t('products')}
+        {t('createNewProduct')}
       </Button>
     {/snippet}
   </PageHeader>
@@ -486,13 +486,13 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   >
     <SearchInput
       value={filters.search}
-      placeholder="Search products..."
+      placeholder={t('search_products')}
       onchange={(value) => updateFilters({ ...filters, search: value })}
     />
 
     {#if categories.length > 0}
       <SelectFilter
-        label="Category"
+        label={t('category')}
         value={filters.category}
         options={categories}
         onchange={(value) => updateFilters({ ...filters, category: value })}
@@ -500,7 +500,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
     {/if}
 
     <SelectFilter
-      label="Status"
+      label={t('status')}
       value={filters.is_active}
       options={STATUS_OPTIONS}
       onchange={(value) => updateFilters({ ...filters, is_active: value })}
@@ -514,8 +514,8 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
         <div class="mb-4 flex size-16 items-center justify-center rounded-[var(--radius-xl)] bg-[var(--surface-sunken)]">
           <span class="text-4xl">📦</span>
         </div>
-        <h3 class="text-[var(--text-primary)] text-lg font-medium">No products yet</h3>
-        <p class="text-[var(--text-secondary)] text-sm">Create your first product to use in invoices</p>
+        <h3 class="text-[var(--text-primary)] text-lg font-medium">{t('no_products_yet')}</h3>
+        <p class="text-[var(--text-secondary)] text-sm">{t('create_first_product')}</p>
       </div>
     {/snippet}
     {#snippet cellContent(row, column)}
@@ -544,8 +544,8 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   data={drawerFormData}
   columns={drawerFields}
   titleKey="name"
-  titlePlaceholder="New Product"
-  headerLabel="Product"
+  titlePlaceholder={t('new_product')}
+  headerLabel={t('product')}
   mode={drawerMode}
   onFieldChange={handleFieldChange}
   onDelete={handleDelete}
@@ -553,13 +553,18 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 >
   {#snippet footerActions()}
     <div class="flex w-full items-center justify-end gap-2">
-      <Button variant="outline" onclick={closeDrawer}>Cancel</Button>
+      <Button variant="outline" onclick={closeDrawer}>{t('cancel')}</Button>
       <Button onclick={handleDrawerSave}>
-        {drawerMode === 'create' ? 'Create Product' : 'Save Changes'}
+        {drawerMode === 'create' ? t('create_product') : t('save_changes')}
       </Button>
     </div>
   {/snippet}
 </CrmDrawer>
+
+<!-- Page Title -->
+<svelte:head>
+  <title>{t('products')} | openCRM</title>
+</svelte:head>
 
 <!-- 自动刷新组件 -->
 <AutoRefresh interval={3000} enabled={true} />

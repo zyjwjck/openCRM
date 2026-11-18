@@ -2,7 +2,9 @@
   import { Badge } from '$lib/components/ui/badge/index.js';
   import { Button } from '$lib/components/ui/button/index.js';
   import { Flame, Phone, Mail, ChevronRight, Calendar, Sparkles } from '@lucide/svelte';
-  import { t } from '$lib/utils/i18n.js';
+  import { useI18n } from '$lib/utils/i18n.svelte.js';
+
+  const { lang, t: tr } = useI18n();
 
   /**
    * @typedef {Object} Lead
@@ -50,7 +52,7 @@
    * @param {string | null | undefined} dateStr
    */
   function formatFollowUp(dateStr) {
-    if (!dateStr) return 'No follow-up set';
+    if (!dateStr) return tr('noFollowUpSet');
     const date = new Date(dateStr);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -60,13 +62,13 @@
     const dateOnly = new Date(date);
     dateOnly.setHours(0, 0, 0, 0);
 
-    if (dateOnly.getTime() === today.getTime()) return 'Today';
-    if (dateOnly.getTime() === tomorrow.getTime()) return 'Tomorrow';
+    if (dateOnly.getTime() === today.getTime()) return tr('today');
+    if (dateOnly.getTime() === tomorrow.getTime()) return tr('tomorrow');
     if (dateOnly.getTime() < today.getTime()) {
       const days = Math.floor((today.getTime() - dateOnly.getTime()) / (1000 * 60 * 60 * 24));
-      return `${days}d overdue`;
+      return tr('daysOverdue', { count: days });
     }
-    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    return date.toLocaleDateString(lang === 'zh' ? 'zh-CN' : 'en-US', { month: 'short', day: 'numeric' });
   }
 
   /**
@@ -87,7 +89,7 @@
    */
   function getLeadName(lead) {
     const parts = [lead.first_name, lead.last_name].filter(Boolean);
-    return parts.length > 0 ? parts.join(' ') : 'Unnamed Lead';
+    return parts.length > 0 ? parts.join(' ') : tr('unnamedLead');
   }
 </script>
 
@@ -98,10 +100,10 @@
       <div class="flex size-8 items-center justify-center rounded-[var(--radius-md)] bg-[var(--lead-hot-bg)] dark:bg-[var(--lead-hot)]/15">
         <Flame class="size-4 text-[var(--lead-hot)]" />
       </div>
-      <h3 class="text-[var(--text-primary)] text-sm font-semibold tracking-tight">{t('hotLeads')}</h3>
+      <h3 class="text-[var(--text-primary)] text-sm font-semibold tracking-tight">{tr('hotLeads')}</h3>
     </div>
     <Button variant="ghost" size="sm" href="/leads?rating=HOT" class="gap-1 text-xs font-medium">
-      {t('hotLeads')}
+      {tr('viewAll')}
       <ChevronRight class="size-3.5" />
     </Button>
   </div>
@@ -113,8 +115,8 @@
         <div class="mb-3 flex size-12 items-center justify-center rounded-[var(--radius-lg)] bg-[var(--surface-sunken)]">
           <Sparkles class="size-6 text-[var(--text-tertiary)]" />
         </div>
-        <p class="text-[var(--text-secondary)] text-sm font-medium">No hot leads</p>
-        <p class="text-[var(--text-tertiary)] text-xs">Mark leads as "Hot" to see them here</p>
+        <p class="text-[var(--text-secondary)] text-sm font-medium">{tr('noHotLeads')}</p>
+        <p class="text-[var(--text-tertiary)] text-xs">{tr('markLeadsAsHot')}</p>
       </div>
     {:else}
       <div class="divide-y divide-[var(--border-default)]/30">
@@ -130,7 +132,7 @@
                 {getLeadName(lead)}
               </p>
               <p class="text-[var(--text-secondary)] mt-0.5 truncate text-xs">
-                {lead.company || 'No company'}
+                {lead.company || tr('noCompany')}
               </p>
             </div>
 
@@ -161,7 +163,7 @@
                 variant="ghost"
                 size="icon"
                 class="size-7 rounded-[var(--radius-md)] hover:bg-[var(--activity-call)]/10 hover:text-[var(--activity-call)]"
-                title="Call"
+                title={tr('call')}
               >
                 <Phone class="size-3.5" />
               </Button>
@@ -169,7 +171,7 @@
                 variant="ghost"
                 size="icon"
                 class="size-7 rounded-[var(--radius-md)] hover:bg-[var(--activity-email)]/10 hover:text-[var(--activity-email)]"
-                title="Email"
+                title={tr('email')}
               >
                 <Mail class="size-3.5" />
               </Button>

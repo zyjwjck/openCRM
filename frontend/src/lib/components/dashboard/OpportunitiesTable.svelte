@@ -4,7 +4,9 @@
   import { Progress } from '$lib/components/ui/progress/index.js';
   import { Sparkles, ChevronRight, Calendar } from '@lucide/svelte';
   import { formatCurrency } from '$lib/utils/formatting.js';
-  import { t } from '$lib/utils/i18n.js';
+  import { useI18n } from '$lib/utils/i18n.svelte.js';
+
+  const { lang, t: tr } = useI18n();
 
   /**
    * @typedef {Object} Opportunity
@@ -28,44 +30,44 @@
   let { opportunities = [] } = $props();
 
   // Using design system stage tokens
-  const stageConfig = /** @type {Record<string, { label: string, bg: string, text: string, border: string }>} */ ({
+  const stageConfig = $derived(/** @type {Record<string, { label: string, bg: string, text: string, border: string }>} */ ({
     PROSPECTING: {
-      label: 'Prospecting',
+      label: tr('stageProspecting'),
       bg: 'bg-[var(--stage-new-bg)] dark:bg-[var(--stage-new)]/15',
       text: 'text-[var(--stage-new)]',
       border: 'border-[var(--stage-new)]/30'
     },
     QUALIFICATION: {
-      label: 'Qualification',
+      label: tr('stageQualification'),
       bg: 'bg-[var(--stage-qualified-bg)] dark:bg-[var(--stage-qualified)]/15',
       text: 'text-[var(--stage-qualified)]',
       border: 'border-[var(--stage-qualified)]/30'
     },
     PROPOSAL: {
-      label: 'Proposal',
+      label: tr('stageProposal'),
       bg: 'bg-[var(--stage-proposal-bg)] dark:bg-[var(--stage-proposal)]/15',
       text: 'text-[var(--stage-proposal)]',
       border: 'border-[var(--stage-proposal)]/30'
     },
     NEGOTIATION: {
-      label: 'Negotiation',
+      label: tr('stageNegotiation'),
       bg: 'bg-[var(--stage-negotiation-bg)] dark:bg-[var(--stage-negotiation)]/15',
       text: 'text-[var(--stage-negotiation)]',
       border: 'border-[var(--stage-negotiation)]/30'
     },
     CLOSED_WON: {
-      label: 'Won',
+      label: tr('stageWon'),
       bg: 'bg-[var(--stage-won-bg)] dark:bg-[var(--stage-won)]/15',
       text: 'text-[var(--stage-won)]',
       border: 'border-[var(--stage-won)]/30'
     },
     CLOSED_LOST: {
-      label: 'Lost',
+      label: tr('stageLost'),
       bg: 'bg-[var(--stage-lost-bg)] dark:bg-[var(--stage-lost)]/15',
       text: 'text-[var(--stage-lost)]',
       border: 'border-[var(--stage-lost)]/30'
     }
-  });
+  }));
 
   /**
    * Calculate days until close
@@ -87,10 +89,10 @@
    */
   function formatDaysUntilClose(days) {
     if (days === null) return '';
-    if (days < 0) return `${Math.abs(days)}d overdue`;
-    if (days === 0) return 'Today';
-    if (days === 1) return 'Tomorrow';
-    return `${days}d`;
+    if (days < 0) return tr('daysOverdue', { count: Math.abs(days) });
+    if (days === 0) return tr('dueToday');
+    if (days === 1) return tr('dueTomorrow');
+    return tr('daysLeft', { count: days });
   }
 
   // Only show open opportunities
@@ -106,10 +108,10 @@
       <div class="flex size-8 items-center justify-center rounded-[var(--radius-md)] bg-[var(--color-success-light)] dark:bg-[var(--color-success-default)]/15">
         <Sparkles class="size-4 text-[var(--color-success-default)]" />
       </div>
-      <h3 class="text-[var(--text-primary)] text-sm font-semibold tracking-tight">{t('opportunities')}</h3>
+      <h3 class="text-[var(--text-primary)] text-sm font-semibold tracking-tight">{tr('opportunities')}</h3>
     </div>
     <Button variant="ghost" size="sm" href="/opportunities" class="gap-1 text-xs font-medium">
-      {t('opportunities')}
+      {tr('viewAll')}
       <ChevronRight class="size-3.5" />
     </Button>
   </div>
@@ -121,8 +123,8 @@
         <div class="mb-3 flex size-12 items-center justify-center rounded-[var(--radius-lg)] bg-[var(--surface-sunken)]">
           <Sparkles class="size-6 text-[var(--text-tertiary)]" />
         </div>
-        <p class="text-[var(--text-secondary)] text-sm font-medium">No open opportunities</p>
-        <p class="text-[var(--text-tertiary)] text-xs">Create one to start tracking</p>
+        <p class="text-[var(--text-secondary)] text-sm font-medium">{tr('noOpenOpportunities')}</p>
+        <p class="text-[var(--text-tertiary)] text-xs">{tr('createOneToStart')}</p>
       </div>
     {:else}
       <div class="divide-y divide-[var(--border-default)]/30">
@@ -140,7 +142,7 @@
                   {opp.name}
                 </p>
                 <p class="text-[var(--text-secondary)] mt-0.5 truncate text-xs">
-                  {opp.account?.name || 'No account'}
+                  {opp.account?.name || tr('noAccount')}
                 </p>
               </div>
               <span class="text-[var(--text-primary)] flex-shrink-0 text-base font-bold tabular-nums tracking-tight">

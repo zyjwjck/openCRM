@@ -21,7 +21,7 @@
 </script>
 
 <svelte:head>
-  <title>Create Organization | BottleCRM</title>
+  <title>{t('createOrganization')} | openCRM</title>
 </svelte:head>
 
 <div class="flex min-h-screen flex-col bg-[var(--surface-sunken)]">
@@ -29,8 +29,8 @@
   <header class="border-b border-[var(--border-default)] bg-[var(--surface-default)]">
     <div class="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
       <div class="flex items-center gap-3">
-        <img src={imgLogo} alt="BottleCRM" class="h-8 w-auto" />
-        <span class="text-lg font-semibold text-[var(--text-primary)]">BottleCRM</span>
+        <img src={imgLogo} alt="openCRM" class="h-8 w-auto" />
+        <span class="text-lg font-semibold text-[var(--text-primary)]">openCRM</span>
       </div>
       <a
         href="/org"
@@ -84,7 +84,7 @@
               class="w-full rounded-lg border border-[var(--border-default)] px-4 py-2.5 text-[var(--text-primary)] placeholder-[var(--text-tertiary)] transition-colors focus:border-[var(--color-primary-default)] focus:ring-2 focus:ring-[var(--color-primary-default)]/20 focus:outline-none disabled:bg-[var(--surface-sunken)] disabled:text-[var(--text-secondary)]"
               placeholder="e.g. Acme Inc."
             />
-            <p class="text-xs text-[var(--text-secondary)]">This will be your workspace name in BottleCRM</p>
+            <p class="text-xs text-[var(--text-secondary)]">{t('workspaceNameHint')}</p>
           </div>
 
           <!-- Error Message -->

@@ -16,14 +16,14 @@
     MessageSquareHeart
   } from '@lucide/svelte';
   import { Button } from '$lib/components/ui/button/index.js';
-  import { t } from '$lib/utils/i18n.js';
+  import { t } from '$lib/utils/i18n.svelte.js';
 
   /** @type {{ data: import('./$types').PageData }} */
   let { data } = $props();
 </script>
 
 <svelte:head>
-  <title>Support - BottleCRM</title>
+  <title>{t('support')} - openCRM</title>
 </svelte:head>
 
 <div class="support-page">
@@ -53,7 +53,7 @@
           <h2>{t('ourMission')}</h2>
         </div>
         <p>
-          {t('missionDescription', { product: 'BottleCRM' })}
+          {t('missionDescription', { product: 'openCRM' })}
         </p>
       </div>
       <div class="mission-pattern"></div>
@@ -123,7 +123,7 @@
           <h3>{t('featureRequests')}</h3>
         </div>
         <p>
-          {t('featureRequestsDescription', { product: 'BottleCRM' })}
+          {t('featureRequestsDescription', { product: 'openCRM' })}
         </p>
         <Button
           variant="outline"
@@ -185,7 +185,7 @@
           class="card-action-security"
           onclick={() =>
             (window.location.href =
-              'mailto:ashwin@micropyramid.com?subject=Security%20Issue%20-%20BottleCRM')}
+              'mailto:ashwin@micropyramid.com?subject=Security%20Issue%20-%20openCRM')}
         >
           <Shield class="h-4 w-4" />
           {t('reportPrivately')}

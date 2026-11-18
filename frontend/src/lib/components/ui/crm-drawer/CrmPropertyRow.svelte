@@ -6,7 +6,7 @@
   import { EditableMultiSelect } from '$lib/components/ui/editable-field/index.js';
   import { cn } from '$lib/utils.js';
   import { formatCurrency } from '$lib/utils/formatting.js';
-  import { t, getCurrentLanguage } from '$lib/utils/i18n.js';
+  import { t, getCurrentLanguage } from '$lib/utils/i18n.svelte.js';
   import { parseDate, getLocalTimeZone } from '@internationalized/date';
   
   // Reactive language tracking

@@ -5,7 +5,7 @@
   import { Skeleton } from '$lib/components/ui/skeleton/index.js';
   import { Separator } from '$lib/components/ui/separator/index.js';
   import { cn } from '$lib/utils.js';
-  import { t, getCurrentLanguage } from '$lib/utils/i18n.js';
+  import { t, getCurrentLanguage } from '$lib/utils/i18n.svelte.js';
   import CrmPropertyRow from './CrmPropertyRow.svelte';
   
   // Reactive language tracking

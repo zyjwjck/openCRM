@@ -45,7 +45,7 @@
     casePriorityOptions
   } from '$lib/utils/table-helpers.js';
   import { useDrawerState } from '$lib/hooks';
-  import { t } from '$lib/utils/i18n.js';
+  import { t } from '$lib/utils/i18n.svelte.js';
 import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 
   // Account from URL param (for quick action from account page)

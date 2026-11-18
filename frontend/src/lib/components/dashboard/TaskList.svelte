@@ -2,7 +2,9 @@
   import { Badge } from '$lib/components/ui/badge/index.js';
   import { Button } from '$lib/components/ui/button/index.js';
   import { Circle, CheckCircle2, ChevronRight, ListTodo } from '@lucide/svelte';
-  import { t } from '$lib/utils/i18n.js';
+  import { useI18n } from '$lib/utils/i18n.svelte.js';
+
+  const { lang, t: tr } = useI18n();
 
   /**
    * @typedef {Object} Task
@@ -118,20 +120,20 @@
   function formatDate(dateStr) {
     if (!dateStr) return '';
     const date = new Date(dateStr);
-    if (isToday(dateStr)) return 'Today';
+    if (isToday(dateStr)) return tr('today');
     if (isOverdue(dateStr)) {
       const days = Math.floor((today.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
-      return days === 1 ? 'Yesterday' : `${days}d ago`;
+      return days === 1 ? tr('yesterday') : tr('daysAgo', { count: days });
     }
-    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    return date.toLocaleDateString(lang === 'zh' ? 'zh-CN' : 'en-US', { month: 'short', day: 'numeric' });
   }
 
-  /** @type {{ id: 'all' | 'overdue' | 'today' | 'week', label: string }[]} */
+  /** @type {{ id: 'all' | 'overdue' | 'today' | 'week', labelKey: string }[]} */
   const filterButtons = [
-    { id: 'all', label: 'All' },
-    { id: 'overdue', label: 'Overdue' },
-    { id: 'today', label: 'Today' },
-    { id: 'week', label: 'Week' }
+    { id: 'all', labelKey: 'taskFilterAll' },
+    { id: 'overdue', labelKey: 'taskFilterOverdue' },
+    { id: 'today', labelKey: 'taskFilterToday' },
+    { id: 'week', labelKey: 'taskFilterWeek' }
   ];
 </script>
 
@@ -142,10 +144,10 @@
       <div class="flex size-8 items-center justify-center rounded-[var(--radius-md)] bg-[var(--color-primary-light)] dark:bg-[var(--color-primary-default)]/15">
         <ListTodo class="size-4 text-[var(--color-primary-default)]" />
       </div>
-      <h3 class="text-[var(--text-primary)] text-sm font-semibold tracking-tight">{t('tasks')}</h3>
+      <h3 class="text-[var(--text-primary)] text-sm font-semibold tracking-tight">{tr('tasks')}</h3>
     </div>
     <Button variant="ghost" size="sm" href="/tasks" class="gap-1 text-xs font-medium">
-      {t('tasks')}
+      {tr('viewAll')}
       <ChevronRight class="size-3.5" />
     </Button>
   </div>
@@ -160,7 +162,7 @@
           {filter === btn.id ? 'bg-[var(--surface-sunken)] shadow-sm' : 'hover:bg-[var(--surface-sunken)]/50'}"
         onclick={() => (filter = btn.id)}
       >
-        {btn.label}
+        {tr(btn.labelKey)}
         {#if btn.id === 'overdue' && overdueTasks.length > 0}
           <Badge class="ml-1.5 h-4 min-w-4 bg-[var(--task-overdue)] px-1 text-[10px] font-bold text-white">
             {overdueTasks.length}
@@ -177,8 +179,8 @@
         <div class="mb-3 flex size-12 items-center justify-center rounded-[var(--radius-lg)] bg-[var(--surface-sunken)]">
           <ListTodo class="size-6 text-[var(--text-tertiary)]" />
         </div>
-        <p class="text-[var(--text-secondary)] text-sm font-medium">No tasks found</p>
-        <p class="text-[var(--text-tertiary)] text-xs">All caught up!</p>
+        <p class="text-[var(--text-secondary)] text-sm font-medium">{tr('noTasksFound')}</p>
+        <p class="text-[var(--text-tertiary)] text-xs">{tr('allCaughtUp')}</p>
       </div>
     {:else}
       <div class="divide-y divide-[var(--border-default)]/30">

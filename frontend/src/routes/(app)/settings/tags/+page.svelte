@@ -10,7 +10,7 @@
   import { Input } from '$lib/components/ui/input/index.js';
   import { Label } from '$lib/components/ui/label/index.js';
   import { TAG_COLORS } from '$lib/constants/colors.js';
-  import { t } from '$lib/utils/i18n.js';
+  import { t } from '$lib/utils/i18n.svelte.js';
 
   /** @type {{ data: any, form: any }} */
   let { data, form } = $props();
@@ -145,7 +145,7 @@
 </script>
 
 <svelte:head>
-  <title>{t('tags')} - BottleCRM</title>
+  <title>{t('tags')} - openCRM</title>
 </svelte:head>
 
 <!-- HubSpot-style header -->

@@ -79,7 +79,7 @@
 </script>
 
 <svelte:head>
-  <title>Profile - BottleCRM</title>
+  <title>{t('profile')} - openCRM</title>
 </svelte:head>
 
 <PageHeader title="Profile" subtitle="Manage your personal information">

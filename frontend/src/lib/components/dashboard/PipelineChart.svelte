@@ -1,6 +1,9 @@
 <script>
   import { BarChart3 } from '@lucide/svelte';
   import { formatCurrency } from '$lib/utils/formatting.js';
+  import { useI18n } from '$lib/utils/i18n.svelte.js';
+
+  const { t: tr } = useI18n();
 
   /**
    * @typedef {Object} StageData
@@ -22,24 +25,28 @@
   const stages = [
     {
       id: 'PROSPECTING',
+      labelKey: 'stageProspecting',
       color: 'bg-[var(--stage-new)]',
       bgLight: 'bg-[var(--stage-new)]/20',
       text: 'text-[var(--stage-new)]'
     },
     {
       id: 'QUALIFICATION',
+      labelKey: 'stageQualification',
       color: 'bg-[var(--stage-qualified)]',
       bgLight: 'bg-[var(--stage-qualified)]/20',
       text: 'text-[var(--stage-qualified)]'
     },
     {
       id: 'PROPOSAL',
+      labelKey: 'stageProposal',
       color: 'bg-[var(--stage-proposal)]',
       bgLight: 'bg-[var(--stage-proposal)]/20',
       text: 'text-[var(--stage-proposal)]'
     },
     {
       id: 'NEGOTIATION',
+      labelKey: 'stageNegotiation',
       color: 'bg-[var(--stage-negotiation)]',
       bgLight: 'bg-[var(--stage-negotiation)]/20',
       text: 'text-[var(--stage-negotiation)]'
@@ -56,20 +63,20 @@
     <div class="flex size-8 items-center justify-center rounded-[var(--radius-md)] bg-[var(--color-primary-light)] dark:bg-[var(--color-primary-default)]/15">
       <BarChart3 class="size-4 text-[var(--color-primary-default)]" />
     </div>
-    <h3 class="text-[var(--text-primary)] text-sm font-semibold tracking-tight">Pipeline by Stage</h3>
+    <h3 class="text-[var(--text-primary)] text-sm font-semibold tracking-tight">{tr('pipelineByStage')}</h3>
   </div>
 
   <!-- Bar chart -->
   <div class="space-y-4">
     {#each stages as stage}
-      {@const data = pipelineData[stage.id] || { count: 0, value: 0, label: stage.id }}
+      {@const data = pipelineData[stage.id] || /** @type {StageData} */ ({ count: 0, value: 0, label: '' })}
       {@const percentage = maxValue > 0 ? (data.value / maxValue) * 100 : 0}
       <div class="group space-y-2">
         <!-- Label row -->
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2">
             <div class="size-2.5 rounded-full {stage.color}"></div>
-            <span class="text-[var(--text-secondary)] text-xs font-medium">{data.label || stage.id}</span>
+            <span class="text-[var(--text-secondary)] text-xs font-medium">{tr(stage.labelKey)}</span>
           </div>
           <span class="text-[var(--text-primary)] text-sm font-bold tabular-nums tracking-tight">
             {formatCurrency(data.value, currency, true)}
@@ -91,7 +98,7 @@
 
   <!-- Summary -->
   <div class="mt-6 flex items-center justify-between border-t border-[var(--border-default)]/50 pt-4">
-    <span class="text-[var(--text-secondary)] text-xs font-medium">Total Open Pipeline</span>
+    <span class="text-[var(--text-secondary)] text-xs font-medium">{tr('totalOpenPipeline')}</span>
     <span class="text-[var(--text-primary)] text-lg font-bold tabular-nums tracking-tight">
       {formatCurrency(totalPipeline, currency, true)}
     </span>

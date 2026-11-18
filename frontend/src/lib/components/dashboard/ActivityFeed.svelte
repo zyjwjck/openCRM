@@ -11,6 +11,9 @@
     ChevronRight,
     Clock
   } from '@lucide/svelte';
+  import { useI18n } from '$lib/utils/i18n.svelte.js';
+
+  const { lang, t: tr } = useI18n();
 
   /**
    * @typedef {Object} ActivityItem
@@ -75,12 +78,50 @@
     text: 'text-[var(--text-tertiary)]'
   };
 
+  // Action code → i18n key mapping
+  const actionKeyMap = {
+    CREATE: 'actionCreated',
+    UPDATE: 'actionUpdated',
+    DELETE: 'actionDeleted',
+    VIEW: 'actionViewed',
+    COMMENT: 'actionCommented',
+    ASSIGN: 'actionAssigned'
+  };
+
+  // Entity type → i18n key mapping
+  const entityKeyMap = {
+    Account: 'entityAccount',
+    Lead: 'entityLead',
+    Contact: 'entityContact',
+    Opportunity: 'entityOpportunity',
+    Case: 'entityCase',
+    Task: 'entityTask',
+    Invoice: 'entityInvoice',
+    Estimate: 'entityEstimate',
+    Event: 'entityEvent'
+  };
+
+  /**
+   * Get translated activity description using action + entityType + entityName
+   */
+  function getActivityDescription(activity) {
+    const actionKey = actionKeyMap[activity.action] || activity.action;
+    const entityKey = entityKeyMap[activity.entityType] || activity.entityType;
+    const actionText = tr(actionKey);
+    const entityText = tr(entityKey);
+    return tr('activityTemplate', {
+      action: actionText,
+      entity: entityText,
+      name: activity.entityName || ''
+    });
+  }
+
   /**
    * Get date category for grouping
    * @param {string | undefined} dateStr
    */
   function getDateCategory(dateStr) {
-    if (!dateStr) return 'Earlier';
+    if (!dateStr) return tr('earlier');
     const date = new Date(dateStr);
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -89,10 +130,10 @@
     const weekAgo = new Date(today);
     weekAgo.setDate(weekAgo.getDate() - 7);
 
-    if (date >= today) return 'Today';
-    if (date >= yesterday) return 'Yesterday';
-    if (date >= weekAgo) return 'This Week';
-    return 'Earlier';
+    if (date >= today) return tr('today');
+    if (date >= yesterday) return tr('yesterday');
+    if (date >= weekAgo) return tr('thisWeek');
+    return tr('earlier');
   }
 
   /**
@@ -102,33 +143,32 @@
   function formatTime(dateStr) {
     if (!dateStr) return '';
     const date = new Date(dateStr);
-    return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+    return date.toLocaleTimeString(lang === 'zh' ? 'zh-CN' : 'en-US', { hour: 'numeric', minute: '2-digit' });
   }
 
   /**
    * Group activities by date category
-   * @param {ActivityItem[]} activities
    */
-  function groupByDate(activities) {
+  // Recompute order when language changes
+  const groupedActivities = $derived(() => {
     const groups = /** @type {Record<string, ActivityItem[]>} */ ({});
-    const order = ['Today', 'Yesterday', 'This Week', 'Earlier'];
+    const orderLabels = [tr('today'), tr('yesterday'), tr('thisWeek'), tr('earlier')];
 
-    for (const activity of activities) {
+    for (const activity of displayedActivities) {
       const category = getDateCategory(activity.timestamp || activity.createdAt);
       if (!groups[category]) groups[category] = [];
       groups[category].push(activity);
     }
 
-    return order
+    return orderLabels
       .filter((cat) => groups[cat]?.length > 0)
       .map((cat) => ({
         category: cat,
         items: groups[cat]
       }));
-  }
+  });
 
   const displayedActivities = $derived(showAll ? activities : activities.slice(0, 5));
-  const groupedActivities = $derived(groupByDate(displayedActivities));
 </script>
 
 <div class="overflow-hidden rounded-[var(--radius-lg)] border border-[var(--border-default)] bg-[var(--surface-raised)] dark:bg-[var(--surface-raised)]/80 dark:backdrop-blur-sm">
@@ -138,10 +178,10 @@
       <div class="flex size-8 items-center justify-center rounded-[var(--radius-md)] bg-[var(--color-primary-light)] dark:bg-[var(--color-primary-default)]/15">
         <Activity class="size-4 text-[var(--color-primary-default)]" />
       </div>
-      <h3 class="text-[var(--text-primary)] text-sm font-semibold tracking-tight">Recent Activity</h3>
+      <h3 class="text-[var(--text-primary)] text-sm font-semibold tracking-tight">{tr('recentActivity')}</h3>
     </div>
     <Button variant="ghost" size="sm" href="/activities" class="gap-1 text-xs font-medium">
-      View all
+      {tr('viewAll')}
       <ChevronRight class="size-3.5" />
     </Button>
   </div>
@@ -153,12 +193,12 @@
         <div class="mb-3 flex size-12 items-center justify-center rounded-[var(--radius-lg)] bg-[var(--surface-sunken)]">
           <Clock class="size-6 text-[var(--text-tertiary)]" />
         </div>
-        <p class="text-[var(--text-secondary)] text-sm font-medium">No recent activity</p>
-        <p class="text-[var(--text-tertiary)] text-xs">Actions will appear here</p>
+        <p class="text-[var(--text-secondary)] text-sm font-medium">{tr('noRecentActivity')}</p>
+        <p class="text-[var(--text-tertiary)] text-xs">{tr('actionsWillAppear')}</p>
       </div>
     {:else}
       <div class="space-y-5">
-        {#each groupedActivities as group}
+        {#each groupedActivities() as group}
           <div>
             <p class="text-[var(--text-tertiary)] mb-3 text-[10px] font-semibold uppercase tracking-widest">
               {group.category}
@@ -180,12 +220,10 @@
                   <!-- Content -->
                   <div class="min-w-0 flex-1">
                     <p class="text-[var(--text-primary)] text-sm leading-snug">
-                      {activity.description ||
-                        activity.message ||
-                        `${activity.action} ${activity.entityType}: ${activity.entityName}`}
+                      {getActivityDescription(activity)}
                     </p>
                     <div class="mt-1 flex items-center gap-1.5 text-xs text-[var(--text-secondary)]">
-                      <span class="font-medium">{activity.user?.name || 'System'}</span>
+                      <span class="font-medium">{activity.user?.name || tr('system')}</span>
                       <span class="text-[var(--text-tertiary)]">&middot;</span>
                       <span>{formatTime(activity.timestamp || activity.createdAt)}</span>
                     </div>
@@ -204,7 +242,7 @@
           class="mt-4 w-full text-xs font-medium"
           onclick={() => (showAll = true)}
         >
-          Show more ({activities.length - 5} more)
+          {tr('showMore', { count: activities.length - 5 })}
         </Button>
       {/if}
     {/if}

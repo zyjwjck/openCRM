@@ -48,7 +48,7 @@
 import { COUNTRIES, getCountryName } from '$lib/constants/countries.js';
 import { CURRENCY_CODES } from '$lib/constants/filters.js';
 import { orgSettings } from '$lib/stores/org.js';
-import { t } from '$lib/utils/i18n.js';
+import { t } from '$lib/utils/i18n.svelte.js';
 import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 
   // Column visibility configuration

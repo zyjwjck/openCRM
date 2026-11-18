@@ -12,7 +12,7 @@
   } from '$lib/components/dashboard';
   import { formatCurrency } from '$lib/utils/formatting.js';
   import { orgSettings } from '$lib/stores/org.js';
-  import { t, getTranslatedGreeting, getCurrentLanguage } from '$lib/utils/i18n.js';
+  import { t, getTranslatedGreeting, getCurrentLanguage } from '$lib/utils/i18n.svelte.js';
   import { onMount } from 'svelte';
   import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 
@@ -63,8 +63,8 @@
   const otherCurrencyCount = $derived(revenueMetrics.other_currency_count || 0);
   const currencyNote = $derived(
     otherCurrencyCount > 0
-      ? `${orgCurrency} only (${otherCurrencyCount} in other currencies)`
-      : `${orgCurrency} only`
+      ? t('currencyWithOthers', { currency: orgCurrency, count: otherCurrencyCount }, currentLang)
+      : t('currencyOnly', { currency: orgCurrency }, currentLang)
   );
 
   // Watch for language changes in localStorage and custom event
@@ -108,14 +108,14 @@
               <Sparkles class="size-5 text-white" />
             </div>
             <div>
-              <p class="text-[var(--text-secondary)] text-sm font-medium">{getTranslatedGreeting()}</p>
+              <p class="text-[var(--text-secondary)] text-sm font-medium">{getTranslatedGreeting(currentLang)}</p>
               <h1 class="text-[var(--text-primary)] text-2xl font-bold tracking-tight md:text-3xl">
-                {t('dashboard')}
+                {t('dashboard', undefined, currentLang)}
               </h1>
             </div>
           </div>
           <p class="text-[var(--text-secondary)] max-w-md text-sm">
-            {t('dashboardDescription')}
+            {t('dashboardDescription', undefined, currentLang)}
           </p>
         </div>
       </div>
@@ -129,7 +129,7 @@
           <AlertCircle class="size-5 text-[var(--color-negative-default)]" />
         </div>
         <div>
-          <p class="text-sm font-medium text-[var(--color-negative-default)]">{t('errorLoading')}</p>
+          <p class="text-sm font-medium text-[var(--color-negative-default)]">{t('errorLoading', undefined, currentLang)}</p>
           <p class="text-xs text-[var(--color-negative-default)]/80">{data.error}</p>
         </div>
       </div>
@@ -152,7 +152,7 @@
               <TrendingUp class="size-5 text-[var(--color-primary-default)]" />
             </div>
             <div>
-              <h2 class="text-[var(--text-primary)] text-base font-semibold tracking-tight">{t('salesPipeline')}</h2>
+              <h2 class="text-[var(--text-primary)] text-base font-semibold tracking-tight">{t('salesPipeline', undefined, currentLang)}</h2>
               <p class="text-[var(--text-tertiary)] text-xs">{currencyNote}</p>
             </div>
           </div>
@@ -163,7 +163,7 @@
       <!-- Revenue Metrics Grid - 4 columns with hover effects -->
       <div class="grid grid-cols-2 gap-4 lg:grid-cols-4">
         <KPICard
-          label={t('pipelineValue')}
+          label={t('pipelineValue', undefined, currentLang)}
           value={formatCurrency(revenueMetrics.pipeline_value || 0, orgCurrency, true)}
           subtitle={currencyNote}
           accentColor="orange"
@@ -173,7 +173,7 @@
           {/snippet}
         </KPICard>
         <KPICard
-          label={t('weightedPipeline')}
+          label={t('weightedPipeline', undefined, currentLang)}
           value={formatCurrency(revenueMetrics.weighted_pipeline || 0, orgCurrency, true)}
           subtitle={currencyNote}
           accentColor="violet"
@@ -183,7 +183,7 @@
           {/snippet}
         </KPICard>
         <KPICard
-          label={t('wonThisMonth')}
+          label={t('wonThisMonth', undefined, currentLang)}
           value={formatCurrency(revenueMetrics.won_this_month || 0, orgCurrency, true)}
           subtitle={currencyNote}
           accentColor="emerald"
@@ -193,7 +193,7 @@
           {/snippet}
         </KPICard>
         <KPICard
-          label={t('conversionRate')}
+          label={t('conversionRate', undefined, currentLang)}
           value="{revenueMetrics.conversion_rate || 0}%"
           accentColor="amber"
         >

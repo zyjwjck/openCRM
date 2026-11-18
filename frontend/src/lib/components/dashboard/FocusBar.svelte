@@ -1,6 +1,8 @@
 <script>
   import { AlertCircle, Calendar, Phone, Flame, Zap } from '@lucide/svelte';
-  import { t } from '$lib/utils/i18n.js';
+  import { useI18n } from '$lib/utils/i18n.svelte.js';
+
+  const { t: tr } = useI18n();
 
   /**
    * @typedef {Object} Props
@@ -20,7 +22,7 @@
       iconClass: 'text-[var(--task-overdue)]',
       bgClass: 'bg-[var(--task-overdue-bg)] dark:bg-[var(--task-overdue)]/15',
       count: overdueCount,
-      label: t('focusBar.overdueTasks'),
+      label: tr('focusBar.overdueTasks'),
       show: overdueCount > 0
     },
     {
@@ -29,7 +31,7 @@
       iconClass: 'text-[var(--task-due-today)]',
       bgClass: 'bg-[var(--task-due-today-bg)] dark:bg-[var(--task-due-today)]/15',
       count: todayCount,
-      label: t('focusBar.tasksDueToday'),
+      label: tr('focusBar.tasksDueToday'),
       show: true
     },
     {
@@ -38,7 +40,7 @@
       iconClass: 'text-[var(--activity-call)]',
       bgClass: 'bg-[var(--color-success-light)] dark:bg-[var(--activity-call)]/15',
       count: followupsCount,
-      label: t('focusBar.followupsToday'),
+      label: tr('focusBar.followupsToday'),
       show: true
     },
     {
@@ -47,7 +49,7 @@
       iconClass: 'text-[var(--lead-hot)]',
       bgClass: 'bg-[var(--lead-hot-bg)] dark:bg-[var(--lead-hot)]/15',
       count: hotLeadsCount,
-      label: t('focusBar.hotLeads'),
+      label: tr('focusBar.hotLeads'),
       show: hotLeadsCount > 0
     }
   ]);
@@ -73,7 +75,7 @@
           <Zap class="size-4 text-[var(--color-primary-default)]" />
         </div>
         <span class="text-[var(--text-secondary)] text-xs font-semibold uppercase tracking-wider">
-          {t('dashboard')}
+          {tr('dashboard')}
         </span>
       </div>
 

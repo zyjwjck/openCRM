@@ -3,7 +3,7 @@
 
   import imgLogo from '$lib/assets/images/logo.png';
   import { ArrowRight } from '@lucide/svelte';
-  import { t, getCurrentLanguage, setCurrentLanguage } from '$lib/utils/i18n.js';
+  import { t, getCurrentLanguage, setCurrentLanguage } from '$lib/utils/i18n.svelte.js';
 
   let isLoading = false;
   let email = '';

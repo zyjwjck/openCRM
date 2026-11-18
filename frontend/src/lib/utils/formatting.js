@@ -4,17 +4,54 @@
  */
 
 import { format, formatDistanceToNow } from 'date-fns';
+import { enUS, zhCN } from 'date-fns/locale';
+import { getCurrentLanguage } from './i18n.svelte.js';
+
+/**
+ * Map i18n language code to date-fns locale
+ * @param {string} lang
+ */
+function getDateLocale(lang) {
+  if (!lang) return enUS;
+  const lower = String(lang).toLowerCase();
+  if (lower.startsWith('zh')) return zhCN;
+  return enUS;
+}
+
+/**
+ * Map i18n language code to Intl locale
+ * @param {string} lang
+ */
+function getIntlLocale(lang) {
+  if (!lang) return 'en-US';
+  const lower = String(lang).toLowerCase();
+  if (lower === 'zh' || lower.startsWith('zh-cn')) return 'zh-CN';
+  if (lower.startsWith('zh-tw') || lower.startsWith('zh-hk')) return 'zh-TW';
+  return 'en-US';
+}
+
+/**
+ * Pick a default date format string based on current language
+ */
+function getDefaultDateFormat() {
+  const lang = getCurrentLanguage();
+  if (lang && String(lang).toLowerCase().startsWith('zh')) {
+    return 'yyyy年M月d日';
+  }
+  return 'MMM d, yyyy';
+}
 
 /**
  * Format a date string to a human-readable format
  * @param {string | Date | null | undefined} date - Date to format
- * @param {string} [formatStr='MMM d, yyyy'] - date-fns format string
+ * @param {string} [formatStr] - date-fns format string (auto-selected if omitted)
  * @returns {string} Formatted date string or '-' if no date
  */
-export function formatDate(date, formatStr = 'MMM d, yyyy') {
+export function formatDate(date, formatStr) {
   if (!date) return '-';
+  const fmt = formatStr || getDefaultDateFormat();
   try {
-    return format(new Date(date), formatStr);
+    return format(new Date(date), fmt, { locale: getDateLocale(getCurrentLanguage()) });
   } catch {
     return '-';
   }
@@ -28,7 +65,10 @@ export function formatDate(date, formatStr = 'MMM d, yyyy') {
 export function formatRelativeDate(date) {
   if (!date) return '-';
   try {
-    return formatDistanceToNow(new Date(date), { addSuffix: true });
+    return formatDistanceToNow(new Date(date), {
+      addSuffix: true,
+      locale: getDateLocale(getCurrentLanguage())
+    });
   } catch {
     return '-';
   }
@@ -44,27 +84,23 @@ export function formatRelativeDate(date) {
 export function formatCurrency(amount, currency = 'USD', compact = false) {
   if (amount === null || amount === undefined) return '-';
 
-  // Convert to number if string
   const numAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
-
-  // Handle NaN or invalid numbers
   if (isNaN(numAmount)) return '-';
 
-  // Ensure valid currency code (fallback to USD)
   const currencyCode = currency && currency.length === 3 ? currency : 'USD';
+  const locale = getIntlLocale(getCurrentLanguage());
 
   try {
-    return new Intl.NumberFormat('en-US', {
+    return new Intl.NumberFormat(locale, {
       style: 'currency',
       currency: currencyCode,
       notation: compact ? 'compact' : 'standard',
       maximumFractionDigits: compact ? 1 : 2
     }).format(numAmount);
   } catch {
-    // Fallback if currency code is invalid
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'USD',
+      currency: currencyCode,
       notation: compact ? 'compact' : 'standard',
       maximumFractionDigits: compact ? 1 : 2
     }).format(numAmount);
@@ -78,7 +114,7 @@ export function formatCurrency(amount, currency = 'USD', compact = false) {
  */
 export function formatNumber(num) {
   if (num === null || num === undefined) return '-';
-  return new Intl.NumberFormat('en-US').format(num);
+  return new Intl.NumberFormat(getIntlLocale(getCurrentLanguage())).format(num);
 }
 
 /**
@@ -116,12 +152,9 @@ export function getNameInitials(firstName, lastName) {
  */
 export function formatPhone(phone) {
   if (!phone) return '';
-  // Remove non-digits
   const digits = phone.replace(/\D/g, '');
-  // Format as (XXX) XXX-XXXX if 10 digits
   if (digits.length === 10) {
     return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
   }
-  // Return original if not 10 digits
   return phone;
 }

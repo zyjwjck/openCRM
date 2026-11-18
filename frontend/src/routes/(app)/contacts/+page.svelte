@@ -33,7 +33,7 @@
 import { goto } from '$app/navigation';
 import { COUNTRIES, getCountryName } from '$lib/constants/countries.js';
 import { browser } from '$app/environment';
-import { t } from '$lib/utils/i18n.js';
+import { t } from '$lib/utils/i18n.svelte.js';
 import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 
   // Column visibility configuration

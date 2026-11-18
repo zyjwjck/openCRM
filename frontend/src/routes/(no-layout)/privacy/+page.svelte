@@ -1,7 +1,7 @@
 <script>
   import '../../../app.css';
   import imgLogo from '$lib/assets/images/logo.png';
-  import { getCurrentLanguage, setCurrentLanguage } from '$lib/utils/i18n.js';
+  import { getCurrentLanguage, setCurrentLanguage } from '$lib/utils/i18n.svelte.js';
 
   let language = getCurrentLanguage();
 

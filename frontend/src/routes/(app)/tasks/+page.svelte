@@ -50,7 +50,7 @@
   import { TASK_STATUSES as statuses, PRIORITIES as priorities } from '$lib/constants/filters.js';
   import { CrmTable } from '$lib/components/ui/crm-table';
   import { formatRelativeDate } from '$lib/utils/formatting.js';
-  import { t } from '$lib/utils/i18n.js';
+  import { t } from '$lib/utils/i18n.svelte.js';
 import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 
   // Account from URL param (for quick action from account page)

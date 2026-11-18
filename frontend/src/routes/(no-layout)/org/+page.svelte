@@ -3,7 +3,7 @@
   import imgLogo from '$lib/assets/images/logo.png';
   import { Building2, LogOut, Plus, ChevronRight, Users, Shield } from '@lucide/svelte';
   import { enhance } from '$app/forms';
-  import { t } from '$lib/utils/i18n.js';
+  import { t } from '$lib/utils/i18n.svelte.js';
 
   let { data } = $props();
   let orgs = $derived(data.orgs);
@@ -13,7 +13,7 @@
 </script>
 
 <svelte:head>
-  <title>{t('selectOrganization')} | BottleCRM</title>
+  <title>{t('selectOrganization')} | openCRM</title>
 </svelte:head>
 
 <div class="flex min-h-screen flex-col bg-[var(--surface-sunken)]">
@@ -21,8 +21,8 @@
   <header class="border-b border-[var(--border-default)] bg-[var(--surface-default)]">
     <div class="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
       <div class="flex items-center gap-3">
-        <img src={imgLogo} alt="BottleCRM" class="h-8 w-auto" />
-        <span class="text-lg font-semibold text-[var(--text-primary)]">BottleCRM</span>
+        <img src={imgLogo} alt="openCRM" class="h-8 w-auto" />
+        <span class="text-lg font-semibold text-[var(--text-primary)]">openCRM</span>
       </div>
       <a
         href="/logout"
@@ -124,7 +124,7 @@
           </div>
           <h3 class="text-lg font-semibold text-[var(--text-primary)]">{t('noOrganizationsYet')}</h3>
           <p class="mt-2 text-[var(--text-secondary)]">
-            {t('createYourFirstOrganizationToGetStartedWithBottleCRM')}
+            {t('createYourFirstOrganizationToGetStartedWithOpenCRM')}
           </p>
           <a
             href="/org/new"

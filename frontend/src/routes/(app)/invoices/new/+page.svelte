@@ -234,7 +234,7 @@
 </script>
 
 <svelte:head>
-  <title>New Invoice | BottleCRM</title>
+  <title>{t('new_invoice')} | openCRM</title>
 </svelte:head>
 
 <!-- Hidden Form -->

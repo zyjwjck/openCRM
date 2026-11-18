@@ -17,7 +17,7 @@
   import { formatCurrency, formatDate } from '$lib/utils/formatting.js';
   import { CURRENCY_CODES } from '$lib/constants/filters.js';
   import { orgSettings } from '$lib/stores/org.js';
-  import { t } from '$lib/utils/i18n.js';
+  import { t } from '$lib/utils/i18n.svelte.js';
   import {
     ArrowLeft,
     Plus,
@@ -251,7 +251,7 @@
 </script>
 
 <svelte:head>
-  <title>Invoice {invoice.invoiceNumber} | BottleCRM</title>
+  <title>{t('invoice')} {invoice.invoiceNumber} | openCRM</title>
 </svelte:head>
 
 <!-- Hidden Forms -->
