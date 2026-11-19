@@ -1,6 +1,6 @@
-<script>
+﻿<script>
   import '../../../app.css';
-  import imgLogo from '$lib/assets/images/logo.png';
+  import imgLogo from '$lib/assets/images/icon.png';
   import { getCurrentLanguage, setCurrentLanguage } from '$lib/utils/i18n.svelte.js';
 
   let language = getCurrentLanguage();

@@ -69,5 +69,19 @@ TODO.md
 .playwright-mcp
 .github
 .nanobot/
-start-all.bat
 start-nanobot.cmd
+
+# openCRM MCP sensitive config
+mcp/config.json
+mcp/__pycache__/
+
+# nanobot runtime
+.nanobot-workspace/
+sessions/
+cli-apps/
+Agent/nanobot-main/.nanobot-logs/
+Agent/nanobot-main/%SystemDrive%/
+
+# temp probe files
+api-docs/_probe_*.json
+api-docs/_probe_*.py

@@ -171,6 +171,7 @@
     mask-composite: exclude;
     opacity: 0.5;
     transition: opacity 0.3s ease;
+    pointer-events: none;
   }
 
   .gradient-border:hover::before {

@@ -1,6 +1,6 @@
-<script>
+﻿<script>
   import '../../../../app.css';
-  import imgLogo from '$lib/assets/images/logo.png';
+  import imgLogo from '$lib/assets/images/icon.png';
   import { enhance } from '$app/forms';
   import { goto } from '$app/navigation';
   import { Building2, ArrowLeft, Check, AlertCircle, Sparkles } from '@lucide/svelte';

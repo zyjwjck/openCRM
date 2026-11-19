@@ -5,8 +5,12 @@ import { apiRequest } from '$lib/api-helpers.js';
 export async function load({ cookies }) {
   try {
     const response = await apiRequest('/org/settings/', {}, { cookies });
+    // Map backend `website` → frontend `domain` (UI calls it company domain)
     return {
-      settings: response
+      settings: {
+        ...response,
+        domain: response.website || response.domain || ''
+      }
     };
   } catch (err) {
     console.error('Failed to load org settings:', err);
@@ -21,7 +25,7 @@ export const actions = {
 
     const data = {
       name: formData.get('name'),
-      domain: formData.get('domain') || null,
+      website: formData.get('domain') || null,
       description: formData.get('description') || null,
       default_currency: formData.get('default_currency'),
       default_country: formData.get('default_country') || null

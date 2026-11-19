@@ -1,6 +1,6 @@
-<script>
+﻿<script>
   import '../../../app.css';
-  import imgLogo from '$lib/assets/images/logo.png';
+  import imgLogo from '$lib/assets/images/icon.png';
   import { Building2, LogOut, Plus, ChevronRight, Users, Shield } from '@lucide/svelte';
   import { enhance } from '$app/forms';
   import { t } from '$lib/utils/i18n.svelte.js';

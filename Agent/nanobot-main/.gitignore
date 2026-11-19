@@ -1,38 +1,103 @@
-# Node
-node_modules/
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
+# Project-specific
+.worktrees/
+.worktree/
+.assets
+.docs
+.env
+.web
+.orion
 
-# Python
-__pycache__/
-*.pyc
-*.pyo
-*.egg-info/
-.eggs/
-dist/
-build/
-.venv/
-venv/
-env/
+# Claude / AI assistant artifacts
+docs/superpowers/
+docs/plans/
 
-# Build outputs
+# webui (monorepo frontend)
+webui/node_modules/
 webui/dist/
+webui/coverage/
+webui/.vite/
 *.tsbuildinfo
 
-# OS
-.DS_Store
-Thumbs.db
+# Python bytecode & caches
+*.pyc
+*.pyo
+*.pyd
+*.pyw
+*.pyz
+__pycache__/
+*.egg-info/
+*.egg
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.pytype/
+.dmypy.json
+dmypy.json
+.tox/
+.nox/
+.hypothesis/
 
-# Editor
+# Build & packaging
+dist/
+build/
+*.manifest
+*.spec
+pip-wheel-metadata/
+share/python-wheels/
+
+# Test & coverage
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+*.cover
+
+# Lock files (project policy)
+poetry.lock
+uv.lock
+
+# Jupyter
+.ipynb_checkpoints/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux
+.directory
+
+# Editors & IDEs (local workspace / user settings)
 .vscode/
+.cursor/
 .idea/
+.fleet/
+*.code-workspace
+*.sublime-project
+*.sublime-workspace
 *.swp
 *.swo
+*~
+nano.*.save
 
-# Runtime
-.lock
-.tmp/
-.cache/
+# Environment & secrets (keep examples tracked if needed)
+.env.*
+!.env.example
+
+# Logs & temp
+*.log
+logs/
+tmp/
+temp/
+*.tmp
+exp/
+.playwright-mcp/
+bridge/node_modules/
+webui/.verify-*

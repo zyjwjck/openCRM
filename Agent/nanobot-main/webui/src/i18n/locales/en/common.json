@@ -424,7 +424,6 @@
         "xmind": "Create, read, and edit Xmind cloud mind maps.",
         "notion": "Read and update your Notion workspace.",
         "linear": "Find and manage Linear issues, projects, and comments.",
-        "github": "Manage GitHub repositories, issues, and pull requests.",
         "supabase": "Inspect and manage Supabase projects."
       }
     },

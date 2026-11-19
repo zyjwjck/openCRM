@@ -1,6 +1,8 @@
 # openCRM
 
-一个现代化的、AI 驱动的 CRM 平台，结合了智能体 ,基于 Django REST Framework 和 SvelteKit 构建，通过智能代理增强，为未来的客户关系管理做好准备。
+一个现代化的、**AI 智能体驱动**的 CRM 平台，基于 Django REST Framework 和 SvelteKit 构建，无缝集成 nanobot 智能体为客户关系管理注入 AI 能力。
+
+[![Language Switch](https://img.shields.io/badge/README-EN%20%F0%9F%87%AC%F0%9F%87%A2-blueviolet.svg)](#language-switch) [English Version](README.md)
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Python](https://img.shields.io/badge/python-3.12+-green.svg)
@@ -9,13 +11,44 @@
 ![Svelte](https://img.shields.io/badge/svelte-5-orange.svg)
 ![AI](https://img.shields.io/badge/AI-powered-blueviolet.svg)
 
+---
+
 ## 项目概述
 
-openCRM 是一个功能齐全的客户关系管理系统，专为初创企业和小型企业设计，增强了前沿的 AI 能力。它结合了强大的 Django REST API 后端和现代化的 SvelteKit 前端，采用多租户架构和 PostgreSQL 行级安全性 (RLS) 实现企业级数据隔离，并集成了智能 AI 代理以实现自动化工作流程和增强决策能力。
+openCRM 是一个功能齐全的客户关系管理系统，专为初创企业和小型企业设计，**核心特色是内置 AI 智能体**。它结合了强大的 Django REST API 后端和现代化的 SvelteKit 前端，采用多租户架构和 PostgreSQL 行级安全性 (RLS) 实现企业级数据隔离，并将 [nanobot](https://github.com/HKUDS/nanobot) 智能体原生嵌入到 CRM 侧边栏的 `/agent` 路由，实现自动化工作流程和智能辅助决策。
 
-本项目基于两个开源基础构建：
-- [Bottle-CRM](https://github.com/MicroPyramid/Django-CRM.git) - 一个强大的 CRM 平台
-- [nanobot](https://github.com/HKUDS/nanobot) - 一个超轻量级的个人 AI 助手
+## AI 智能体集成（核心特色）
+
+openCRM 的 AI 能力来自 [nanobot](https://github.com/HKUDS/nanobot) —— 一个超轻量级（约 4,000 行）的个人 AI 智能体框架。集成方式极简而强大：
+
+- **原生 iframe 嵌入**：nanobot 的 React + TypeScript WebUI 运行在 `8765` 端口，直接作为 iframe 嵌入 CRM 侧边栏的 `/agent` 路由，**无需重写聊天界面**，即可获得完整智能体能力
+- **零配置接入**：首次访问 `/agent` 时通过 `bootstrapSecret` 参数完成鉴权，后续鉴权由 nanobot 自行维护
+- **完整能力继承**：CRM 内嵌的 nanobot 保留全部功能——会话管理、长期记忆、MCP 工具、自动化、语音转录、多渠道网关（Telegram / Discord / 飞书等）
+- **多 LLM 灵活切换**：在 nanobot 自身的设置面板中配置 OpenAI、Anthropic、Google、vLLM 等模型提供商，无需 CRM 侧重复维护
+
+**架构示意：**
+
+```
+┌───────────────────────────────────────────────────────────────┐
+│  openCRM 前端 (SvelteKit :5173)                                │
+│                                                               │
+│  ┌─────────────────────────────────────────────────────────┐  │
+│  │ /agent 路由                                               │  │
+│  │  ┌───────────────────────────────────────────────────┐   │  │
+│  │  │ iframe → http://127.0.0.1:8765 (nanobot WebUI)    │   │  │
+│  │  │   ✓ 会话   ✓ 记忆   ✓ MCP 工具   ✓ 自动化          │   │  │
+│  │  │   ✓ 语音   ✓ 渠道网关 (飞书/Telegram/Discord...)  │   │  │
+│  │  └───────────────────────────────────────────────────┘   │  │
+│  └─────────────────────────────────────────────────────────┘  │
+│                                                               │
+│  侧边栏 → AI → Agent                                           │
+└───────────────────────────────────────────────────────────────┘
+       ↕ REST API
+┌───────────────────────────────────────────────────────────────┐
+│  openCRM 后端 (Django :8000)                                  │
+│  • 多租户 RLS 数据隔离   • JWT 认证   • 7 大 CRM 模块         │
+└───────────────────────────────────────────────────────────────┘
+```
 
 ## 功能特性
 
@@ -28,7 +61,7 @@ openCRM 是一个功能齐全的客户关系管理系统，专为初创企业和
 - **任务管理** - 带有日历和看板视图的任务管理
 - **发票管理** - 创建和管理发票
 
-### AI 驱动功能
+### AI 驱动功能（由 nanobot 提供）
 - **智能线索评分** - AI 驱动的线索资格认证和优先级排序
 - **自动跟进** - 智能提醒和个性化外展建议
 - **预测分析** - 销售和客户行为的预测和趋势分析
@@ -65,12 +98,12 @@ openCRM 是一个功能齐全的客户关系管理系统，专为初创企业和
 - **Axios** 用于 API 通信
 - **Lucide** 图标
 
-### AI 组件
-- **nanobot** - 超轻量级 AI 代理框架（约 4,000 行代码）
-- **多 LLM 支持** - 集成各种 LLM 提供商（OpenAI、Anthropic、Google 等）
-- **本地 LLM 支持** - 使用 vLLM 本地运行模型
-- **语音转录** - 集成语音功能
-- **多渠道集成** - Telegram、Discord、WhatsApp 和飞书
+### AI 组件（nanobot）
+- **超轻量级 AI 框架** - 约 4,000 行代码，Python 原生
+- **原生 React + TypeScript WebUI** - 通过 iframe 嵌入 CRM，无需重写
+- **多 LLM 支持** - OpenAI、Anthropic、Google、vLLM 等
+- **语音转录** - 剪贴板和麦克风权限由 iframe 继承
+- **多渠道网关** - Telegram、Discord、WhatsApp、飞书等
 
 ## 快速开始
 
@@ -127,27 +160,58 @@ npm install
 npm run dev
 ```
 
-#### 4. AI 代理设置
+#### 4. AI 智能体设置（nanobot）
+
+nanobot 以源码包形式位于 `Agent/nanobot-main/`，通过 iframe 嵌入到 CRM 的 `/agent` 路由。
+
+在已激活的虚拟环境中操作（可以复用后端的 `.openCRM-venv`，Python ≥ 3.11 即可）：
+
 ```bash
-# 在新终端中，从项目根目录
-cd agent
+# 打开新终端，从项目根目录进入
+cd Agent/nanobot-main
 
-# 安装依赖
-pip install -e .
+# 从源码安装 nanobot（首次构建 WebUI 需要 bun 或 npm）
+python -m pip install -e .
 
-# 初始化Agent服务器
+# 初始化配置和工作空间（交互式引导）
 nanobot onboard
 ```
 
+启动 nanobot **网关**（监听 `http://127.0.0.1:8765`）：
+
+```bash
+# 开发推荐：自动打开浏览器并保持渠道运行
+nanobot webui
+
+# 或：仅网关模式（不自动打开浏览器）
+nanobot gateway
+
+# 后台 / 守护进程模式
+nanobot webui --background
+nanobot gateway --background
+
+# 管理后台网关
+nanobot gateway status
+nanobot gateway logs
+nanobot gateway restart
+nanobot gateway stop
+```
+
+**在 CRM 中使用**：侧边栏 → AI → Agent（或直接访问 `/agent`）。模型 / 提供商 / MCP 的配置都在 nanobot 自身的**设置**面板中完成。
+
 ### 访问应用
 - **前端**：http://localhost:5173
+- **AI 智能体**：http://localhost:5173/agent （iframe 嵌入 nanobot WebUI）
 - **API 文档**：http://localhost:8000/swagger-ui/
 - **管理面板**：http://localhost:8000/admin/
-- **AI 代理**：http://localhost:3000（或按配置）
+- **nanobot WebUI（直接访问）**：http://127.0.0.1:8765
+- **nanobot OpenAI 兼容 API**：http://127.0.0.1:8765/v1/...
 
-## AI 代理配置
+## AI 智能体配置
 
-AI 代理（基于 nanobot）需要 LLM 提供商的 API 密钥。在 `agent/.nanobot/config.json` 中配置您的设置：
+nanobot 默认配置和工作空间位于 `~/.nanobot/`。可通过环境变量 `NANOBOT_HOME` 和 `NANOBOT_WORKSPACE` 覆写路径，或指向 `Agent/nanobot-main/.nanobot/` 使 CRM 安装保持自包含。
+
+在 nanobot home 目录创建或编辑 `config.json`：
 
 ```json
 {
@@ -164,7 +228,9 @@ AI 代理（基于 nanobot）需要 LLM 提供商的 API 密钥。在 `agent/.na
 }
 ```
 
-有关更多配置选项，请参考 [nanobot 文档](https://github.com/HKUDS/nanobot#configuration)。
+也可以在 nanobot WebUI → **设置 → 模型** 中图形化完成配置。
+
+更多文档参考 [nanobot.wiki](https://nanobot.wiki/cn/docs/latest/getting-started/nanobot-overview)。
 
 ## 项目结构
 
@@ -182,78 +248,68 @@ openCRM/
 │   └── crm/                # Django 项目设置
 ├── frontend/               # SvelteKit 前端
 │   ├── src/
-│   │   ├── lib/           # 组件、存储、工具
-│   │   └── routes/        # SvelteKit 路由
-│   │       ├── (app)/     # 已认证应用路由
-│   │       └── (no-layout)/ # 认证页面（登录等）
-│   └── static/            # 静态资产
-├── agent/                  # AI 代理（基于 nanobot）
-│   ├── agent/              # 核心代理逻辑
-│   ├── skills/             # 捆绑技能
-│   ├── channels/           # 通信渠道
-│   └── config/             # 配置
+│   │   ├── lib/
+│   │   │   ├── components/
+│   │   │   │   ├── dashboard/   # 仪表盘小组件（i18n 响应式）
+│   │   │   │   └── layout/      # AppSidebar 等
+│   │   │   └── utils/i18n.js    # 翻译字典与辅助函数
+│   │   └── routes/
+│   │       ├── (app)/agent/     # /agent — nanobot WebUI 的 iframe 包装页
+│   │       ├── (app)/           # 其他已认证 CRM 页面
+│   │       └── (no-layout)/     # 登录等无布局认证页面
+│   └── static/                 # 静态资源
+├── Agent/                  # nanobot AI 智能体（源码包）
+│   └── nanobot-main/       # nanobot 源码树（Python 包 + 内置 WebUI）
+│       ├── docs/           # nanobot 上游文档
+│       ├── nanobot/        # 智能体运行时、网关、渠道、记忆、MCP
+│       ├── skills/         # 内置技能：天气、定时、记忆、GitHub…
+│       └── channels/       # Telegram、Discord、飞书、微信、邮件…
 └── docker/                 # Docker 配置
 ```
 
+## 参考项目
+
+openCRM 基于以下两个开源项目构建，在它们的基础上整合了 AI 智能体能力：
+
+- [Bottle-CRM](https://github.com/MicroPyramid/Django-CRM.git) - 一个强大的 CRM 平台，提供多租户架构和完整的 Django REST API 基础
+- [nanobot](https://github.com/HKUDS/nanobot) - 一个超轻量级的个人 AI 助手框架，为 openCRM 提供全部 AI 智能体能力
+
 ## 多租户和安全性
 
-openCRM 使用 PostgreSQL 行级安全性 (RLS) 确保组织间的完整数据隔离。每个数据库查询都会自动按组织上下文进行过滤，提供企业级安全性。
+openCRM 使用 PostgreSQL 行级安全性 (RLS) 确保组织间的完整数据隔离。每个数据库查询都会自动按组织上下文进行过滤。
 
 ```bash
-# 检查 RLS 状态
-python manage.py manage_rls --status
-
-# 验证 RLS 用户配置
-python manage.py manage_rls --verify-user
-
-# 测试数据隔离
-python manage.py manage_rls --test
+python manage.py manage_rls --status    # 检查 RLS 状态
+python manage.py manage_rls --verify-user  # 验证 RLS 用户配置
+python manage.py manage_rls --test        # 测试数据隔离
 ```
 
 ## 开发
 
 ### 后端命令
-
 ```bash
-# 运行测试
-cd backend && pytest
-
-# 格式化代码
-black . && isort .
-
-# 检查依赖
-pipdeptree
-pip-check -H
+cd backend
+pytest                    # 运行测试
+black . && isort .         # 格式化代码
+pipdeptree                # 检查依赖树
+pip-check -H              # 检查过时依赖
 ```
 
 ### 前端命令
-
 ```bash
 cd frontend
-
-# 类型检查
-npm run check
-
-# 代码检查
-npm run lint
-
-# 格式化代码
-npm run format
+npm run check             # 类型检查
+npm run lint              # 代码检查
+npm run format            # 格式化代码
 ```
 
-### AI 代理命令
-
+### AI 智能体命令
 ```bash
-cd agent
-
-# 启动代理
-npm run dev
-
-# 检查代理状态
-nanobot status
-
-# 配置代理
-nanobot onboard
+cd Agent/nanobot-main
+nanobot webui             # 启动网关 + WebUI
+nanobot gateway           # 仅启动网关
+nanobot onboard           # 首次交互式配置
+nanobot models list       # 查看模型配置
 ```
 
 ## API 文档
@@ -267,11 +323,16 @@ GET/POST       /api/<module>/comment/<pk>/    # 评论
 GET/POST       /api/<module>/attachment/<pk>/ # 附件
 ```
 
-运行后端时，交互式 API 文档可在 `/swagger-ui/` 获得。
+运行后端时，交互式 API 文档在 `/swagger-ui/`。
+
+## Language Switch
+
+- [English README](README.md)
+- [中文 README](README_zh.md)
 
 ## 贡献
 
-我们欢迎贡献！请参阅我们的贡献指南了解详情。
+欢迎贡献！
 
 1. Fork 仓库
 2. 创建功能分支 (`git checkout -b feature/amazing-feature`)
@@ -281,33 +342,22 @@ GET/POST       /api/<module>/attachment/<pk>/ # 附件
 
 ## 社区
 
-- **问题**：[GitHub Issues](https://github.com/zyjwjck/openCRM/issues)
-- **原始项目问题**：[Django-CRM Issues](https://github.com/MicroPyramid/Django-CRM/issues)
-- **AI 代理问题**：[nanobot Issues](https://github.com/HKUDS/nanobot/issues)
+- **openCRM Issues**：[GitHub Issues](https://github.com/zyjwjck/openCRM/issues)
+- **原始 CRM 项目 Issues**：[Django-CRM Issues](https://github.com/MicroPyramid/Django-CRM/issues)
+- **AI 智能体 Issues**：[nanobot Issues](https://github.com/HKUDS/nanobot/issues)
 
 ## 许可证
 
-本项目采用 MIT 许可证 - 详情请参阅 [LICENSE](LICENSE) 文件。
+MIT 许可证 - 详情请参阅 [LICENSE](LICENSE) 文件。
 
 ## 致谢
 
-本项目基于以下开源项目构建：
-
-- **Django-CRM** 由 [MicroPyramid](https://github.com/MicroPyramid/Django-CRM.git) 开发
-- **nanobot** 由 [HKUDS](https://github.com/HKUDS/nanobot) 开发
-
-我们感谢这些项目的所有贡献者的宝贵工作。
+- **Django-CRM** by [MicroPyramid](https://github.com/MicroPyramid/Django-CRM.git) — CRM 平台基础
+- **nanobot** by [HKUDS](https://github.com/HKUDS/nanobot) — AI 智能体框架
 
 ## 贡献者
 
-本项目目前由以下人员开发和维护：
-
 - **zyjwjck** - 项目创建者和主要开发者
-
-## 语言切换
-
-- [English README](README.md)
-- [中文 README](README_zh.md)
 
 ## 未来路线图
 
@@ -323,5 +373,5 @@ GET/POST       /api/<module>/attachment/<pk>/ # 附件
 ---
 
 <p align="center">
-  <em>openCRM: 客户关系管理的未来</em>
+  <em>openCRM: AI 智能体驱动的客户关系管理</em>
 </p>

@@ -21,30 +21,30 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 
   // Frequency options - using design system tokens
   const FREQUENCIES = [
-    { value: 'WEEKLY', label: 'Weekly', color: 'bg-[var(--stage-contacted-bg)] text-[var(--stage-contacted)]' },
-    { value: 'BIWEEKLY', label: 'Bi-weekly', color: 'bg-[var(--stage-qualified-bg)] text-[var(--stage-qualified)]' },
-    { value: 'MONTHLY', label: 'Monthly', color: 'bg-[var(--color-success-light)] text-[var(--color-success-default)]' },
-    { value: 'QUARTERLY', label: 'Quarterly', color: 'bg-[var(--stage-negotiation-bg)] text-[var(--stage-negotiation)]' },
-    { value: 'SEMI_ANNUALLY', label: 'Semi-annually', color: 'bg-[var(--color-primary-light)] text-[var(--color-primary-default)]' },
-    { value: 'YEARLY', label: 'Yearly', color: 'bg-[var(--stage-proposal-bg)] text-[var(--stage-proposal)]' },
-    { value: 'CUSTOM', label: 'Custom', color: 'bg-[var(--surface-sunken)] text-[var(--text-secondary)]' }
+    { value: 'WEEKLY', label: t('weekly'), color: 'bg-[var(--stage-contacted-bg)] text-[var(--stage-contacted)]' },
+    { value: 'BIWEEKLY', label: t('bi_weekly'), color: 'bg-[var(--stage-qualified-bg)] text-[var(--stage-qualified)]' },
+    { value: 'MONTHLY', label: t('monthly'), color: 'bg-[var(--color-success-light)] text-[var(--color-success-default)]' },
+    { value: 'QUARTERLY', label: t('quarterly'), color: 'bg-[var(--stage-negotiation-bg)] text-[var(--stage-negotiation)]' },
+    { value: 'SEMI_ANNUALLY', label: t('semi_annually'), color: 'bg-[var(--color-primary-light)] text-[var(--color-primary-default)]' },
+    { value: 'YEARLY', label: t('yearly'), color: 'bg-[var(--stage-proposal-bg)] text-[var(--stage-proposal)]' },
+    { value: 'CUSTOM', label: t('custom'), color: 'bg-[var(--surface-sunken)] text-[var(--text-secondary)]' }
   ];
 
   // Status options
   const STATUS_OPTIONS = [
-    { value: 'true', label: 'Active' },
-    { value: 'false', label: 'Paused' }
+    { value: 'true', label: t('active') },
+    { value: 'false', label: t('paused') }
   ];
 
   // Payment terms options
   const PAYMENT_TERMS = [
-    { value: 'DUE_ON_RECEIPT', label: 'Due on Receipt' },
-    { value: 'NET_7', label: 'Net 7' },
-    { value: 'NET_15', label: 'Net 15' },
-    { value: 'NET_30', label: 'Net 30' },
-    { value: 'NET_45', label: 'Net 45' },
-    { value: 'NET_60', label: 'Net 60' },
-    { value: 'NET_90', label: 'Net 90' }
+    { value: 'DUE_ON_RECEIPT', label: t('due_on_receipt') },
+    { value: 'NET_7', label: t('net_7') },
+    { value: 'NET_15', label: t('net_15') },
+    { value: 'NET_30', label: t('net_30') },
+    { value: 'NET_45', label: t('net_45') },
+    { value: 'NET_60', label: t('net_60') },
+    { value: 'NET_90', label: t('net_90') }
   ];
 
   /**
@@ -117,53 +117,53 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   // Drawer field definitions
   const drawerFields = [
     // Core Info Section
-    { key: 'title', label: 'Title', type: 'text', section: 'core', required: true },
+    { key: 'title', label: t('title'), type: 'text', section: 'core', required: true },
     {
       key: 'isActive',
-      label: 'Active',
+      label: t('active'),
       type: 'boolean',
       section: 'core'
     },
     // Client Section
-    { key: 'clientName', label: 'Client Name', type: 'text', section: 'client', required: true },
-    { key: 'clientEmail', label: 'Client Email', type: 'email', section: 'client' },
+    { key: 'clientName', label: t('client_name'), type: 'text', section: 'client', required: true },
+    { key: 'clientEmail', label: t('client_email'), type: 'email', section: 'client' },
     // Schedule Section
     {
       key: 'frequency',
-      label: 'Frequency',
+      label: t('frequency'),
       type: 'select',
       section: 'schedule',
       options: FREQUENCIES
     },
-    { key: 'customDays', label: 'Custom Days', type: 'number', section: 'schedule' },
-    { key: 'startDate', label: 'Start Date', type: 'date', section: 'schedule' },
-    { key: 'endDate', label: 'End Date', type: 'date', section: 'schedule' },
-    { key: 'nextGenerationDate', label: 'Next Invoice Date', type: 'date', section: 'schedule' },
+    { key: 'customDays', label: t('custom_days'), type: 'number', section: 'schedule' },
+    { key: 'startDate', label: t('start_date'), type: 'date', section: 'schedule' },
+    { key: 'endDate', label: t('end_date'), type: 'date', section: 'schedule' },
+    { key: 'nextGenerationDate', label: t('next_invoice_date'), type: 'date', section: 'schedule' },
     // Settings Section
     {
       key: 'paymentTerms',
-      label: 'Payment Terms',
+      label: t('payment_terms'),
       type: 'select',
       section: 'settings',
       options: PAYMENT_TERMS
     },
     {
       key: 'autoSend',
-      label: 'Auto Send',
+      label: t('auto_send'),
       type: 'boolean',
       section: 'settings'
     },
     // Amounts Section
     {
       key: 'subtotal',
-      label: 'Subtotal',
+      label: t('subtotal'),
       type: 'readonly',
       section: 'amounts',
       getValue: (row) => formatCurrency(Number(row.subtotal), row.currency)
     },
     {
       key: 'totalAmount',
-      label: 'Total',
+      label: t('total'),
       type: 'readonly',
       section: 'amounts',
       getValue: (row) => formatCurrency(Number(row.totalAmount), row.currency)
@@ -171,13 +171,13 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
     // Stats Section
     {
       key: 'invoicesGenerated',
-      label: 'Invoices Generated',
+      label: t('invoices_generated'),
       type: 'readonly',
       section: 'stats'
     },
     // Notes Section
-    { key: 'notes', label: 'Notes', type: 'textarea', section: 'notes' },
-    { key: 'terms', label: 'Terms & Conditions', type: 'textarea', section: 'notes' }
+    { key: 'notes', label: t('notes'), type: 'textarea', section: 'notes' },
+    { key: 'terms', label: t('terms_conditions'), type: 'textarea', section: 'notes' }
   ];
 
   // Default visible columns
@@ -375,7 +375,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   async function handleDelete() {
     if (!selectedRecurring) return;
 
-    if (!confirm('Are you sure you want to delete this recurring invoice?')) return;
+    if (!confirm(t('are_you_sure_delete_recurring'))) return;
 
     formState.recurringId = selectedRecurring.id;
     await tick();
@@ -444,12 +444,12 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   use:enhance={() => {
     return async ({ result }) => {
       if (result.type === 'success') {
-        toast.success('Recurring invoice created');
+        toast.success(t('recurring_created'));
         closeDrawer();
         invalidateAll();
       } else if (result.type === 'failure') {
         toast.error(
-          /** @type {string} */ (result.data?.error) || 'Failed to create recurring invoice'
+          /** @type {string} */ (result.data?.error) || t('failed_to_create_recurring')
         );
       }
     };
@@ -479,12 +479,12 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   use:enhance={() => {
     return async ({ result }) => {
       if (result.type === 'success') {
-        toast.success('Recurring invoice updated');
+        toast.success(t('recurring_updated'));
         closeDrawer();
         invalidateAll();
       } else if (result.type === 'failure') {
         toast.error(
-          /** @type {string} */ (result.data?.error) || 'Failed to update recurring invoice'
+          /** @type {string} */ (result.data?.error) || t('failed_to_update_recurring')
         );
       }
     };
@@ -515,12 +515,12 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   use:enhance={() => {
     return async ({ result }) => {
       if (result.type === 'success') {
-        toast.success('Recurring invoice deleted');
+        toast.success(t('recurring_deleted'));
         closeDrawer();
         invalidateAll();
       } else if (result.type === 'failure') {
         toast.error(
-          /** @type {string} */ (result.data?.error) || 'Failed to delete recurring invoice'
+          /** @type {string} */ (result.data?.error) || t('failed_to_delete_recurring')
         );
       }
     };
@@ -537,10 +537,10 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   use:enhance={() => {
     return async ({ result }) => {
       if (result.type === 'success') {
-        toast.success('Status updated');
+        toast.success(t('status_updated'));
         invalidateAll();
       } else if (result.type === 'failure') {
-        toast.error(/** @type {string} */ (result.data?.error) || 'Failed to update status');
+        toast.error(/** @type {string} */ (result.data?.error) || t('failed_to_update_status'));
       }
     };
   }}
@@ -549,6 +549,9 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 </form>
 
 <!-- Page Content -->
+<svelte:head>
+  <title>{t('recurringInvoices')} | openCRM</title>
+</svelte:head>
 <div class="flex flex-col gap-4 p-6">
   <!-- Header -->
   <PageHeader title={t('recurringInvoices')}>
@@ -667,19 +670,19 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   >
     <SearchInput
       value={filters.search}
-      placeholder="Search recurring..."
+      placeholder={t('search_recurring')}
       onchange={(value) => updateFilters({ ...filters, search: value })}
     />
 
     <SelectFilter
-      label="Status"
+      label={t('status')}
       value={filters.is_active}
       options={STATUS_OPTIONS}
       onchange={(value) => updateFilters({ ...filters, is_active: value })}
     />
 
     <SelectFilter
-      label="Frequency"
+      label={t('frequency')}
       value={filters.frequency}
       options={FREQUENCIES}
       onchange={(value) => updateFilters({ ...filters, frequency: value })}
@@ -693,8 +696,8 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
         <div class="mb-4 flex size-16 items-center justify-center rounded-[var(--radius-xl)] bg-[var(--surface-sunken)]">
           <span class="text-4xl">🔄</span>
         </div>
-        <h3 class="text-[var(--text-primary)] text-lg font-medium">No recurring invoices yet</h3>
-        <p class="text-[var(--text-secondary)] text-sm">Create your first recurring invoice template</p>
+        <h3 class="text-[var(--text-primary)] text-lg font-medium">{t('no_recurring_invoices')}</h3>
+        <p class="text-[var(--text-secondary)] text-sm">{t('create_first_recurring')}</p>
       </div>
     {/snippet}
     {#snippet cellContent(row, column)}

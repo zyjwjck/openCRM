@@ -1,7 +1,7 @@
-<script>
+﻿<script>
   import { page } from '$app/stores';
   import { afterNavigate, goto } from '$app/navigation';
-  import imgLogo from '$lib/assets/images/logo.png';
+  import imgLogo from '$lib/assets/images/icon.png';
   import { t } from '$lib/utils/i18n.svelte.js';
 
   import * as Sidebar from '$lib/components/ui/sidebar/index.js';

@@ -1,7 +1,7 @@
-<script>
+﻿<script>
   import '../../../app.css';
 
-  import imgLogo from '$lib/assets/images/logo.png';
+  import imgLogo from '$lib/assets/images/icon.png';
   import { ArrowRight } from '@lucide/svelte';
   import { t, getCurrentLanguage, setCurrentLanguage } from '$lib/utils/i18n.svelte.js';
 

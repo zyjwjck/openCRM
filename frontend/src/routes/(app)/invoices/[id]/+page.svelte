@@ -46,12 +46,12 @@
 
   // Payment terms options
   const PAYMENT_TERMS = [
-    { value: 'DUE_ON_RECEIPT', label: 'Due on Receipt' },
-    { value: 'NET_15', label: 'Net 15' },
-    { value: 'NET_30', label: 'Net 30' },
-    { value: 'NET_45', label: 'Net 45' },
-    { value: 'NET_60', label: 'Net 60' },
-    { value: 'CUSTOM', label: 'Custom' }
+    { value: 'DUE_ON_RECEIPT', label: t('due_on_receipt') },
+    { value: 'NET_15', label: t('net_15') },
+    { value: 'NET_30', label: t('net_30') },
+    { value: 'NET_45', label: t('net_45') },
+    { value: 'NET_60', label: t('net_60') },
+    { value: 'CUSTOM', label: t('custom') }
   ];
 
   // Status colors - using design system tokens
@@ -178,7 +178,7 @@
   // Save changes
   async function saveChanges() {
     if (!hasValidLineItems()) {
-      toast.error('Please add at least one line item with a name/description and rate');
+      toast.error(t('please_add_line_item'));
       return;
     }
     isSaving = true;
@@ -264,11 +264,11 @@
     return async ({ result }) => {
       isSaving = false;
       if (result.type === 'success') {
-        toast.success('Invoice updated');
+        toast.success(t('invoice_updated'));
         currentTab = 'view';
         invalidateAll();
       } else if (result.type === 'failure') {
-        toast.error(/** @type {string} */ (result.data?.error) || 'Failed to update');
+        toast.error(/** @type {string} */ (result.data?.error) || t('failed_to_update_invoice'));
       }
     };
   }}
@@ -311,9 +311,9 @@
   use:enhance={() => {
     return async ({ result }) => {
       if (result.type === 'redirect') {
-        toast.success('Invoice cancelled');
+        toast.success(t('invoice_cancelled'));
       } else if (result.type === 'failure') {
-        toast.error(/** @type {string} */ (result.data?.error) || 'Failed to cancel invoice');
+        toast.error(/** @type {string} */ (result.data?.error) || t('failed_to_cancel_invoice'));
       }
     };
   }}
@@ -328,10 +328,10 @@
     return async ({ result }) => {
       isSaving = false;
       if (result.type === 'success') {
-        toast.success('Invoice sent');
+        toast.success(t('invoice_sent'));
         invalidateAll();
       } else if (result.type === 'failure') {
-        toast.error(/** @type {string} */ (result.data?.error) || 'Failed to send');
+        toast.error(/** @type {string} */ (result.data?.error) || t('failed_to_send_invoice'));
       }
     };
   }}
@@ -347,9 +347,9 @@
       isDownloadingPdf = false;
       if (result.type === 'success' && result.data?.pdf) {
         handlePdfDownload(result.data.pdf, result.data.filename);
-        toast.success('PDF downloaded');
+        toast.success(t('pdf_downloaded'));
       } else if (result.type === 'failure') {
-        toast.error(/** @type {string} */ (result.data?.error) || 'Failed to download PDF');
+        toast.error(/** @type {string} */ (result.data?.error) || t('failed_to_download_pdf'));
       }
     };
   }}
@@ -365,14 +365,14 @@
         </Button>
         <div>
           <div class="flex items-center gap-3">
-            <h1 class="text-xl font-semibold">{invoice.invoiceNumber || 'Invoice'}</h1>
+            <h1 class="text-xl font-semibold">{invoice.invoiceNumber || t('invoice')}</h1>
             <Select.Root type="single" value={invoice.status} onValueChange={handleStatusChange}>
               <Select.Trigger
                 class="h-7 w-auto gap-1 border-0 px-2 text-xs font-medium {STATUS_COLORS[
                   invoice.status
                 ] || STATUS_COLORS.Draft}"
               >
-                {INVOICE_STATUS_OPTIONS.find(s => s.value === invoice.status)?.label || (invoice.status || 'Draft').replace('_', ' ')}
+                {INVOICE_STATUS_OPTIONS.find(s => s.value === invoice.status)?.label || t('draft')}
               </Select.Trigger>
               <Select.Content>
                 {#each INVOICE_STATUS_OPTIONS as option}
@@ -387,7 +387,7 @@
               </Select.Content>
             </Select.Root>
           </div>
-          <p class="text-muted-foreground text-sm">{invoice.clientName || 'No client name'}</p>
+          <p class="text-muted-foreground text-sm">{invoice.clientName || t('no_client_name')}</p>
         </div>
       </div>
       <div class="flex items-center gap-3">
@@ -425,7 +425,7 @@
                     variant="outline"
                     size="icon"
                     class="text-destructive"
-                    title="Cancel Invoice"
+                    title={t('cancelInvoice')}
                   >
                     <Ban class="size-4" />
                   </Button>
@@ -472,54 +472,54 @@
             <div class="space-y-4">
               <div class="text-primary flex items-center gap-2 text-2xl font-bold">
                 <FileText class="size-8" />
-                <span>INVOICE</span>
+                <span>{t('invoice')}</span>
               </div>
               <div class="space-y-2">
                 <div class="flex items-center gap-2">
-                  <Label class="text-muted-foreground w-24">Invoice #</Label>
+                  <Label class="text-muted-foreground w-24">{t('invoice_number')}</Label>
                   <span class="font-medium">{invoice.invoiceNumber}</span>
                 </div>
                 {#if isEditing}
                   <div class="flex items-center gap-2">
-                    <Label class="text-muted-foreground w-24">Title</Label>
+                    <Label class="text-muted-foreground w-24">{t('title')}</Label>
                     <Input
                       bind:value={invoice.invoiceTitle}
-                      placeholder="Invoice title"
+                      placeholder={t('invoice_title_placeholder')}
                       class="max-w-xs"
                     />
                   </div>
                   <div class="flex items-center gap-2">
-                    <Label class="text-muted-foreground w-24">PO Number</Label>
+                    <Label class="text-muted-foreground w-24">{t('po_number')}</Label>
                     <Input
                       bind:value={invoice.poNumber}
-                      placeholder="Purchase Order #"
+                      placeholder={t('po_placeholder')}
                       class="max-w-xs"
                     />
                   </div>
                   <div class="flex items-center gap-2">
-                    <Label class="text-muted-foreground w-24">Billing Period</Label>
+                    <Label class="text-muted-foreground w-24">{t('billing_period')}</Label>
                     <Input
                       bind:value={invoice.billingPeriod}
-                      placeholder="e.g. December 2024"
+                      placeholder={t('billing_period_placeholder')}
                       class="max-w-xs"
                     />
                   </div>
                 {:else if invoice.invoiceTitle || invoice.poNumber || invoice.billingPeriod}
                   {#if invoice.invoiceTitle}
                     <div class="flex items-center gap-2">
-                      <Label class="text-muted-foreground w-24">Title</Label>
+                      <Label class="text-muted-foreground w-24">{t('title')}</Label>
                       <span>{invoice.invoiceTitle}</span>
                     </div>
                   {/if}
                   {#if invoice.poNumber}
                     <div class="flex items-center gap-2">
-                      <Label class="text-muted-foreground w-24">PO Number</Label>
+                      <Label class="text-muted-foreground w-24">{t('po_number')}</Label>
                       <span>{invoice.poNumber}</span>
                     </div>
                   {/if}
                   {#if invoice.billingPeriod}
                     <div class="flex items-center gap-2">
-                      <Label class="text-muted-foreground w-24">Billing Period</Label>
+                      <Label class="text-muted-foreground w-24">{t('billing_period')}</Label>
                       <span>{invoice.billingPeriod}</span>
                     </div>
                   {/if}
@@ -531,14 +531,14 @@
             <div class="space-y-3 text-right">
               {#if isEditing}
                 <div class="flex items-center justify-end gap-2">
-                  <Label class="text-muted-foreground">Currency</Label>
+                  <Label class="text-muted-foreground">{t('currency')}</Label>
                   <Select.Root
                     type="single"
                     value={invoice.currency}
                     onValueChange={(v) => (invoice.currency = v)}
                   >
                     <Select.Trigger class="w-40">
-                      {currencyOptions.find((c) => c.value === invoice.currency)?.label || 'Select'}
+                      {currencyOptions.find((c) => c.value === invoice.currency)?.label || t('select')}
                     </Select.Trigger>
                     <Select.Content>
                       {#each currencyOptions as option}
@@ -548,24 +548,24 @@
                   </Select.Root>
                 </div>
                 <div class="flex items-center justify-end gap-2">
-                  <Label class="text-muted-foreground">Issue Date</Label>
+                  <Label class="text-muted-foreground">{t('issue_date')}</Label>
                   <Input type="date" bind:value={invoice.issueDate} class="w-40" />
                 </div>
                 <div class="flex items-center justify-end gap-2">
-                  <Label class="text-muted-foreground">Due Date</Label>
+                  <Label class="text-muted-foreground">{t('due_date')}</Label>
                   <Input type="date" bind:value={invoice.dueDate} class="w-40" />
                 </div>
               {:else}
                 <div class="flex items-center justify-end gap-2 text-sm">
-                  <span class="text-muted-foreground">Issue Date:</span>
+                  <span class="text-muted-foreground">{t('issue_date')}:</span>
                   <span class="font-medium">{formatDate(invoice.issueDate)}</span>
                 </div>
                 <div class="flex items-center justify-end gap-2 text-sm">
-                  <span class="text-muted-foreground">Due Date:</span>
+                  <span class="text-muted-foreground">{t('due_date')}:</span>
                   <span class="font-medium">{formatDate(invoice.dueDate)}</span>
                 </div>
                 <div class="flex items-center justify-end gap-2 text-sm">
-                  <span class="text-muted-foreground">Currency:</span>
+                  <span class="text-muted-foreground">{t('currency')}:</span>
                   <span class="font-medium">{invoice.currency}</span>
                 </div>
               {/if}
@@ -579,7 +579,7 @@
           <div class="space-y-3">
             <div class="flex items-center gap-2 font-medium">
               <Building2 class="text-muted-foreground size-4" />
-              <span>Bill From</span>
+              <span>{t('bill_from')}</span>
             </div>
             {#if isEditing}
               <Select.Root
@@ -588,7 +588,7 @@
                 onValueChange={(v) => (invoice.accountId = v)}
               >
                 <Select.Trigger class="w-full">
-                  {accounts.find((a) => a.id === invoice.accountId)?.name || 'Select Account'}
+                  {accounts.find((a) => a.id === invoice.accountId)?.name || t('select_account')}
                 </Select.Trigger>
                 <Select.Content>
                   {#each accounts as account}
@@ -598,7 +598,7 @@
               </Select.Root>
             {:else}
               <p class="font-medium">
-                {accounts.find((a) => a.id === invoice.accountId)?.name || 'No account'}
+                {accounts.find((a) => a.id === invoice.accountId)?.name || t('no_account')}
               </p>
             {/if}
           </div>
@@ -607,7 +607,7 @@
           <div class="space-y-3">
             <div class="flex items-center gap-2 font-medium">
               <User class="text-muted-foreground size-4" />
-              <span>Bill To</span>
+              <span>{t('bill_to')}</span>
             </div>
             {#if isEditing}
               <Select.Root
@@ -616,7 +616,7 @@
                 onValueChange={handleContactChange}
               >
                 <Select.Trigger class="w-full">
-                  {contacts.find((c) => c.id === invoice.contactId)?.name || 'Select Contact'}
+                  {contacts.find((c) => c.id === invoice.contactId)?.name || t('select_contact')}
                 </Select.Trigger>
                 <Select.Content>
                   {#each contacts as contact}
@@ -625,13 +625,13 @@
                 </Select.Content>
               </Select.Root>
               <div class="space-y-2">
-                <Input bind:value={invoice.clientName} placeholder="Client Name" />
-                <Input bind:value={invoice.clientEmail} placeholder="Email" type="email" />
-                <Input bind:value={invoice.clientPhone} placeholder="Phone" />
+                <Input bind:value={invoice.clientName} placeholder={t('client_name')} />
+                <Input bind:value={invoice.clientEmail} placeholder={t('email')} type="email" />
+                <Input bind:value={invoice.clientPhone} placeholder={t('phone')} />
               </div>
             {:else}
               <div class="space-y-1">
-                <p class="font-medium">{invoice.clientName || 'No name'}</p>
+                <p class="font-medium">{invoice.clientName || t('no_name')}</p>
                 {#if invoice.clientEmail}
                   <p class="text-muted-foreground text-sm">{invoice.clientEmail}</p>
                 {/if}
@@ -645,15 +645,15 @@
 
         <!-- Line Items -->
         <div class="p-6">
-          <h3 class="mb-4 font-medium">Line Items</h3>
+          <h3 class="mb-4 font-medium">{t('line_items')}</h3>
           <div class="rounded-md border">
             <div
               class="bg-muted/50 text-muted-foreground grid grid-cols-12 gap-4 border-b px-4 py-3 text-sm font-medium"
             >
-              <div class="col-span-5">Description</div>
-              <div class="col-span-2 text-right">Quantity</div>
-              <div class="col-span-2 text-right">Rate</div>
-              <div class="col-span-2 text-right">Amount</div>
+              <div class="col-span-5">{t('description')}</div>
+              <div class="col-span-2 text-right">{t('quantity')}</div>
+              <div class="col-span-2 text-right">{t('rate')}</div>
+              <div class="col-span-2 text-right">{t('amount')}</div>
               {#if isEditing}<div class="col-span-1"></div>{/if}
             </div>
 
@@ -664,12 +664,12 @@
                     <div class="space-y-2">
                       <Input
                         bind:value={item.name}
-                        placeholder="Item name"
+                        placeholder={t('item_name')}
                         class="border-0 bg-transparent px-0 font-medium focus-visible:ring-0"
                       />
                       <Input
                         bind:value={item.description}
-                        placeholder="Additional description (optional)"
+                        placeholder={t('item_description_placeholder')}
                         class="text-muted-foreground border-0 bg-transparent px-0 text-xs focus-visible:ring-0"
                       />
                     </div>
@@ -737,7 +737,7 @@
               <div class="px-4 py-3">
                 <Button variant="ghost" size="sm" onclick={addLineItem} class="text-primary">
                   <Plus class="mr-2 size-4" />
-                  Add Line Item
+                  {t('add_line_item')}
                 </Button>
               </div>
             {/if}
@@ -748,12 +748,12 @@
         <div class="flex justify-end border-t p-6">
           <div class="w-80 space-y-3">
             <div class="flex justify-between text-sm">
-              <span class="text-muted-foreground">Subtotal</span>
+              <span class="text-muted-foreground">{t('subtotal')}</span>
               <span class="font-medium">{formatCurrency(subtotal, invoice.currency)}</span>
             </div>
             <div class="flex items-center justify-between text-sm">
               <div class="flex items-center gap-2">
-                <span class="text-muted-foreground">Tax</span>
+                <span class="text-muted-foreground">{t('tax')}</span>
                 {#if isEditing}
                   <Input
                     type="number"
@@ -772,16 +772,16 @@
             </div>
             <Separator />
             <div class="flex justify-between text-lg font-semibold">
-              <span>Total</span>
+              <span>{t('total')}</span>
               <span class="text-primary">{formatCurrency(total, invoice.currency)}</span>
             </div>
             {#if Number(invoice.amountPaid) > 0}
               <div class="flex justify-between text-sm text-green-600">
-                <span>Amount Paid</span>
+                <span>{t('amount_paid')}</span>
                 <span>-{formatCurrency(Number(invoice.amountPaid), invoice.currency)}</span>
               </div>
               <div class="flex justify-between font-medium">
-                <span>Amount Due</span>
+                <span>{t('amount_due')}</span>
                 <span class="text-[var(--color-primary-default)]"
                   >{formatCurrency(Number(invoice.amountDue), invoice.currency)}</span
                 >
@@ -793,16 +793,16 @@
         <!-- Notes & Terms -->
         <div class="grid grid-cols-2 gap-8 border-t p-6">
           <div class="space-y-2">
-            <Label class="text-sm font-medium">Notes</Label>
+            <Label class="text-sm font-medium">{t('notes')}</Label>
             <Textarea
               bind:value={invoice.notes}
-              placeholder="Notes visible to client..."
+              placeholder={t('notes_placeholder')}
               rows={4}
             />
           </div>
           <div class="space-y-2">
-            <Label class="text-sm font-medium">Terms & Conditions</Label>
-            <Textarea bind:value={invoice.terms} placeholder="Payment terms..." rows={4} />
+            <Label class="text-sm font-medium">{t('terms_conditions')}</Label>
+            <Textarea bind:value={invoice.terms} placeholder={t('payment_terms_placeholder')} rows={4} />
           </div>
         </div>
       </div>

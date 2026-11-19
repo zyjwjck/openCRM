@@ -1,0 +1,7 @@
+{
+  "base_url": "http://127.0.0.1:8000",
+  "email": "admin@example.com",
+  "password": "CHANGE_ME",
+  "access_token": null,
+  "org_name": null
+}

@@ -1,6 +1,8 @@
 # openCRM
 
-A modern, AI-powered CRM platform built with Agent, by Django REST Framework and SvelteKit, enhanced with intelligent agents for future-ready customer relationship management.
+A modern, **AI-agent-driven** CRM platform built with Django REST Framework and SvelteKit, seamlessly integrating the nanobot agent to bring AI capabilities into customer relationship management.
+
+[![Language Switch](https://img.shields.io/badge/README-%E4%B8%AD%E6%96%87%20%F0%9F%87%A8%F0%9F%87%B3-blueviolet.svg)](#language-switch) [中文版本](README_zh.md)
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Python](https://img.shields.io/badge/python-3.12+-green.svg)
@@ -9,42 +11,73 @@ A modern, AI-powered CRM platform built with Agent, by Django REST Framework and
 ![Svelte](https://img.shields.io/badge/svelte-5-orange.svg)
 ![AI](https://img.shields.io/badge/AI-powered-blueviolet.svg)
 
+---
+
 ## Overview
 
-openCRM is a full-featured Customer Relationship Management system designed for startups and small businesses, enhanced with cutting-edge AI capabilities. It combines a powerful Django REST API backend with a modern SvelteKit frontend, featuring multi-tenant architecture with PostgreSQL Row-Level Security (RLS) for enterprise-grade data isolation, and integrates intelligent AI agents for automated workflows and enhanced decision-making.
+openCRM is a full-featured Customer Relationship Management system designed for startups and small businesses, whose **defining feature is a built-in AI agent**. It combines a powerful Django REST API backend with a modern SvelteKit frontend, featuring multi-tenant architecture with PostgreSQL Row-Level Security (RLS) for enterprise-grade data isolation. The [nanobot](https://github.com/HKUDS/nanobot) agent is natively embedded into the CRM sidebar at the `/agent` route for automated workflows and intelligent decision support.
 
-This project is built upon two open-source foundations:
-- [Bottle-CRM](https://github.com/MicroPyramid/Django-CRM.git) - A robust CRM platform
-- [nanobot](https://github.com/HKUDS/nanobot) - An ultra-lightweight personal AI assistant
+## AI Agent Integration (Core Feature)
+
+openCRM's AI capabilities come from [nanobot](https://github.com/HKUDS/nanobot) — an ultra-lightweight (~4,000 lines) personal AI agent framework. The integration is minimal yet powerful:
+
+- **Native iframe embed**: nanobot's React + TypeScript WebUI runs on port `8765` and is embedded directly as an iframe at the CRM sidebar's `/agent` route — **no chat UI to rebuild**, full agent experience out of the box
+- **Zero-config auth**: first visit to `/agent` authenticates via a `bootstrapSecret` parameter; nanobot maintains subsequent auth in its own `localStorage`
+- **Full capability inheritance**: the embedded nanobot retains everything — sessions, long-term memory, MCP tools, automations, voice transcription, multi-channel gateways (Telegram / Discord / Feishu / ...)
+- **Flexible LLM switching**: configure OpenAI, Anthropic, Google, vLLM, and other providers inside nanobot's own Settings panel — no duplicate CRM-side config
+
+**Architecture:**
+
+```
+┌───────────────────────────────────────────────────────────────┐
+│  openCRM Frontend (SvelteKit :5173)                          │
+│                                                               │
+│  ┌─────────────────────────────────────────────────────────┐  │
+│  │ /agent route                                             │  │
+│  │  ┌───────────────────────────────────────────────────┐   │  │
+│  │  │ iframe → http://127.0.0.1:8765 (nanobot WebUI)    │   │  │
+│  │  │   ✓ Sessions   ✓ Memory   ✓ MCP Tools   ✓ Automation│   │  │
+│  │  │   ✓ Voice      ✓ Channel gateways (Feishu/TG/DC..) │   │  │
+│  │  └───────────────────────────────────────────────────┘   │  │
+│  └─────────────────────────────────────────────────────────┘  │
+│                                                               │
+│  Sidebar → AI → Agent                                         │
+└───────────────────────────────────────────────────────────────┘
+       ↕ REST API
+┌───────────────────────────────────────────────────────────────┐
+│  openCRM Backend (Django :8000)                               │
+│  • Multi-tenant RLS isolation • JWT auth • 7 CRM modules      │
+└───────────────────────────────────────────────────────────────┘
+```
 
 ## Features
 
 ### Core CRM Modules
-- **Leads** - Track and manage sales leads through your pipeline
-- **Accounts** - Manage company/organization records
-- **Contacts** - Store and organize contact information
-- **Opportunities** - Track deals and sales opportunities
-- **Cases** - Customer support case management
-- **Tasks** - Task management with calendar and Kanban board views
-- **Invoices** - Create and manage invoices
+- **Leads** — Track and manage sales leads through your pipeline
+- **Accounts** — Manage company / organization records
+- **Contacts** — Store and organize contact information
+- **Opportunities** — Track deals and sales opportunities
+- **Cases** — Customer support case management
+- **Tasks** — Task management with calendar and Kanban board views
+- **Invoices** — Create and manage invoices
 
-### AI-Powered Features
-- **Intelligent Lead Scoring** - AI-driven lead qualification and prioritization
-- **Automated Follow-up** - Smart reminders and personalized outreach suggestions
-- **Predictive Analytics** - Forecasting and trend analysis for sales and customer behavior
-- **Natural Language Processing** - Conversational interfaces for data entry and retrieval
-- **Smart Document Processing** - Automated extraction of information from documents
-- **24/7 Market Analysis** - Real-time insights to inform sales and marketing strategies
+### AI-Powered Features (provided by nanobot)
+- **Intelligent Lead Scoring** — AI-driven lead qualification and prioritization
+- **Automated Follow-up** — Smart reminders and personalized outreach suggestions
+- **Predictive Analytics** — Forecasting and trend analysis for sales and customer behavior
+- **Natural Language Processing** — Conversational interfaces for data entry and retrieval
+- **Smart Document Processing** — Automated extraction of information from documents
+- **24/7 Market Analysis** — Real-time insights to inform sales and marketing strategies
 
 ### Platform Features
-- **Multi-Tenant Architecture** - PostgreSQL RLS for secure data isolation between organizations
-- **JWT Authentication** - Secure token-based authentication
-- **Team Management** - Organize users into teams with role-based access
-- **Activity Tracking** - Comprehensive audit logs and activity history
-- **Comments & Attachments** - Collaborate with comments and file attachments on any record
-- **Tags** - Flexible tagging system for organizing records
-- **Email Integration** - AWS SES integration for transactional emails
-- **Background Tasks** - Celery + Redis for async task processing
+- **Multi-Tenant Architecture** — PostgreSQL RLS for secure data isolation between organizations
+- **JWT Authentication** — Secure token-based authentication
+- **Team Management** — Organize users into teams with role-based access
+- **Activity Tracking** — Comprehensive audit logs and activity history
+- **Comments & Attachments** — Collaborate with comments and file attachments on any record
+- **Tags** — Flexible tagging system for organizing records
+- **Email Integration** — AWS SES integration for transactional emails
+- **Background Tasks** — Celery + Redis for async task processing
 
 ## Tech Stack
 
@@ -65,12 +98,12 @@ This project is built upon two open-source foundations:
 - **Axios** for API communication
 - **Lucide** icons
 
-### AI Components
-- **nanobot** - Ultra-lightweight AI agent framework (~4,000 lines of code)
-- **Multi-LLM Support** - Integration with various LLM providers (OpenAI, Anthropic, Google, etc.)
-- **Local LLM Support** - Run models locally with vLLM
-- **Voice Transcription** - Integrated voice capabilities
-- **Multi-Channel Integration** - Telegram, Discord, WhatsApp, and Feishu
+### AI Component (nanobot)
+- **Ultra-lightweight AI framework** — ~4,000 lines of code, Python-native
+- **Native React + TypeScript WebUI** — embedded via iframe, no rebuild needed
+- **Multi-LLM support** — OpenAI, Anthropic, Google, vLLM, etc.
+- **Voice transcription** — clipboard + microphone permissions delegated to the iframe
+- **Multi-channel gateways** — Telegram, Discord, WhatsApp, Feishu
 
 ## Quick Start
 
@@ -127,27 +160,58 @@ npm install
 npm run dev
 ```
 
-#### 4. AI Agent Setup
+#### 4. AI Agent Setup (nanobot)
+
+nanobot ships as a source bundle under `Agent/nanobot-main/` and is embedded into the CRM via iframe at `/agent`.
+
+Run from an activated virtual environment (you can reuse the backend `.openCRM-venv` if it meets Python 3.11+):
+
 ```bash
 # In a new terminal, from the project root
-cd agent
+cd Agent/nanobot-main
 
-# Install dependencies
-pip install -e .
+# Install nanobot from source (bun or npm required the first time to build WebUI)
+python -m pip install -e .
 
-# Initialize the agent server
+# Initialise config & workspace (interactive onboarding)
 nanobot onboard
 ```
 
+Launch the nanobot **Gateway** (serves WebUI + websocket channels + automations on `http://127.0.0.1:8765`):
+
+```bash
+# Recommended for development: opens the browser and keeps channels alive
+nanobot webui
+
+# Or: gateway-only mode (no automatic browser open)
+nanobot gateway
+
+# Background / daemon variants
+nanobot webui --background
+nanobot gateway --background
+
+# Control the background gateway
+nanobot gateway status
+nanobot gateway logs
+nanobot gateway restart
+nanobot gateway stop
+```
+
+**Inside the CRM**: sidebar → AI → Agent (or visit `/agent` directly). Model / Provider / MCP configuration happens inside nanobot's own **Settings** panel.
+
 ### Access the Application
 - **Frontend**: http://localhost:5173
+- **AI Agent**: http://localhost:5173/agent  (embedded nanobot WebUI via iframe)
 - **API Documentation**: http://localhost:8000/swagger-ui/
 - **Admin Panel**: http://localhost:8000/admin/
-- **AI Agent**: http://localhost:3000 (or as configured)
+- **nanobot WebUI (direct access)**: http://127.0.0.1:8765
+- **nanobot OpenAI-compatible API**: http://127.0.0.1:8765/v1/...
 
 ## AI Agent Configuration
 
-The AI agent (based on nanobot) requires API keys for LLM providers. Configure your settings in `agent/.nanobot/config.json`:
+nanobot's default config and workspace live under `~/.nanobot/`. Override with `NANOBOT_HOME` and `NANOBOT_WORKSPACE` environment variables, or point them to `Agent/nanobot-main/.nanobot/` for a self-contained setup.
+
+Create or edit `config.json` inside the nanobot home directory:
 
 ```json
 {
@@ -164,7 +228,9 @@ The AI agent (based on nanobot) requires API keys for LLM providers. Configure y
 }
 ```
 
-For more configuration options, refer to the [nanobot documentation](https://github.com/HKUDS/nanobot#configuration).
+Or configure **everything graphically** inside the nanobot WebUI → **Settings → Models**.
+
+Full docs at [nanobot.wiki](https://nanobot.wiki/docs/latest/getting-started/nanobot-overview).
 
 ## Project Structure
 
@@ -182,78 +248,68 @@ openCRM/
 │   └── crm/                # Django project settings
 ├── frontend/               # SvelteKit frontend
 │   ├── src/
-│   │   ├── lib/           # Components, stores, utilities
-│   │   └── routes/        # SvelteKit routes
-│   │       ├── (app)/     # Authenticated app routes
-│   │       └── (no-layout)/ # Auth pages (login, etc.)
+│   │   ├── lib/
+│   │   │   ├── components/
+│   │   │   │   ├── dashboard/   # Dashboard widgets (i18n reactive)
+│   │   │   │   └── layout/      # AppSidebar, etc.
+│   │   │   └── utils/i18n.js    # Translation dictionaries + helpers
+│   │   └── routes/
+│   │       ├── (app)/agent/     # /agent — iframe wrapper for nanobot WebUI
+│   │       ├── (app)/           # Other authenticated CRM pages
+│   │       └── (no-layout)/     # Auth pages (login, etc.)
 │   └── static/            # Static assets
-├── agent/                  # AI agent (based on nanobot)
-│   ├── agent/              # Core agent logic
-│   ├── skills/             # Bundled skills
-│   ├── channels/           # Communication channels
-│   └── config/             # Configuration
+├── Agent/                  # nanobot AI agent (source bundle)
+│   └── nanobot-main/       # nanobot source tree (Python package + built-in WebUI)
+│       ├── docs/           # nanobot upstream documentation
+│       ├── nanobot/        # agent runtime, gateway, channels, memory, MCP
+│       ├── skills/         # bundled skills: weather, cron, memory, github…
+│       └── channels/       # Telegram, Discord, Feishu, WeChat, Email…
 └── docker/                 # Docker configuration
 ```
 
+## Reference Projects
+
+openCRM is built upon two open-source foundations, enhancing them with AI agent capabilities:
+
+- [Bottle-CRM](https://github.com/MicroPyramid/Django-CRM.git) — a robust CRM platform providing the multi-tenant architecture and Django REST API foundation
+- [nanobot](https://github.com/HKUDS/nanobot) — an ultra-lightweight personal AI assistant framework, which provides all of openCRM's AI agent capabilities
+
 ## Multi-Tenancy & Security
 
-openCRM uses PostgreSQL Row-Level Security (RLS) to ensure complete data isolation between organizations. Every database query is automatically filtered by organization context, providing enterprise-grade security.
+openCRM uses PostgreSQL Row-Level Security (RLS) to ensure complete data isolation between organizations. Every database query is automatically filtered by organization context.
 
 ```bash
-# Check RLS status
-python manage.py manage_rls --status
-
-# Verify RLS user configuration
-python manage.py manage_rls --verify-user
-
-# Test data isolation
-python manage.py manage_rls --test
+python manage.py manage_rls --status      # Check RLS status
+python manage.py manage_rls --verify-user # Verify RLS user configuration
+python manage.py manage_rls --test        # Test data isolation
 ```
 
 ## Development
 
 ### Backend Commands
-
 ```bash
-# Run tests
-cd backend && pytest
-
-# Format code
-black . && isort .
-
-# Check dependencies
-pipdeptree
-pip-check -H
+cd backend
+pytest                    # Run tests
+black . && isort .         # Format code
+pipdeptree                # Check dependency tree
+pip-check -H              # Check for outdated deps
 ```
 
 ### Frontend Commands
-
 ```bash
 cd frontend
-
-# Type checking
-npm run check
-
-# Linting
-npm run lint
-
-# Formatting
-npm run format
+npm run check             # Type checking
+npm run lint              # Linting
+npm run format            # Formatting
 ```
 
 ### AI Agent Commands
-
 ```bash
-cd agent
-
-# Start the agent
-npm run dev
-
-# Check agent status
-nanobot status
-
-# Configure agent
-nanobot onboard
+cd Agent/nanobot-main
+nanobot webui             # Launch gateway + WebUI
+nanobot gateway           # Gateway only (no browser open)
+nanobot onboard           # First-time interactive setup
+nanobot models list       # View model configuration
 ```
 
 ## API Documentation
@@ -261,17 +317,22 @@ nanobot onboard
 The API follows RESTful conventions:
 
 ```
-GET/POST       /api/<module>/                 # List/Create
-GET/PUT/DELETE /api/<module>/<pk>/            # Detail/Update/Delete
+GET/POST       /api/<module>/                 # List / Create
+GET/PUT/DELETE /api/<module>/<pk>/            # Detail / Update / Delete
 GET/POST       /api/<module>/comment/<pk>/    # Comments
 GET/POST       /api/<module>/attachment/<pk>/ # Attachments
 ```
 
-Interactive API documentation is available at `/swagger-ui/` when running the backend.
+Interactive API docs at `/swagger-ui/` when running the backend.
+
+## Language Switch
+
+- [English README](README.md)
+- [中文 README](README_zh.md)
 
 ## Contributing
 
-We welcome contributions! Please see our contributing guidelines for details.
+We welcome contributions!
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
@@ -281,33 +342,22 @@ We welcome contributions! Please see our contributing guidelines for details.
 
 ## Community
 
-- **Issues**: [GitHub Issues](https://github.com/zyjwjck/openCRM/issues)
-- **Original Project Issues**: [Django-CRM Issues](https://github.com/MicroPyramid/Django-CRM/issues)
+- **openCRM Issues**: [GitHub Issues](https://github.com/zyjwjck/openCRM/issues)
+- **Original CRM Project Issues**: [Django-CRM Issues](https://github.com/MicroPyramid/Django-CRM/issues)
 - **AI Agent Issues**: [nanobot Issues](https://github.com/HKUDS/nanobot/issues)
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT License — see [LICENSE](LICENSE) file for details.
 
 ## Acknowledgements
 
-This project is built upon the following open-source projects:
-
-- **Django-CRM** by [MicroPyramid](https://github.com/MicroPyramid/Django-CRM.git)
-- **nanobot** by [HKUDS](https://github.com/HKUDS/nanobot)
-
-We are grateful to all the contributors of these projects for their valuable work.
+- **Django-CRM** by [MicroPyramid](https://github.com/MicroPyramid/Django-CRM.git) — CRM platform foundation
+- **nanobot** by [HKUDS](https://github.com/HKUDS/nanobot) — AI agent framework
 
 ## Contributors
 
-This project is currently developed and maintained by:
-
-- **zyjwjck** - Project creator and lead developer
-
-## Language Switch
-
-- [English README](README.md)
-- [中文 README](README_zh.md)
+- **zyjwjck** — Project creator and lead developer
 
 ## Future Roadmap
 
@@ -323,5 +373,5 @@ This project is currently developed and maintained by:
 ---
 
 <p align="center">
-  <em>openCRM: The Future of Customer Relationship Management</em>
+  <em>openCRM: AI-Agent-Driven Customer Relationship Management</em>
 </p>
