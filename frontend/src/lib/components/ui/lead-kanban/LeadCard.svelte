@@ -1,5 +1,5 @@
 <script>
-  import { Building2, DollarSign, Flame, Snowflake, Thermometer, Sparkles } from '@lucide/svelte';
+  import { Building2, DollarSign, Flame, Snowflake, TrendingUp, Eye, Sparkles } from '@lucide/svelte';
   import { useI18n } from '$lib/utils/i18n.svelte.js';
 
   const i18n = useI18n();
@@ -29,9 +29,9 @@
   /** @type {{ item: Lead, onclick?: () => void, ondragstart?: (e: DragEvent) => void, ondragend?: () => void }} */
   let { item, onclick, ondragstart, ondragend } = $props();
 
-  // Rating configurations with icons and colors
+  // Rating configurations with icons and colors (A/B/C/D tiers)
   const ratingConfig = {
-    HOT: {
+    A: {
       icon: Flame,
       bg: 'bg-gradient-to-r from-rose-500/20 to-orange-500/20',
       text: 'text-rose-500 dark:text-rose-400',
@@ -39,20 +39,28 @@
       glow: 'shadow-rose-500/20',
       pulse: true
     },
-    WARM: {
-      icon: Thermometer,
+    B: {
+      icon: TrendingUp,
       bg: 'bg-gradient-to-r from-amber-500/15 to-yellow-500/15',
       text: 'text-amber-600 dark:text-amber-400',
       border: 'border-amber-500/30',
       glow: 'shadow-amber-500/10',
       pulse: false
     },
-    COLD: {
-      icon: Snowflake,
+    C: {
+      icon: Eye,
       bg: 'bg-gradient-to-r from-sky-500/15 to-cyan-500/15',
       text: 'text-sky-600 dark:text-cyan-400',
       border: 'border-sky-500/30',
       glow: 'shadow-sky-500/10',
+      pulse: false
+    },
+    D: {
+      icon: Snowflake,
+      bg: 'bg-gradient-to-r from-slate-500/15 to-gray-500/15',
+      text: 'text-slate-500 dark:text-slate-400',
+      border: 'border-slate-500/30',
+      glow: 'shadow-slate-500/10',
       pulse: false
     }
   };
@@ -66,13 +74,15 @@
   const isOverdue = $derived(item.is_follow_up_overdue || item.isFollowUpOverdue);
   const rating = $derived(item.rating);
   const ratingLabel = $derived(
-    rating === 'HOT'
-      ? tr('ratingHot')
-      : rating === 'WARM'
-        ? tr('ratingWarm')
-        : rating === 'COLD'
-          ? tr('ratingCold')
-          : rating
+    rating === 'A'
+      ? tr('ratingA')
+      : rating === 'B'
+        ? tr('ratingB')
+        : rating === 'C'
+          ? tr('ratingC')
+          : rating === 'D'
+            ? tr('ratingD')
+            : rating
   );
   const assignees = $derived(item.assigned_to || item.assignedTo || []);
   const config = $derived(rating ? ratingConfig[rating] : null);
@@ -147,7 +157,7 @@
     hover:border-white/20 dark:hover:border-white/[0.1]
     hover:shadow-lg hover:shadow-black/5 dark:hover:shadow-black/20
     hover:-translate-y-0.5"
-  class:hot-card={rating === 'HOT'}
+  class:hot-card={rating === 'A'}
   draggable="true"
   {onclick}
   onkeydown={handleKeydown}
@@ -160,7 +170,7 @@
   <div class="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/50 via-transparent to-transparent dark:from-white/[0.02]"></div>
 
   <!-- Hot lead animated glow -->
-  {#if rating === 'HOT'}
+  {#if rating === 'A'}
     <div class="hot-glow pointer-events-none absolute -inset-[1px] rounded-xl bg-gradient-to-r from-rose-500/20 via-orange-500/20 to-rose-500/20 opacity-0 blur-sm transition-opacity duration-300 group-hover:opacity-100"></div>
   {/if}
 

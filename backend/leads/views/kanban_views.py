@@ -56,7 +56,7 @@ class LeadKanbanView(APIView):
             ),
             OpenApiParameter(
                 name="rating",
-                description="Filter by rating (HOT/WARM/COLD)",
+                description="Filter by rating (A/B/C/D)",
                 required=False,
                 type=str,
             ),

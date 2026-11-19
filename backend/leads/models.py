@@ -83,7 +83,12 @@ class Lead(AssignableMixin, BaseModel):
         max_length=10,
         blank=True,
         null=True,
-        choices=[("HOT", "Hot"), ("WARM", "Warm"), ("COLD", "Cold")],
+        choices=[
+            ("A", "A - High Value"),
+            ("B", "B - Potential"),
+            ("C", "C - Watching"),
+            ("D", "D - Low Value"),
+        ],
     )
     opportunity_amount = models.DecimalField(
         _("Deal Value"), decimal_places=2, max_digits=12, blank=True, null=True

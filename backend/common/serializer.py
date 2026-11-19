@@ -298,6 +298,7 @@ class CreateUserSerializer(serializers.ModelSerializer):
         model = User
         fields = (
             "email",
+            "username",
             "profile_pic",
         )
 
@@ -751,6 +752,11 @@ class TeamCreateSerializer(serializers.ModelSerializer):
 
         self.fields["name"].required = True
         self.fields["description"].required = False
+        self.fields["description"].allow_blank = True
+        # org is derived from the authenticated user's JWT (request.profile.org),
+        # never from client input. Make it read-only so it is not required in the
+        # request payload and cannot be spoofed; create/save still set it explicitly.
+        self.fields["org"].read_only = True
 
     def validate_name(self, name):
         if self.instance:

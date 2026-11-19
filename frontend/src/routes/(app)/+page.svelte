@@ -98,7 +98,7 @@
   <!-- Subtle gradient mesh background with orange tint -->
   <div class="gradient-mesh noise-overlay pointer-events-none fixed inset-0 -z-10 opacity-50 dark:opacity-30"></div>
 
-  <div class="space-y-8 p-6 md:p-8">
+  <div class="space-y-8 py-6 md:py-8">
     <!-- Header Section with orange gradient accent -->
     <header>
       <div class="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
@@ -107,7 +107,7 @@
             <div class="flex size-10 items-center justify-center rounded-[var(--radius-lg)] bg-gradient-to-br from-[var(--color-primary-default)] to-[var(--stage-contacted)] shadow-lg dark:shadow-[var(--color-primary-default)]/20">
               <Sparkles class="size-5 text-white" />
             </div>
-            <h1 class="text-[var(--text-primary)] text-2xl font-bold tracking-tight md:text-3xl">
+            <h1 class="text-[var(--text-primary)] text-2xl font-bold tracking-tight md:text-[1.75rem]">
               {t('dashboard', undefined, currentLang)}
             </h1>
           </div>

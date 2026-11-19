@@ -30,9 +30,10 @@ export const LEAD_SOURCES = [
 /** @type {{ value: string, label: string }[]} */
 export const LEAD_RATINGS = [
   { value: 'ALL', label: 'All Ratings' },
-  { value: 'HOT', label: 'Hot' },
-  { value: 'WARM', label: 'Warm' },
-  { value: 'COLD', label: 'Cold' }
+  { value: 'A', label: 'A - High Value' },
+  { value: 'B', label: 'B - Potential' },
+  { value: 'C', label: 'C - Watching' },
+  { value: 'D', label: 'D - Low Value' }
 ];
 
 /** @type {{ value: string, label: string }[]} */

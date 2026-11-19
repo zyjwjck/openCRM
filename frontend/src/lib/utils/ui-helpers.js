@@ -88,9 +88,10 @@ export function getPriorityClass(priority) {
 export function getRatingConfig(rating) {
   /** @type {{ [key: string]: { color: string, bgColor: string, dots: number } }} */
   const configs = {
-    HOT: { color: 'text-red-500', bgColor: 'bg-red-500', dots: 3 },
-    WARM: { color: 'text-orange-500', bgColor: 'bg-orange-500', dots: 2 },
-    COLD: { color: 'text-blue-500', bgColor: 'bg-blue-500', dots: 1 }
+    A: { color: 'text-rose-500', bgColor: 'bg-rose-500', dots: 4 },
+    B: { color: 'text-amber-500', bgColor: 'bg-amber-500', dots: 3 },
+    C: { color: 'text-sky-500', bgColor: 'bg-sky-500', dots: 2 },
+    D: { color: 'text-slate-400', bgColor: 'bg-slate-400', dots: 1 }
   };
   return (
     configs[rating?.toUpperCase() || ''] || {

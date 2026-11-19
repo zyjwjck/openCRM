@@ -223,7 +223,12 @@ class Migration(migrations.Migration):
                     "rating",
                     models.CharField(
                         blank=True,
-                        choices=[("HOT", "Hot"), ("WARM", "Warm"), ("COLD", "Cold")],
+                        choices=[
+                            ("A", "A - High Value"),
+                            ("B", "B - Potential"),
+                            ("C", "C - Watching"),
+                            ("D", "D - Low Value"),
+                        ],
                         max_length=10,
                         null=True,
                         verbose_name="Rating",

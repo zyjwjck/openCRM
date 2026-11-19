@@ -9,13 +9,13 @@
     Shield,
     Edit,
     Plus,
-    Check,
-    X,
     Trash2,
     AlertCircle,
     UserCheck
-  } from '@lucide/svelte';
-  import PageHeader from '$lib/components/layout/PageHeader.svelte';
+    } from '@lucide/svelte';
+    import PageHeader from '$lib/components/layout/PageHeader.svelte';
+    import UserEditDialog from '$lib/components/users/UserEditDialog.svelte';
+    import { apiRequest } from '$lib/api.js';
   import { Button } from '$lib/components/ui/button/index.js';
   import { Input } from '$lib/components/ui/input/index.js';
   import { Label } from '$lib/components/ui/label/index.js';
@@ -34,16 +34,21 @@
 
   // Get logged-in user id from data
   let loggedInUserId = $derived(data.user?.id);
+  let isAdmin = $derived(!!data.isAdmin);
 
   // Transform users data for table display
   let users = $derived(
     Array.isArray(data.users)
       ? data.users.map((u) => ({
           id: u.user.id,
+          profileId: u.profileId,
           odId: u.profile?.id || u.odId,
           name: u.user.name || u.user.email,
           email: u.user.email,
+          username: u.username,
           role: u.role,
+          teamIds: u.teamIds || [],
+          teamNames: u.teamNames || [],
           joined: u.profile?.created_at
             ? typeof u.profile.created_at === 'string'
               ? u.profile.created_at.slice(0, 10)
@@ -70,9 +75,10 @@
       }))
   );
 
-  // State for editing roles
-  /** @type {string | null} */
-  let editingRoleId = $state(null);
+  // State for editing users
+  let userDialogOpen = $state(false);
+  /** @type {any} */
+  let editingUser = $state(null);
 
   // State for team dialog
   let teamDialogOpen = $state(false);
@@ -120,6 +126,85 @@
   function openEditTeamDialog(team) {
     editingTeam = team;
     teamDialogOpen = true;
+  }
+
+  /**
+   * Open dialog to edit a user
+   * @param {any} user
+   */
+  function openEditUser(user) {
+    editingUser = user;
+    userDialogOpen = true;
+  }
+
+  /**
+   * Save user edits (client-side API calls)
+   * @param {any} data
+   */
+  async function handleEditUser(data) {
+    try {
+      // Update user info (PATCH /api/user/{id}/)
+      // apiRequest serializes `body` internally, so pass a plain object here
+      await apiRequest(`/user/${data.userId}/`, {
+        method: 'PATCH',
+        body: {
+          username: data.username,
+          email: data.email,
+          role: data.role
+        }
+      });
+
+      // Update active/inactive status (admin-only endpoint)
+      if (data.isActive !== undefined && data.isActive !== editingUser?.isActive) {
+        await apiRequest(`/user/${data.userId}/status/`, {
+          method: 'POST',
+          body: { status: data.isActive ? 'Active' : 'Inactive' }
+        });
+      }
+
+      // Admin-only password change (only when a new password was entered)
+      if (isAdmin && data.password) {
+        await apiRequest(`/user/${data.userId}/password/`, {
+          method: 'POST',
+          body: { password: data.password }
+        });
+      }
+
+      // Reconcile team membership using the profile id
+      if (data.profileId) {
+        const teamsData = await apiRequest('/teams/').catch(() => ({ teams: [] }));
+        const allTeams = teamsData.teams || [];
+        for (const team of allTeams) {
+          const memberIds = (team.users || []).map((u) => u.id);
+          const isMember = memberIds.includes(data.profileId);
+          const shouldBeMember = data.teamIds.includes(team.id);
+          if (shouldBeMember && !isMember) {
+            await apiRequest(`/teams/${team.id}/`, {
+              method: 'PUT',
+              body: {
+                name: team.name,
+                description: team.description || '',
+                assign_users: [...memberIds, data.profileId]
+              }
+            });
+          } else if (!shouldBeMember && isMember) {
+            await apiRequest(`/teams/${team.id}/`, {
+              method: 'PUT',
+              body: {
+                name: team.name,
+                description: team.description || '',
+                assign_users: memberIds.filter((id) => id !== data.profileId)
+              }
+            });
+          }
+        }
+      }
+
+      toast.success(t('userUpdated'));
+      await invalidateAll();
+    } catch (err) {
+      toast.error(err.message || t('userUpdateFailed'));
+    }
   }
 
   /**
@@ -224,7 +309,7 @@
 
 <PageHeader title={t('usersAndTeams')} subtitle={t('manageUsersAndTeamsInYourOrganization')} />
 
-<div class="flex-1 space-y-6 p-4 md:p-6">
+<div class="flex-1 space-y-6 py-4 md:py-6">
   <!-- Error Message -->
   {#if data.error}
     <Card.Root class="border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-900/20">
@@ -330,8 +415,10 @@
                 <Table.Root>
                   <Table.Header>
                     <Table.Row>
-                      <Table.Head class="w-[300px]">{t('member')}</Table.Head>
+                      <Table.Head class="w-[280px]">{t('member')}</Table.Head>
                       <Table.Head>{t('role')}</Table.Head>
+                      <Table.Head>{t('team')}</Table.Head>
+                      <Table.Head>{t('status')}</Table.Head>
                       <Table.Head>{t('joined')}</Table.Head>
                       <Table.Head class="w-[80px]">{t('actions')}</Table.Head>
                     </Table.Row>
@@ -357,68 +444,42 @@
                                 {#if user.isSelf}
                                   <Badge variant="secondary" class="text-xs">{t('you')}</Badge>
                                 {/if}
-                                {#if !user.isActive}
-                                  <Badge variant="outline" class="text-muted-foreground text-xs"
-                                    >{t('inactive')}</Badge
-                                  >
-                                {/if}
                               </div>
                               <span class="text-muted-foreground text-sm">{user.email}</span>
                             </div>
                           </div>
                         </Table.Cell>
                         <Table.Cell>
-                          {#if user.isSelf || editingRoleId !== user.id}
-                            <Badge
-                              variant={user.role === 'ADMIN' ? 'default' : 'secondary'}
-                              class="cursor-default"
-                            >
-                              {#if user.role === 'ADMIN'}
-                                <Shield class="mr-1 h-3 w-3" />
-                              {:else}
-                                <User class="mr-1 h-3 w-3" />
-                              {/if}
-                              {user.role}
-                            </Badge>
-                            {#if !user.isSelf}
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                class="ml-2 h-6 px-2 text-xs"
-                                onclick={() => (editingRoleId = user.id)}
-                              >
-                                <Edit class="h-3 w-3" />
-                              </Button>
+                          <Badge
+                            variant={user.role === 'ADMIN' ? 'default' : 'secondary'}
+                            class="cursor-default"
+                          >
+                            {#if user.role === 'ADMIN'}
+                              <Shield class="mr-1 h-3 w-3" />
+                            {:else}
+                              <User class="mr-1 h-3 w-3" />
                             {/if}
-                          {:else}
-                            <form
-                              method="POST"
-                              action="/users?/edit_role"
-                              class="flex items-center gap-2"
-                            >
-                              <input type="hidden" name="user_id" value={user.id} />
-                              <select
-                                name="role"
-                                class="border-input bg-background h-8 rounded-md border px-2 text-sm"
-                              >
-                                <option value="USER" selected={user.role === 'USER'}>{t('user')}</option>
-                                <option value="ADMIN" selected={user.role === 'ADMIN'}>{t('admin')}</option
-                                >
-                              </select>
-                              <Button type="submit" size="icon" class="h-7 w-7" variant="default">
-                                <Check class="h-3.5 w-3.5" />
-                              </Button>
-                              <Button
-                                type="button"
-                                size="icon"
-                                class="h-7 w-7"
-                                variant="outline"
-                                onclick={() => (editingRoleId = null)}
-                              >
-                                <X class="h-3.5 w-3.5" />
-                              </Button>
-                            </form>
-                          {/if}
+                            {user.role}
+                          </Badge>
+                        </Table.Cell>
+                        <Table.Cell>
+                          <div class="flex flex-wrap gap-1">
+                            {#each user.teamNames as teamName}
+                              <Badge variant="outline" class="text-xs">{teamName}</Badge>
+                            {:else}
+                              <span class="text-muted-foreground text-sm">-</span>
+                            {/each}
+                          </div>
+                        </Table.Cell>
+                        <Table.Cell>
+                          <Badge
+                            variant={user.isActive ? 'default' : 'outline'}
+                            class={user.isActive
+                              ? 'bg-[var(--color-success-default)] text-white'
+                              : 'text-muted-foreground'}
+                          >
+                            {user.isActive ? t('active') : t('inactive')}
+                          </Badge>
                         </Table.Cell>
                         <Table.Cell>
                           <span class="text-muted-foreground text-sm"
@@ -426,6 +487,16 @@
                           >
                         </Table.Cell>
                         <Table.Cell>
+                          <div class="flex items-center gap-1">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              class="h-8 w-8"
+                              onclick={() => openEditUser(user)}
+                              title={t('editUser')}
+                            >
+                              <Edit class="h-4 w-4" />
+                            </Button>
                           {#if user.isSelf}
                             <span class="text-muted-foreground">-</span>
                           {:else if !user.isActive}
@@ -467,13 +538,14 @@
                               </AlertDialog.Content>
                             </AlertDialog.Root>
                           {/if}
+                          </div>
                         </Table.Cell>
                       </Table.Row>
                     {/each}
 
                     {#if users.length === 0}
                       <Table.Row>
-                        <Table.Cell colspan={4} class="py-8 text-center">
+                        <Table.Cell colspan={6} class="py-8 text-center">
                           <Users class="text-muted-foreground/50 mx-auto h-8 w-8" />
                           <p class="text-muted-foreground mt-2 text-sm">{t('noTeamMembersFound')}</p>
                         </Table.Cell>
@@ -546,4 +618,17 @@
   }}
   onSubmit={handleTeamSubmit}
   isLoading={isTeamLoading}
+/>
+
+<!-- User Edit Dialog -->
+<UserEditDialog
+  bind:open={userDialogOpen}
+  user={editingUser}
+  teams={teams}
+  {isAdmin}
+  onSubmit={handleEditUser}
+  onClose={() => {
+    userDialogOpen = false;
+    editingUser = null;
+  }}
 />

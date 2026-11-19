@@ -35,6 +35,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         default=uuid.uuid4, unique=True, editable=False, db_index=True, primary_key=True
     )
     email = models.EmailField(_("email address"), blank=True, unique=True)
+    username = models.CharField(_("username"), max_length=150, blank=True, null=True)
     profile_pic = models.CharField(max_length=1000, null=True, blank=True)
     activation_key = models.CharField(max_length=150, null=True, blank=True)
     key_expires = models.DateTimeField(null=True, blank=True)
@@ -216,6 +217,7 @@ class Profile(BaseModel):
     def user_details(self):
         return {
             "email": self.user.email,
+            "username": self.user.username,
             "id": self.user.id,
             "is_active": self.user.is_active,
             "profile_pic": self.user.profile_pic,

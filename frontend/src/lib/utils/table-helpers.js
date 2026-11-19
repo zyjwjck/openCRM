@@ -169,22 +169,28 @@ export const leadStatusOptions = [
 // Lead temperature ratings - using design system tokens
 export const leadRatingOptions = [
   {
-    value: 'HOT',
-    label: 'Hot',
-    labelKey: 'ratingHot',
+    value: 'A',
+    label: 'A - High Value',
+    labelKey: 'ratingA',
     color: 'bg-[var(--lead-hot-bg)] text-[var(--lead-hot)] dark:bg-[var(--lead-hot)]/15'
   },
   {
-    value: 'WARM',
-    label: 'Warm',
-    labelKey: 'ratingWarm',
+    value: 'B',
+    label: 'B - Potential',
+    labelKey: 'ratingB',
     color: 'bg-[var(--lead-warm-bg)] text-[var(--lead-warm)] dark:bg-[var(--lead-warm)]/15'
   },
   {
-    value: 'COLD',
-    label: 'Cold',
-    labelKey: 'ratingCold',
+    value: 'C',
+    label: 'C - Watching',
+    labelKey: 'ratingC',
     color: 'bg-[var(--lead-cold-bg)] text-[var(--lead-cold)] dark:bg-[var(--lead-cold)]/15'
+  },
+  {
+    value: 'D',
+    label: 'D - Low Value',
+    labelKey: 'ratingD',
+    color: 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400'
   }
 ];
 

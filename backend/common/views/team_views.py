@@ -13,7 +13,7 @@ from common.serializer import (
     TeamsSerializer,
     TeamswaggerCreateSerializer,
 )
-from common.tasks import remove_users, update_team_users
+from common.tasks import dispatch_task, remove_users, update_team_users
 
 
 class TeamsListView(APIView, LimitOffsetPagination):
@@ -199,12 +199,12 @@ class TeamsDetailView(APIView):
                 )
                 if profiles:
                     team_obj.users.add(*profiles)
-            update_team_users.delay(pk, str(request.profile.org.id))
+            dispatch_task(update_team_users, pk, str(request.profile.org.id))
             latest_users = team_obj.get_users()
             for user in actual_users:
                 if user not in latest_users:
                     removed_users.append(user)
-            remove_users.delay(removed_users, pk, str(request.profile.org.id))
+            dispatch_task(remove_users, removed_users, pk, str(request.profile.org.id))
             return Response(
                 {"error": False, "message": "Team Updated Successfully"},
                 status=status.HTTP_200_OK,

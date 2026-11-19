@@ -86,3 +86,6 @@ Agent/nanobot-main/%SystemDrive%/
 # temp probe files
 api-docs/_probe_*.json
 api-docs/_probe_*.py
+
+# accidental tool-argument artifacts
+--filename=*

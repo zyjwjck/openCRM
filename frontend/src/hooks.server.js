@@ -15,7 +15,7 @@ import { refreshSession, clearSessionCookies, setSessionCookies } from '$lib/api
 
 const API_BASE_URL = env.PUBLIC_DJANGO_API_URL
   ? `${env.PUBLIC_DJANGO_API_URL}/api`
-  : 'http://localhost:8000/api';
+  : 'http://localhost:8099/api';
 
 /**
  * @typedef {{ default_currency?: string, currency_symbol?: string, default_country?: string|null }} OrgSettingsPayload

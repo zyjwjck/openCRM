@@ -593,7 +593,7 @@ class Command(BaseCommand):
         leads = []
         industries = [c[0] for c in INDCHOICES]
         sources = [c[0] for c in LEAD_SOURCE]
-        ratings = ["HOT", "WARM", "COLD"]
+        ratings = ["A", "B", "C", "D"]
 
         # Lead title templates for realistic data
         lead_title_templates = [

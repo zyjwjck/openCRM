@@ -215,7 +215,7 @@
   {/snippet}
 </PageHeader>
 
-<div class="flex-1 p-4 md:p-6 lg:p-8">
+<div class="flex-1 py-4 md:py-6 lg:py-8">
   <form
     id="org-settings-form"
     method="POST"

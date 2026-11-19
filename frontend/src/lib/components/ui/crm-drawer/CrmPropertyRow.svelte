@@ -106,14 +106,19 @@
   function formatDateDisplay(dateStr) {
     if (!dateStr) return placeholder || t('pickADate', currentLang);
     try {
-      const date = new Date(dateStr + 'T00:00:00');
+      // DateTime strings (e.g. created_at "2026-11-15T08:30:00Z") must not be
+      // suffixed with T00:00:00, otherwise they become invalid dates.
+      const normalized =
+        typeof dateStr === 'string' && dateStr.includes('T') ? dateStr : dateStr + 'T00:00:00';
+      const date = new Date(normalized);
+      if (isNaN(date.getTime())) return t('invalidDate', currentLang);
       return date.toLocaleDateString(currentLang === 'zh' ? 'zh-CN' : 'en-US', {
         month: 'short',
         day: 'numeric',
         year: 'numeric'
       });
     } catch {
-      return dateStr;
+      return t('invalidDate', currentLang);
     }
   }
 
@@ -290,7 +295,7 @@
             >
               <span class="h-2.5 w-2.5 rounded-full ring-1 ring-inset ring-black/10 dark:ring-white/20 {option.color?.split(' ')[0] || 'bg-gray-400'}"
               ></span>
-              <span class="font-medium">{option.label}</span>
+              <span class="font-medium">{option.label || emptyText}</span>
               {#if value === option.value}
                 <Check class="ml-auto h-4 w-4 text-primary" />
               {/if}

@@ -14,6 +14,23 @@
 import { error, fail, redirect } from '@sveltejs/kit';
 import { apiRequest } from '$lib/api-helpers.js';
 
+/**
+ * DRF validation errors thrown by apiRequest surface as
+ * "field: message; field2: message". Extract just the field names so the
+ * client can show localized, field-specific messages. Returns [] for
+ * non-validation failures (auth, 5xx, network, ...).
+ * @param {unknown} err
+ * @returns {string[]}
+ */
+function extractFieldErrors(err) {
+  const message = err instanceof Error ? err.message : '';
+  if (!message) return [];
+  return message
+    .split(';')
+    .map((part) => (part.split(':')[0] || '').trim())
+    .filter((field) => /^[a-z_]+$/.test(field));
+}
+
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ url, cookies, locals }) {
   const user = locals.user;
@@ -207,10 +224,11 @@ export async function load({ url, cookies, locals }) {
     // Pre-loaded form options for drawer (avoids client-side auth issues) - optimized
     const formUsers = [];
     for (const u of users) {
+      const email = u.user_details?.email || u.email || 'Unknown';
       formUsers.push({
         id: u.id,
-        email: u.user?.email || u.email,
-        name: u.user?.email || u.email
+        email,
+        name: email
       });
     }
 
@@ -263,9 +281,10 @@ export async function load({ url, cookies, locals }) {
           { value: 'other', label: 'Other', labelKey: 'sourceOther' }
         ],
         ratings: [
-          { value: 'HOT', label: 'Hot', labelKey: 'ratingHot' },
-          { value: 'WARM', label: 'Warm', labelKey: 'ratingWarm' },
-          { value: 'COLD', label: 'Cold', labelKey: 'ratingCold' }
+          { value: 'A', label: 'A - High Value', labelKey: 'ratingA' },
+          { value: 'B', label: 'B - Potential', labelKey: 'ratingB' },
+          { value: 'C', label: 'C - Watching', labelKey: 'ratingC' },
+          { value: 'D', label: 'D - Low Value', labelKey: 'ratingD' }
         ]
       },
       // Pre-loaded form options for drawer (avoids client-side auth issues)
@@ -295,7 +314,7 @@ export const actions = {
       'other'
     ];
     const validStatuses = ['assigned', 'in process', 'converted', 'recycled', 'closed'];
-    const validRatings = ['HOT', 'WARM', 'COLD'];
+    const validRatings = ['A', 'B', 'C', 'D'];
 
     try {
       const form = await request.formData();
@@ -365,7 +384,7 @@ export const actions = {
       }
 
       if (!title) {
-        return fail(400, { error: 'Lead title is required.' });
+        return fail(400, { errorKey: 'leadTitleRequired' });
       }
 
       // Use assignedTo array if provided, otherwise fall back to ownerId
@@ -423,7 +442,7 @@ export const actions = {
       return { success: true };
     } catch (err) {
       console.error('Error creating lead:', err);
-      return fail(500, { error: 'Failed to create lead' });
+      return fail(400, { errorKey: 'failedToCreateLead', fieldErrors: extractFieldErrors(err) });
     }
   },
 
@@ -439,7 +458,7 @@ export const actions = {
       'other'
     ];
     const validStatuses = ['assigned', 'in process', 'converted', 'recycled', 'closed'];
-    const validRatings = ['HOT', 'WARM', 'COLD'];
+    const validRatings = ['A', 'B', 'C', 'D'];
 
     try {
       const form = await request.formData();
@@ -510,7 +529,7 @@ export const actions = {
       }
 
       if (!leadId || !title) {
-        return fail(400, { error: 'Lead ID and title are required.' });
+        return fail(400, { errorKey: 'leadIdAndTitleRequired' });
       }
 
       // Use assignedTo array if provided, otherwise fall back to ownerId
@@ -565,7 +584,7 @@ export const actions = {
       return { success: true };
     } catch (err) {
       console.error('Error updating lead:', err);
-      return fail(500, { error: 'Failed to update lead' });
+      return fail(400, { errorKey: 'failedToUpdateLead', fieldErrors: extractFieldErrors(err) });
     }
   },
 
@@ -583,7 +602,7 @@ export const actions = {
       return { success: true };
     } catch (err) {
       console.error('Error deleting lead:', err);
-      return fail(500, { error: 'Failed to delete lead' });
+      return fail(400, { errorKey: 'failedToDeleteLead', fieldErrors: extractFieldErrors(err) });
     }
   },
 
@@ -608,7 +627,7 @@ export const actions = {
       return { success: true };
     } catch (err) {
       console.error('Error converting lead:', err);
-      return fail(500, { error: 'Failed to convert lead' });
+      return fail(400, { errorKey: 'failedToConvertLead', fieldErrors: extractFieldErrors(err) });
     }
   },
 
@@ -693,7 +712,7 @@ export const actions = {
       }
 
       if (!status) {
-        return fail(400, { error: 'Valid status is required.' });
+        return fail(400, { errorKey: 'validStatusRequired' });
       }
 
       await apiRequest(
@@ -708,7 +727,10 @@ export const actions = {
       return { success: true };
     } catch (err) {
       console.error('Error updating lead status:', err);
-      return fail(500, { error: 'Failed to update lead status' });
+      return fail(400, {
+        errorKey: 'failedToUpdateLeadStatus',
+        fieldErrors: extractFieldErrors(err)
+      });
     }
   },
 

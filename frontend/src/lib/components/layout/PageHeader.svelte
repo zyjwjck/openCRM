@@ -11,7 +11,7 @@
 </script>
 
 <header
-  class="sticky top-0 z-10 border-b border-border/40 bg-gradient-to-r from-background via-background to-background/95 backdrop-blur-2xl supports-[backdrop-filter]:bg-background/60"
+  class="sticky top-0 z-20 shrink-0 border-b border-border/40 bg-gradient-to-r from-background via-background to-background/95 backdrop-blur-2xl supports-[backdrop-filter]:bg-background/60"
 >
   <!-- Ambient glow effect for dark mode -->
   <div
@@ -26,7 +26,7 @@
     ></div>
   </div>
 
-  <div class="relative flex min-h-[4.5rem] items-center justify-between gap-6 px-6 py-4 md:px-8">
+  <div class="relative flex min-h-[4.5rem] items-center justify-between gap-6 py-4">
     <!-- Title Section -->
     <div class="flex flex-col gap-1">
       <div class="flex items-baseline gap-3">

@@ -21,5 +21,5 @@ if not exist "%VENV_PYTHON%" (
 )
 
 echo Starting openCRM MCP Server on http://127.0.0.1:8100/mcp ...
-echo (Close this window to stop it. Requires the Django backend on :8000)
+echo (Close this window to stop it. Requires the Django backend on :8099)
 "%VENV_PYTHON%" Agent/mcp/opencrm_server.py --http

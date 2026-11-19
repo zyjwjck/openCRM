@@ -70,7 +70,8 @@ export async function load({ url, locals, cookies }) {
       currency: product.currency || 'USD',
       category: product.category || '',
       isActive: product.is_active,
-      createdAt: product.created_at
+      createdAt: product.created_at,
+      hasCommissionPolicy: product.has_commission_policy ?? false
     }));
 
     // Extract unique categories
@@ -163,6 +164,33 @@ export const actions = {
     }
   },
 
+  // Toggle the active (on-shelf / off-shelf) status of a single product.
+  // The backend PUT supports partial updates, so only is_active is sent.
+  toggleActive: async ({ request, locals, cookies }) => {
+    try {
+      const form = await request.formData();
+      const productId = form.get('productId')?.toString();
+
+      if (!productId) {
+        return fail(400, { error: 'Product ID is required' });
+      }
+
+      await apiRequest(
+        `/invoices/products/${productId}/`,
+        {
+          method: 'PUT',
+          body: { is_active: form.get('isActive') === 'true' }
+        },
+        { cookies, org: locals.org }
+      );
+
+      return { success: true };
+    } catch (err) {
+      console.error('Error toggling product status:', err);
+      return fail(400, { error: err.message || 'Failed to update product status' });
+    }
+  },
+
   delete: async ({ request, locals, cookies }) => {
     try {
       const form = await request.formData();
@@ -182,6 +210,94 @@ export const actions = {
     } catch (err) {
       console.error('Error deleting product:', err);
       return fail(400, { error: err.message || 'Failed to delete product' });
+    }
+  },
+
+  listAttachments: async ({ request, locals, cookies }) => {
+    try {
+      const form = await request.formData();
+      const productId = form.get('productId')?.toString();
+      if (!productId) {
+        return fail(400, { error: 'Product ID is required' });
+      }
+
+      const response = await apiRequest(
+        `/invoices/products/${productId}/attachments/`,
+        {},
+        { cookies, org: locals.org }
+      );
+      return { success: true, attachments: response?.attachments || [] };
+    } catch (err) {
+      console.error('Error listing product attachments:', err);
+      return fail(400, { error: err.message || 'Failed to list attachments' });
+    }
+  },
+
+  uploadAttachment: async ({ request, locals, cookies }) => {
+    try {
+      const form = await request.formData();
+      const productId = form.get('productId')?.toString();
+      const file = form.get('file');
+
+      if (!productId) {
+        return fail(400, { error: 'Product ID is required' });
+      }
+      if (!file || typeof file === 'string' || typeof file.arrayBuffer !== 'function' || file.size === 0) {
+        return fail(400, { error: 'A file is required' });
+      }
+
+      const uploadData = new FormData();
+      uploadData.append('file', file);
+
+      const response = await apiRequest(
+        `/invoices/products/${productId}/attachments/`,
+        { method: 'POST', body: uploadData },
+        { cookies, org: locals.org }
+      );
+      return { success: true, attachment: response?.attachment || null };
+    } catch (err) {
+      console.error('Error uploading product attachment:', err);
+      return fail(400, { error: err.message || 'Failed to upload attachment' });
+    }
+  },
+
+  deleteAttachment: async ({ request, locals, cookies }) => {
+    try {
+      const form = await request.formData();
+      const attachmentId = form.get('attachmentId')?.toString();
+      if (!attachmentId) {
+        return fail(400, { error: 'Attachment ID is required' });
+      }
+
+      await apiRequest(
+        `/invoices/products/attachments/${attachmentId}/`,
+        { method: 'DELETE' },
+        { cookies, org: locals.org }
+      );
+      return { success: true };
+    } catch (err) {
+      console.error('Error deleting product attachment:', err);
+      return fail(400, { error: err.message || 'Failed to delete attachment' });
+    }
+  },
+
+  downloadAttachment: async ({ request, locals, cookies }) => {
+    try {
+      const form = await request.formData();
+      const attachmentId = form.get('attachmentId')?.toString();
+      if (!attachmentId) {
+        return fail(400, { error: 'Attachment ID is required' });
+      }
+
+      const file = await apiRequest(
+        `/invoices/products/attachments/${attachmentId}/`,
+        { responseType: 'blob' },
+        { cookies, org: locals.org }
+      );
+      return { success: true, file };
+    } catch (err) {
+      console.error('Error downloading product attachment:', err);
+      return fail(400, { error: err.message || 'Failed to download attachment' });
     }
   }
 };

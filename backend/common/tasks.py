@@ -1,4 +1,6 @@
 import datetime
+import logging
+import threading
 
 from celery import Celery
 from django.conf import settings
@@ -14,6 +16,40 @@ from common.models import Comment, Profile, Teams, User
 from common.token_generator import account_activation_token
 
 app = Celery("redis://")
+
+logger = logging.getLogger(__name__)
+
+# Broker outages must never block an HTTP response. These are fire-and-forget
+# tasks: results are not consumed anywhere, so skip the result backend and do
+# not spend ~100s retrying an unreachable broker.
+app.conf.update(
+    task_ignore_result=True,
+    broker_connection_retry_on_startup=False,
+    broker_connection_max_retries=0,
+    broker_connection_retry=False,
+    broker_transport_options={
+        "max_retries": 0,
+        "socket_connect_timeout": 1,
+        "socket_timeout": 1,
+    },
+)
+
+
+def dispatch_task(task, *args, **kwargs):
+    """Queue a Celery task without blocking the caller.
+
+    Task dispatch is best-effort: a broker outage should not fail or stall the
+    request whose data has already been saved. Run the (short, bounded) delay
+    in a daemon thread so the HTTP response returns immediately.
+    """
+
+    def _enqueue():
+        try:
+            task.apply_async(args=args, kwargs=kwargs, ignore_result=True)
+        except Exception:
+            logger.warning("Failed to queue Celery task %s", task.name, exc_info=True)
+
+    threading.Thread(target=_enqueue, daemon=True).start()
 
 
 def set_rls_context(org_id):

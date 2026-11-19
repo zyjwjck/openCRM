@@ -115,8 +115,8 @@ CELERY_BROKER_URL=redis://localhost:6379/0
 CELERY_RESULT_BACKEND=redis://localhost:6379/0
 
 # Domain
-DOMAIN_NAME=http://localhost:8000
-SWAGGER_ROOT_URL=http://localhost:8000
+DOMAIN_NAME=http://localhost:8099
+SWAGGER_ROOT_URL=http://localhost:8099
 ```
 
 ### 5. Set up database
@@ -141,7 +141,7 @@ python manage.py createsuperuser
 python manage.py runserver
 ```
 
-The API will be available at `http://localhost:8000`
+The API will be available at `http://localhost:8099`
 
 ## Running Celery
 
@@ -153,9 +153,9 @@ celery -A crm worker --loglevel=INFO
 
 ## API Documentation
 
-- **Swagger UI**: http://localhost:8000/swagger-ui/
-- **ReDoc**: http://localhost:8000/api/schema/redoc/
-- **Django Admin**: http://localhost:8000/admin/
+- **Swagger UI**: http://localhost:8099/swagger-ui/
+- **ReDoc**: http://localhost:8099/api/schema/redoc/
+- **Django Admin**: http://localhost:8099/admin/
 
 ### Generating Schema
 

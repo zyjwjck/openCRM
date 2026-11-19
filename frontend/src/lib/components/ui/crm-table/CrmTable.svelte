@@ -202,11 +202,11 @@
       <thead>
         <tr class="border-b border-gray-100/60 dark:border-gray-800/60">
           {#if onRowClick}
-            <th class="w-8 px-1"></th>
+            <th class="w-4"></th>
           {/if}
           {#each visibleColumnDefs as column, colIndex (column.key)}
             <th
-              class="py-3 pr-4 text-left text-[13px] font-normal text-gray-400 dark:text-gray-500 {colIndex ===
+              class="py-3 pr-4 text-left font-normal text-gray-400 dark:text-gray-500 {colIndex ===
               0
                 ? 'pl-0'
                 : 'pl-4'} {column.width || ''}"
@@ -238,7 +238,7 @@
             }}
           >
             {#if onRowClick}
-              <td class="w-8 px-1 py-3">
+              <td class="w-4 py-3">
                 <button type="button" onclick={() => onRowClick(row)} class={expandButtonClasses}>
                   <Expand class="h-3.5 w-3.5 text-gray-500" />
                 </button>
@@ -263,13 +263,13 @@
                       onkeydown={handleKeydown}
                       onblur={() => stopEditing(true)}
                       data-edit-input="{row.id}-{column.key}"
-                      class="w-full rounded bg-white px-2 py-1.5 text-sm shadow-sm ring-1 ring-gray-200 transition-shadow duration-100 outline-none focus:ring-blue-300 dark:bg-gray-900 dark:ring-gray-700"
+                      class="w-full rounded bg-white px-2 py-1.5 shadow-sm ring-1 ring-gray-200 transition-shadow duration-100 outline-none focus:ring-blue-300 dark:bg-gray-900 dark:ring-gray-700"
                     />
                   {:else if onRowChange && column.editable !== false}
                     <button
                       type="button"
                       onclick={() => startEditing(row.id, column.key)}
-                      class="-mx-2 -my-1.5 w-full cursor-text rounded px-2 py-1.5 text-left text-sm text-gray-900 transition-colors duration-75 hover:bg-gray-100/50 dark:text-gray-100 dark:hover:bg-gray-800/50"
+                      class="-mx-2 -my-1.5 w-full cursor-text rounded px-2 py-1.5 text-left text-gray-900 transition-colors duration-75 hover:bg-gray-100/50 dark:text-gray-100 dark:hover:bg-gray-800/50"
                     >
                       {#if formattedValue}
                         {formattedValue}
@@ -278,7 +278,7 @@
                       {/if}
                     </button>
                   {:else}
-                    <span class="text-sm text-gray-900 dark:text-gray-100">
+                    <span class="text-gray-900 dark:text-gray-100">
                       {#if formattedValue}
                         {formattedValue}
                       {:else}
@@ -294,13 +294,13 @@
                       onkeydown={handleKeydown}
                       onblur={() => stopEditing(true)}
                       data-edit-input="{row.id}-{column.key}"
-                      class="w-full rounded bg-white px-2 py-1.5 text-sm shadow-sm ring-1 ring-gray-200 transition-shadow duration-100 outline-none focus:ring-blue-300 dark:bg-gray-900 dark:ring-gray-700"
+                      class="w-full rounded bg-white px-2 py-1.5 shadow-sm ring-1 ring-gray-200 transition-shadow duration-100 outline-none focus:ring-blue-300 dark:bg-gray-900 dark:ring-gray-700"
                     />
                   {:else if onRowChange && column.editable !== false}
                     <button
                       type="button"
                       onclick={() => startEditing(row.id, column.key)}
-                      class="-mx-2 -my-1.5 w-full cursor-text rounded px-2 py-1.5 text-left text-sm text-gray-900 transition-colors duration-75 hover:bg-gray-100/50 dark:text-gray-100 dark:hover:bg-gray-800/50"
+                      class="-mx-2 -my-1.5 w-full cursor-text rounded px-2 py-1.5 text-left text-gray-900 transition-colors duration-75 hover:bg-gray-100/50 dark:text-gray-100 dark:hover:bg-gray-800/50"
                     >
                       {#if formattedValue}
                         {formattedValue}
@@ -309,7 +309,7 @@
                       {/if}
                     </button>
                   {:else}
-                    <span class="text-sm text-gray-900 dark:text-gray-100">
+                    <span class="text-gray-900 dark:text-gray-100">
                       {#if formattedValue}
                         {formattedValue}
                       {:else}
@@ -392,7 +392,7 @@
                   <button
                     type="button"
                     onclick={() => onRowClick?.(row)}
-                    class="-mx-2 -my-1.5 w-full cursor-pointer rounded px-2 py-1.5 text-left text-sm text-gray-900 transition-colors duration-75 hover:bg-gray-100/50 dark:text-gray-100 dark:hover:bg-gray-800/50"
+                    class="-mx-2 -my-1.5 w-full cursor-pointer rounded px-2 py-1.5 text-left text-gray-900 transition-colors duration-75 hover:bg-gray-100/50 dark:text-gray-100 dark:hover:bg-gray-800/50"
                   >
                     {#if value}
                       <div class="flex items-center gap-1.5">

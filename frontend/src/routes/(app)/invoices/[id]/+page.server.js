@@ -327,7 +327,7 @@ export const actions = {
       }
 
       // Make request to Django backend for PDF
-      const apiUrl = env.PUBLIC_DJANGO_API_URL || 'http://localhost:8000';
+      const apiUrl = env.PUBLIC_DJANGO_API_URL || 'http://localhost:8099';
       const response = await fetch(`${apiUrl}/api/invoices/${params.id}/pdf/`, {
         method: 'GET',
         headers: {

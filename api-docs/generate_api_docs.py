@@ -21,7 +21,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 JSON_PATH = os.path.join(HERE, "api_openapi.json")
 PROBE_PATH = os.path.join(HERE, "_probe_data.json")
 OUT_DIR = HERE
-BACKEND = os.environ.get("OPENCRM_BACKEND", "http://127.0.0.1:8000")
+BACKEND = os.environ.get("OPENCRM_BACKEND", "http://127.0.0.1:8099")
 
 with open(JSON_PATH, "r", encoding="utf-8") as f:
     SPEC = json.load(f)
@@ -1041,21 +1041,21 @@ def write_readme(by_module):
     lines.append("```bash")
     lines.append("# 1) 确保后端在跑 (python manage.py runserver)")
     lines.append("# 2) 拉最新 schema")
-    lines.append("curl http://127.0.0.1:8000/schema/ -o api_openapi.json")
+    lines.append("curl http://127.0.0.1:8099/schema/ -o api_openapi.json")
     lines.append("# 3) 探测后端 + 生成 Markdown（推荐）")
     lines.append("python generate_api_docs.py --probe")
     lines.append("# 4) 跳过探测（用 _probe_data.json 缓存）")
     lines.append("python generate_api_docs.py")
     lines.append("# 覆盖后端地址 / 令牌")
-    lines.append("# OPENCRM_BACKEND=http://192.168.1.100:8000 python generate_api_docs.py --probe")
+    lines.append("# OPENCRM_BACKEND=http://192.168.1.100:8099 python generate_api_docs.py --probe")
     lines.append("```")
     lines.append("")
 
     lines.append("## 原始 OpenAPI"); lines.append("")
     lines.append("- [`api_openapi.json`](api_openapi.json) — 完整 OpenAPI 3.0 schema（256 schema, 121 path, ~713 KB），可直接喂给 OpenAPI-to-MCP 转换器。")
     lines.append("- [`_probe_data.json`](_probe_data.json) — 后端探测缓存（可删，下次生成会重新探测）。")
-    lines.append("- Django Swagger UI: http://127.0.0.1:8000/swagger-ui/")
-    lines.append("- Django ReDoc: http://127.0.0.1:8000/api/schema/redoc/")
+    lines.append("- Django Swagger UI: http://127.0.0.1:8099/swagger-ui/")
+    lines.append("- Django ReDoc: http://127.0.0.1:8099/api/schema/redoc/")
     lines.append("")
 
     with open(os.path.join(OUT_DIR, "README.md"), "w", encoding="utf-8") as f:

@@ -358,14 +358,14 @@
 <div class="bg-muted/30 min-h-screen print:bg-white">
   <!-- Header (hidden when printing) -->
   <div class="bg-background sticky top-0 z-10 border-b print:hidden">
-    <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+    <div class="mx-auto flex max-w-6xl items-center justify-between py-4">
       <div class="flex items-center gap-4">
         <Button variant="ghost" size="icon" onclick={goBack}>
           <ArrowLeft class="size-5" />
         </Button>
         <div>
           <div class="flex items-center gap-3">
-            <h1 class="text-xl font-semibold">{invoice.invoiceNumber || t('invoice')}</h1>
+            <h1 class="text-2xl font-bold tracking-tight md:text-[1.75rem]">{invoice.invoiceNumber || t('invoice')}</h1>
             <Select.Root type="single" value={invoice.status} onValueChange={handleStatusChange}>
               <Select.Trigger
                 class="h-7 w-auto gap-1 border-0 px-2 text-xs font-medium {STATUS_COLORS[

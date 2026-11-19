@@ -97,7 +97,7 @@ export const dragHandleClasses =
  * Expand button styles that show on row hover
  */
 export const expandButtonClasses =
-  'flex items-center justify-center w-6 h-6 rounded opacity-0 group-hover:opacity-100 hover:bg-gray-200 transition-all duration-75';
+  'flex items-center justify-center w-4 h-4 rounded opacity-0 group-hover:opacity-100 hover:bg-gray-200 transition-all duration-75';
 
 /**
  * Drop indicator line styles

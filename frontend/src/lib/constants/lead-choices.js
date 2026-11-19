@@ -5,8 +5,7 @@
 
 /** @type {{ value: string, label: string }[]} */
 export const INDUSTRIES = [
-  { value: '', label: 'Select Industry' },
-  { value: 'ADVERTISING', label: 'Advertising' },
+  { value: '', label: '' },  { value: 'ADVERTISING', label: 'Advertising' },
   { value: 'AGRICULTURE', label: 'Agriculture' },
   { value: 'APPAREL & ACCESSORIES', label: 'Apparel & Accessories' },
   { value: 'AUTOMOTIVE', label: 'Automotive' },
@@ -40,7 +39,7 @@ export const INDUSTRIES = [
 
 /** @type {{ value: string, label: string }[]} */
 export const COUNTRIES = [
-  { value: '', label: 'Select Country' },
+  { value: '', label: '' },
   { value: 'US', label: 'United States' },
   { value: 'GB', label: 'United Kingdom' },
   { value: 'CA', label: 'Canada' },
@@ -129,3 +128,20 @@ export const COUNTRIES = [
   { value: 'VE', label: 'Venezuela' },
   { value: 'VN', label: 'Vietnam' }
 ];
+
+/**
+ * Map an industry value (e.g. "FOOD & BEVERAGE") to its i18n key
+ * (e.g. "industryFoodBeverage") so option labels can follow the UI language.
+ * @param {string} value
+ * @returns {string} i18n key like "industryAdvertising"
+ */
+export function getIndustryLabelKey(value) {
+  if (!value) return '';
+  const camel = value
+    .split(' ')
+    .filter((word) => word !== '&')
+    .map((word) => word.charAt(0) + word.slice(1).toLowerCase())
+    .join('');
+  return `industry${camel}`;
+}
+

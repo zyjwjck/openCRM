@@ -89,28 +89,45 @@ export async function load({ locals, cookies }) {
     }
 
     // Combine active and inactive users, transform to match expected format
+    const teamsList = teamsData.teams || [];
     const allUsers = [
       ...activeUsers.map((profile) => ({
         odId: profile.user_details?.id || profile.id,
+        profileId: profile.id,
         organizationId: org.id,
         role: profile.role,
+        username: profile.user_details?.username || '',
         user: {
           id: profile.user_details?.id || profile.id,
           email: profile.user_details?.email || 'N/A',
-          name: profile.user_details?.email?.split('@')[0] || 'N/A'
+          name: profile.user_details?.username || profile.user_details?.email?.split('@')[0] || 'N/A'
         },
+        teamIds: teamsList
+          .filter((t) => (t.users || []).some((u) => u.id === profile.id))
+          .map((t) => t.id),
+        teamNames: teamsList
+          .filter((t) => (t.users || []).some((u) => u.id === profile.id))
+          .map((t) => t.name),
         isActive: true,
         profile
       })),
       ...inactiveUsers.map((profile) => ({
         odId: profile.user_details?.id || profile.id,
+        profileId: profile.id,
         organizationId: org.id,
         role: profile.role,
+        username: profile.user_details?.username || '',
         user: {
           id: profile.user_details?.id || profile.id,
           email: profile.user_details?.email || 'N/A',
-          name: profile.user_details?.email?.split('@')[0] || 'N/A'
+          name: profile.user_details?.username || profile.user_details?.email?.split('@')[0] || 'N/A'
         },
+        teamIds: teamsList
+          .filter((t) => (t.users || []).some((u) => u.id === profile.id))
+          .map((t) => t.id),
+        teamNames: teamsList
+          .filter((t) => (t.users || []).some((u) => u.id === profile.id))
+          .map((t) => t.name),
         isActive: false,
         profile
       }))
@@ -131,7 +148,8 @@ export async function load({ locals, cookies }) {
       },
       users: allUsers,
       teams,
-      user: { id: user.id }
+      user: { id: user.id },
+      isAdmin
     };
   } catch (err) {
     console.error('Error loading users:', err);

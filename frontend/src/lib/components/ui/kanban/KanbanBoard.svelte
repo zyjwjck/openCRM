@@ -92,7 +92,7 @@
       col.items?.forEach(item => {
         const amount = parseFloat(String(item.opportunity_amount || item.opportunityAmount || 0));
         if (!isNaN(amount)) totalValue += amount;
-        if (item.rating === 'HOT') hotCount++;
+        if (item.rating === 'A') hotCount++;
         itemCount++;
       });
     });

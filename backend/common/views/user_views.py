@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.contrib.auth.hashers import make_password
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from drf_spectacular.utils import extend_schema, inline_serializer
@@ -482,3 +483,45 @@ class UserStatusView(APIView):
             inactive_profiles, many=True
         ).data
         return Response(context)
+
+
+class UserPasswordView(APIView):
+    """Admin-only: set a user's password."""
+
+    permission_classes = (IsAuthenticated,)
+
+    @extend_schema(
+        tags=["users"],
+        description="Set a user password (admin only)",
+        parameters=swagger_params.organization_params,
+        responses={
+            200: inline_serializer(
+                name="UserPasswordResponse",
+                fields={"error": serializers.BooleanField(), "message": serializers.CharField()},
+            )
+        },
+    )
+    def post(self, request, pk, format=None):
+        if self.request.profile.role != "ADMIN" and not self.request.user.is_superuser:
+            return Response(
+                {
+                    "error": True,
+                    "errors": "You do not have permission to perform this action",
+                },
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        profile = get_object_or_404(Profile, user__id=pk, org=request.profile.org)
+        password = request.data.get("password")
+        if not password or len(password) < 8:
+            return Response(
+                {"error": True, "errors": "Password must be at least 8 characters"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        profile.user.password = make_password(password)
+        profile.user.save(update_fields=["password"])
+        return Response(
+            {"error": False, "message": "Password updated"},
+            status=status.HTTP_200_OK,
+        )

@@ -3,6 +3,7 @@
   import { invalidateAll, goto } from '$app/navigation';
   import { tick, onMount } from 'svelte';
   import { toast } from 'svelte-sonner';
+  import { findInvalidContactFields } from '$lib/utils/validation.js';
   import {
     Plus,
     Phone,
@@ -27,7 +28,9 @@
     Loader2,
     ArrowRightCircle,
     Banknote,
-    Filter
+    Filter,
+    Sparkles,
+    X
   } from '@lucide/svelte';
   import { page } from '$app/stores';
   import {
@@ -40,7 +43,7 @@
   import { Pagination } from '$lib/components/ui/pagination';
   import { Button } from '$lib/components/ui/button/index.js';
   import { PageHeader } from '$lib/components/layout';
-  import { INDUSTRIES, COUNTRIES } from '$lib/constants/lead-choices.js';
+  import { INDUSTRIES, COUNTRIES, getIndustryLabelKey } from '$lib/constants/lead-choices.js';
   import { CURRENCY_CODES } from '$lib/constants/filters.js';
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
   import { formatRelativeDate, formatDate, getNameInitials } from '$lib/utils/formatting.js';
@@ -61,9 +64,13 @@
   import { LeadKanban } from '$lib/components/ui/lead-kanban';
   import { useI18n } from '$lib/utils/i18n.svelte.js';
   import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
+  import NanobotFrame from '$lib/components/common/NanobotFrame.svelte';
 
   const i18n = useI18n();
   const tr = i18n.t;
+
+  // In-page AI assistant panel (nanobot WebUI rendered beside the list)
+  let aiPanelOpen = $state(false);
 
   // Column visibility configuration
   const STORAGE_KEY = 'leads-column-config';
@@ -162,6 +169,7 @@
       canHide: true,
       options: INDUSTRIES.map((i) => ({
         ...i,
+        label: tr(getIndustryLabelKey(i.value)) || i.label,
         color: 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'
       }))
     },
@@ -386,8 +394,10 @@
       icon: Building2,
       options: INDUSTRIES.map((i) => ({
         ...i,
+        label: tr(getIndustryLabelKey(i.value)) || i.label,
         color: 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'
-      }))
+      })),
+      emptyText: tr('selectIndustry')
     },
     // Deal Information
     {
@@ -476,6 +486,7 @@
         ...c,
         color: 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'
       })),
+      emptyText: tr('selectCountry'),
       essential: true
     },
     // Notes
@@ -990,6 +1001,18 @@
       const currentState = leadToFormState(drawerData);
       Object.assign(formState, currentState);
 
+      // Pre-submit validation with specific, localized messages
+      const invalidFields = findInvalidContactFields(formState);
+      if (invalidFields.length > 0) {
+        isSaving = false;
+        toast.error(
+          invalidFields
+            .map((/** @type {string} */ f) => tr(f === 'email' ? 'invalidEmailFormat' : 'invalidPhoneFormat'))
+            .join(' · ')
+        );
+        return;
+      }
+
       await tick();
       updateForm.requestSubmit();
     } catch (error) {
@@ -1080,6 +1103,18 @@
       formState.teams = createFormData.teams || [];
       formState.contacts = createFormData.contacts || [];
       formState.tags = createFormData.tags || [];
+
+      // Pre-submit validation with specific, localized messages
+      const invalidFields = findInvalidContactFields(formState);
+      if (invalidFields.length > 0) {
+        isSaving = false;
+        toast.error(
+          invalidFields
+            .map((/** @type {string} */ f) => tr(f === 'email' ? 'invalidEmailFormat' : 'invalidPhoneFormat'))
+            .join(' · ')
+        );
+        return;
+      }
 
       await tick();
       createForm.requestSubmit();
@@ -1440,7 +1475,17 @@
             }
             await invalidateAll();
           } else if (result.type === 'failure') {
-            toast.error(result.data?.error || tr('operationFailed'));
+            // Server returns { errorKey, fieldErrors } so messages follow the UI language
+            const data = /** @type {any} */ (result.data || {});
+            const fieldErrors = Array.isArray(data.fieldErrors) ? data.fieldErrors : [];
+            const contactMessages = fieldErrors
+              .filter((/** @type {string} */ f) => f === 'email' || f === 'phone')
+              .map((/** @type {string} */ f) => tr(f === 'email' ? 'invalidEmailFormat' : 'invalidPhoneFormat'));
+            if (contactMessages.length > 0) {
+              toast.error(contactMessages.join(' · '));
+            } else {
+              toast.error(tr(data.errorKey || 'operationFailed'));
+            }
           } else if (result.type === 'error') {
             toast.error(tr('unexpectedError'));
           }
@@ -1578,6 +1623,17 @@
         </DropdownMenu.Root>
       {/if}
 
+      <!-- AI Assistant -->
+      <Button
+        variant="outline"
+        size="sm"
+        class="gap-2"
+        onclick={() => (aiPanelOpen = !aiPanelOpen)}
+      >
+        <Sparkles class="h-4 w-4" />
+        {tr('aiAssistant')}
+      </Button>
+
       <Button onclick={openCreate}>
         <Plus class="mr-2 h-4 w-4" />
         {tr('newLead')}
@@ -1586,7 +1642,8 @@
   {/snippet}
 </PageHeader>
 
-<div class="flex-1">
+<div class="flex min-h-0 flex-1 flex-col gap-4 lg:flex-row">
+  <div class="flex min-h-0 min-w-0 flex-1 flex-col">
   <!-- Collapsible Filter Bar -->
   <FilterBar
     minimal={true}
@@ -1738,6 +1795,33 @@
       onPageChange={handlePageChange}
       onLimitChange={handleLimitChange}
     />
+  {/if}
+  </div>
+
+  {#if aiPanelOpen}
+    <aside
+      class="-mr-6 flex h-[520px] w-full shrink-0 flex-col overflow-hidden border border-[var(--border-default)] bg-[var(--surface-default)] shadow-sm md:-mr-8 lg:h-auto lg:w-[360px]"
+    >
+      <div
+        class="flex shrink-0 items-center justify-between gap-2 border-b border-[var(--border-default)] px-4 py-3"
+      >
+        <h2 class="flex items-center gap-2 text-sm font-semibold text-[var(--text-primary)]">
+          <Sparkles class="text-[var(--color-primary-default)] h-4 w-4" />
+          {tr('aiAssistant')}
+        </h2>
+        <button
+          type="button"
+          aria-label="Close"
+          class="text-muted-foreground hover:bg-muted hover:text-foreground flex h-8 w-8 items-center justify-center rounded-lg transition-colors"
+          onclick={() => (aiPanelOpen = false)}
+        >
+          <X class="h-4 w-4" />
+        </button>
+      </div>
+      <div class="min-h-0 flex-1">
+        <NanobotFrame />
+      </div>
+    </aside>
   {/if}
 </div>
 

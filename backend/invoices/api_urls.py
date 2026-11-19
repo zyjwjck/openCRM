@@ -122,6 +122,16 @@ urlpatterns = [
     # ==========================================================================
     path("products/", api_views.ProductListView.as_view(), name="product_list"),
     path(
+        "products/<uuid:pk>/attachments/",
+        api_views.ProductAttachmentView.as_view(),
+        name="product_attachments",
+    ),
+    path(
+        "products/attachments/<uuid:pk>/",
+        api_views.ProductAttachmentDetailView.as_view(),
+        name="product_attachment_detail",
+    ),
+    path(
         "products/<uuid:pk>/",
         api_views.ProductDetailView.as_view(),
         name="product_detail",

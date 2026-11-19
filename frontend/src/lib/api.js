@@ -14,7 +14,7 @@ import { goto } from '$app/navigation';
 // Note: VITE_ prefix is required for client-side env vars
 const API_BASE_URL = env.PUBLIC_DJANGO_API_URL
   ? `${env.PUBLIC_DJANGO_API_URL}/api`
-  : 'http://localhost:8000/api';
+  : 'http://localhost:8099/api';
 
 /**
  * Storage keys for tokens and org

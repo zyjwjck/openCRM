@@ -102,7 +102,7 @@ class ApiHomeView(APIView):
         followups_today = leads.filter(next_follow_up=today).count()
 
         hot_leads = leads.filter(
-            rating="HOT", status__in=["assigned", "in process"]
+            rating="A", status__in=["assigned", "in process"]
         ).count()
 
         context["urgent_counts"] = {
@@ -193,7 +193,7 @@ class ApiHomeView(APIView):
 
         # NEW: Hot leads list for dedicated panel
         hot_leads_qs = leads.filter(
-            rating="HOT", status__in=["assigned", "in process"]
+            rating="A", status__in=["assigned", "in process"]
         ).order_by("-created_at")[:10]
 
         context["hot_leads"] = [

@@ -25,25 +25,31 @@
   /** @type {Props} */
   let { leads = [] } = $props();
 
-  // Using design system lead temperature tokens
+  // Using design system lead tier tokens (A = high value)
   const ratingConfig = /** @type {Record<string, { bg: string, text: string, border: string, iconColor: string }>} */ ({
-    HOT: {
+    A: {
       bg: 'bg-[var(--lead-hot-bg)] dark:bg-[var(--lead-hot)]/15',
       text: 'text-[var(--lead-hot)]',
       border: 'border-[var(--lead-hot)]/30',
       iconColor: 'text-[var(--lead-hot)]'
     },
-    WARM: {
+    B: {
       bg: 'bg-[var(--lead-warm-bg)] dark:bg-[var(--lead-warm)]/15',
       text: 'text-[var(--lead-warm)]',
       border: 'border-[var(--lead-warm)]/30',
       iconColor: 'text-[var(--lead-warm)]'
     },
-    COLD: {
+    C: {
       bg: 'bg-[var(--lead-cold-bg)] dark:bg-[var(--lead-cold)]/15',
       text: 'text-[var(--lead-cold)]',
       border: 'border-[var(--lead-cold)]/30',
       iconColor: 'text-[var(--lead-cold)]'
+    },
+    D: {
+      bg: 'bg-slate-100 dark:bg-slate-800',
+      text: 'text-slate-500 dark:text-slate-400',
+      border: 'border-slate-300 dark:border-slate-700',
+      iconColor: 'text-slate-500 dark:text-slate-400'
     }
   });
 
@@ -102,7 +108,7 @@
       </div>
       <h3 class="text-[var(--text-primary)] text-sm font-semibold tracking-tight">{tr('hotLeads')}</h3>
     </div>
-    <Button variant="ghost" size="sm" href="/leads?rating=HOT" class="gap-1 text-xs font-medium">
+    <Button variant="ghost" size="sm" href="/leads?rating=A" class="gap-1 text-xs font-medium">
       {tr('viewAll')}
       <ChevronRight class="size-3.5" />
     </Button>
@@ -121,7 +127,7 @@
     {:else}
       <div class="divide-y divide-[var(--border-default)]/30">
         {#each leads as lead (lead.id)}
-          {@const config = ratingConfig[lead.rating || 'HOT'] || ratingConfig.HOT}
+          {@const config = ratingConfig[lead.rating || 'A'] || ratingConfig.A}
           <a
             href="/leads?view={lead.id}"
             class="group flex items-center gap-3 px-5 py-3 transition-all duration-200 hover:bg-[var(--color-primary-light)] dark:hover:bg-[var(--color-primary-default)]/5"
@@ -141,7 +147,7 @@
               class="flex-shrink-0 gap-1.5 border text-[10px] font-semibold {config.bg} {config.text} {config.border}"
             >
               <Flame class="size-3 {config.iconColor}" />
-              {lead.rating || 'HOT'}
+              {lead.rating || 'A'}
             </Badge>
 
             <!-- Follow-up date -->

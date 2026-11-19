@@ -23,6 +23,7 @@ from common.views.team_views import TeamsDetailView, TeamsListView
 from common.views.user_views import (
     GetTeamsAndUsersView,
     UserDetailView,
+    UserPasswordView,
     UsersListView,
     UserStatusView,
 )
@@ -54,6 +55,7 @@ urlpatterns = [
     path("users/", UsersListView.as_view()),
     path("user/<str:pk>/", UserDetailView.as_view()),
     path("user/<str:pk>/status/", UserStatusView.as_view()),
+    path("user/<str:pk>/password/", UserPasswordView.as_view()),
     # Documents
     path("documents/", DocumentListView.as_view()),
     path("documents/<str:pk>/", DocumentDetailView.as_view()),

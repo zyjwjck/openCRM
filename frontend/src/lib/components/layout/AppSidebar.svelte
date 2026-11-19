@@ -2,7 +2,7 @@
   import { page } from '$app/stores';
   import { afterNavigate, goto } from '$app/navigation';
   import imgLogo from '$lib/assets/images/icon.png';
-  import { t } from '$lib/utils/i18n.svelte.js';
+  import { t, setCurrentLanguage } from '$lib/utils/i18n.svelte.js';
 
   import * as Sidebar from '$lib/components/ui/sidebar/index.js';
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
@@ -34,7 +34,8 @@
     BarChart3,
     Tag,
     Sparkles,
-    Home
+    Home,
+    Wallet
   } from '@lucide/svelte';
 
   /**
@@ -125,7 +126,7 @@
   /** @param {'en' | 'zh'} newLanguage */
   const setLanguage = (newLanguage) => {
     language = newLanguage;
-    localStorage.setItem('language', newLanguage);
+    setCurrentLanguage(newLanguage);
     // Trigger a custom event to notify other components of language change
     if (typeof window !== 'undefined') {
       window.dispatchEvent(new CustomEvent('languageChange', { detail: { language: newLanguage } }));
@@ -227,7 +228,8 @@
     { href: '/invoices/products', label: t('products', undefined, language), icon: Package, type: 'link', preload: 'off' },
     { href: '/invoices/recurring', label: t('recurring', undefined, language), icon: RefreshCw, type: 'link', preload: 'off' },
     { href: '/invoices/templates', label: t('templates', undefined, language), icon: FileCode, type: 'link', preload: 'off' },
-    { href: '/invoices/reports', label: t('reports', undefined, language), icon: BarChart3, type: 'link', preload: 'off' }
+    { href: '/invoices/reports', label: t('reports', undefined, language), icon: BarChart3, type: 'link', preload: 'off' },
+    { href: '/commission', label: t('commission', undefined, language), icon: Wallet, type: 'link', preload: 'off' }
   ]);
 
   // Combine for iteration - also reactive via $derived

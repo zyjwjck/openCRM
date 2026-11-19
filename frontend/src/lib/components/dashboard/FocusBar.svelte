@@ -44,7 +44,7 @@
       show: true
     },
     {
-      href: '/leads?rating=HOT',
+      href: '/leads?rating=A',
       icon: Flame,
       iconClass: 'text-[var(--lead-hot)]',
       bgClass: 'bg-[var(--lead-hot-bg)] dark:bg-[var(--lead-hot)]/15',

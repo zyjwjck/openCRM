@@ -22,8 +22,8 @@ REM ---------- 0. ensure nanobot env dir (under .nanobot) ----------
 if not exist "%~dp0.nanobot\workspace" mkdir "%~dp0.nanobot\workspace"
 
 REM ---------- 1. Django Backend (blue window) ----------
-echo [1/4] Starting Django Backend on port 8000...
-start "openCRM - Backend (Django :8000)" cmd /k "color 1F && cd /d ""%~dp0backend"" && if exist ""%VENV_PYTHON%"" ( ""%VENV_PYTHON%"" manage.py runserver ) else ( echo ERROR: .openCRM-venv not found. & echo Run: python -m venv .openCRM-venv & echo Then: .openCRM-venv\Scripts\activate & echo Then: pip install -r requirements.txt & pause )"
+echo [1/4] Starting Django Backend on port 8099...
+start "openCRM - Backend (Django :8099)" cmd /k "color 1F && cd /d ""%~dp0backend"" && if exist ""%VENV_PYTHON%"" ( ""%VENV_PYTHON%"" manage.py runserver 8099 ) else ( echo ERROR: .openCRM-venv not found. & echo Run: python -m venv .openCRM-venv & echo Then: .openCRM-venv\Scripts\activate & echo Then: pip install -r requirements.txt & pause )"
 
 timeout /t 2 /nobreak >nul
 
@@ -74,8 +74,8 @@ echo ============================================
 echo.
 echo   CRM UI            http://localhost:5173
 echo   CRM + AI          http://localhost:5173/agent
-echo   Django API        http://localhost:8000/swagger-ui/
-echo   Django Admin      http://localhost:8000/admin/
+echo   Django API        http://localhost:8099/swagger-ui/
+echo   Django Admin      http://localhost:8099/admin/
 echo   nanobot UI        http://127.0.0.1:8765
 echo   openCRM MCP       http://127.0.0.1:8100/mcp
 echo.

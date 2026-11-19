@@ -59,6 +59,7 @@ from invoices.pdf import (
 )
 from django.db import transaction
 from invoices.tasks import create_invoice_history, send_email, send_invoice_to_client
+from commission.services import active_policies, policy_matches
 
 
 # =============================================================================
@@ -819,12 +820,20 @@ class ProductListView(APIView, LimitOffsetPagination):
             queryset = queryset.filter(category=request.query_params.get("category"))
 
         results = self.paginate_queryset(queryset.order_by("name"), request, view=self)
+        payload = ProductSerializer(results, many=True).data
+
+        policies = list(active_policies(request.profile.org, timezone.now().date()))
+        for item, product in zip(payload, results):
+            item["has_commission_policy"] = any(
+                policy_matches(policy, product, product.category) for policy in policies
+            )
+
         return Response(
             {
                 "count": self.count,
                 "next": self.get_next_link(),
                 "previous": self.get_previous_link(),
-                "results": ProductSerializer(results, many=True).data,
+                "results": payload,
             }
         )
 
@@ -907,6 +916,124 @@ class ProductDetailView(APIView):
         product.delete()
         return Response(
             {"error": False, "message": "Product deleted"},
+            status=status.HTTP_200_OK,
+        )
+
+
+class ProductAttachmentView(APIView):
+    """List and upload attachments for a product"""
+
+    permission_classes = (IsAuthenticated, HasOrgContext)
+
+    def get_product(self, pk, request):
+        return Product.objects.filter(id=pk, org=request.profile.org).first()
+
+    @extend_schema(tags=["Product Attachments"], operation_id="product_attachments_list")
+    def get(self, request, pk):
+        product = self.get_product(pk, request)
+        if not product:
+            return Response(
+                {"error": True, "message": "Product not found"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        content_type = ContentType.objects.get_for_model(Product)
+        attachments = Attachments.objects.filter(
+            content_type=content_type,
+            object_id=product.id,
+            org=request.profile.org,
+        ).order_by("-created_at")
+        return Response(
+            {"attachments": AttachmentsSerializer(attachments, many=True).data}
+        )
+
+    @extend_schema(tags=["Product Attachments"], operation_id="product_attachments_create")
+    def post(self, request, pk):
+        product = self.get_product(pk, request)
+        if not product:
+            return Response(
+                {"error": True, "message": "Product not found"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        upload = request.FILES.get("file")
+        if not upload:
+            return Response(
+                {"error": True, "message": "File required"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        content_type = ContentType.objects.get_for_model(Product)
+        attachment = Attachments.objects.create(
+            content_type=content_type,
+            object_id=product.id,
+            file_name=upload.name[:60],
+            attachment=upload,
+            created_by=request.profile.user,
+            org=request.profile.org,
+        )
+        return Response(
+            {
+                "error": False,
+                "message": "Attachment uploaded",
+                "attachment": AttachmentsSerializer(attachment).data,
+            },
+            status=status.HTTP_201_CREATED,
+        )
+
+
+class ProductAttachmentDetailView(APIView):
+    """Download and delete a product attachment"""
+
+    permission_classes = (IsAuthenticated, HasOrgContext)
+
+    def get_attachment(self, pk, request):
+        product_content_type = ContentType.objects.get_for_model(Product)
+        return Attachments.objects.filter(
+            id=pk,
+            content_type=product_content_type,
+            org=request.profile.org,
+        ).first()
+
+    @extend_schema(tags=["Product Attachments"], operation_id="product_attachments_download")
+    def get(self, request, pk):
+        import mimetypes
+
+        attachment = self.get_attachment(pk, request)
+        if not attachment or not attachment.attachment:
+            return Response(
+                {"error": True, "message": "Attachment not found"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        file_field = attachment.attachment
+        file_name = attachment.file_name or file_field.name.split("/")[-1]
+        content = file_field.read()
+        content_type = (
+            mimetypes.guess_type(file_name)[0] or "application/octet-stream"
+        )
+        response = HttpResponse(content, content_type=content_type)
+        response["Content-Disposition"] = f'attachment; filename="{file_name}"'
+        return response
+
+    @extend_schema(tags=["Product Attachments"], operation_id="product_attachments_destroy")
+    def delete(self, request, pk):
+        attachment = self.get_attachment(pk, request)
+        if not attachment:
+            return Response(
+                {"error": True, "message": "Attachment not found"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        role = request.profile.role
+        if attachment.created_by_id != request.profile.user_id and role != "ADMIN":
+            return Response(
+                {"error": True, "message": "Permission denied"},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+
+        attachment.delete()
+        return Response(
+            {"error": False, "message": "Attachment deleted"},
             status=status.HTTP_200_OK,
         )
 

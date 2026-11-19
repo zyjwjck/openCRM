@@ -201,7 +201,7 @@
   </div>
 
   <!-- Tags table -->
-  <div class="px-6 py-4">
+  <div class="py-4">
     {#if !showArchived}
       {#if filteredActiveTags.length === 0}
         <div class="flex flex-col items-center justify-center py-16 text-center">

@@ -134,7 +134,7 @@
       {#if index === 3}
         <div class="flex flex-shrink-0 flex-col items-center gap-1 px-2">
           <div class="h-4 w-px bg-[var(--border-default)]/50"></div>
-          <span class="text-[var(--text-tertiary)]/50 text-[8px] font-medium uppercase tracking-widest">{tr('closedLabel')}</span>
+          <span class="text-[var(--text-tertiary)] text-xs font-semibold uppercase tracking-widest">{tr('closedLabel')}</span>
           <div class="h-4 w-px bg-[var(--border-default)]/50"></div>
         </div>
       {/if}

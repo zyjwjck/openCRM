@@ -38,6 +38,7 @@
    *   enableProgressiveDisclosure?: boolean,
    *   class?: string,
    *   activitySection?: import('svelte').Snippet,
+   *   afterProperties?: import('svelte').Snippet,
    *   footerActions?: import('svelte').Snippet,
    * }}
    */
@@ -58,6 +59,7 @@
     enableProgressiveDisclosure = true,
     class: className,
     activitySection,
+    afterProperties,
     footerActions
   } = $props();
 
@@ -261,7 +263,7 @@
           </div>
 
           <!-- Properties section with refined spacing -->
-          <div class="px-6 pb-8">
+          <div class="px-6 {afterProperties ? 'pb-4' : 'pb-8'}">
             {#if enableProgressiveDisclosure && essentialColumns.length > 0}
               <!-- Essential fields section -->
               <div class="grid gap-1 sm:grid-cols-1 md:grid-cols-2">
@@ -344,6 +346,13 @@
               </div>
             {/if}
           </div>
+
+          <!-- Optional custom section rendered between the properties and the activity section -->
+          {#if afterProperties}
+            <div class="px-6 pb-6">
+              {@render afterProperties()}
+            </div>
+          {/if}
 
           <!-- Activity section with refined styling -->
           {#if activitySection}

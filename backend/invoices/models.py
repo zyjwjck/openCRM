@@ -145,6 +145,13 @@ class Product(BaseModel):
     description = models.TextField(_("Description"), blank=True, null=True)
     sku = models.CharField(_("SKU"), max_length=100, blank=True, null=True)
     price = models.DecimalField(_("Price"), max_digits=12, decimal_places=2, default=0)
+    standard_cost = models.DecimalField(
+        _("Standard Cost"),
+        max_digits=12,
+        decimal_places=2,
+        default=0,
+        help_text="Standard unit cost used for gross-profit based commission calculations",
+    )
     currency = models.CharField(
         _("Currency"), max_length=3, choices=CURRENCY_CODES, blank=True, null=True
     )
@@ -508,6 +515,11 @@ class InvoiceLineItem(BaseModel):
     unit_price = models.DecimalField(
         _("Unit Price"), max_digits=12, decimal_places=2, default=0
     )
+    # Cost frozen at the time of sale so historical commission never drifts
+    # when the product's standard cost changes later.
+    unit_cost_snapshot = models.DecimalField(
+        _("Unit Cost Snapshot"), max_digits=12, decimal_places=2, default=0
+    )
 
     # Per-item discount
     discount_type = models.CharField(
@@ -556,6 +568,11 @@ class InvoiceLineItem(BaseModel):
         return f"{self.invoice.invoice_number} - {display_name}"
 
     def save(self, *args, **kwargs):
+        # Freeze the product's standard cost at sale time. Once set, it is
+        # never refreshed, so historical margin/commission stays stable.
+        if not self.unit_cost_snapshot and self.product_id:
+            self.unit_cost_snapshot = self.product.standard_cost or Decimal("0")
+
         # Calculate subtotal (quantity * unit_price)
         self.subtotal = self.quantity * self.unit_price
 

@@ -10,7 +10,7 @@ import { dev } from '$app/environment';
 
 const API_BASE_URL = env.PUBLIC_DJANGO_API_URL
   ? `${env.PUBLIC_DJANGO_API_URL}/api`
-  : 'http://localhost:8000/api';
+  : 'http://localhost:8099/api';
 
 const ACCESS_COOKIE = 'jwt_access';
 const REFRESH_COOKIE = 'jwt_refresh';
@@ -220,14 +220,15 @@ const apiCache = new ApiCache();
  * are managed by hooks and locals contains the user and org context.
  *
  * @param {string} endpoint - API endpoint (e.g., '/accounts/', '/leads/123/')
- * @param {{ method?: string, body?: Record<string, unknown>, headers?: Record<string, string> }} options - Fetch options
+ * @param {{ method?: string, body?: Record<string, unknown> | FormData, headers?: Record<string, string>, responseType?: 'json' | 'blob' }} options - Fetch options
  * @param {{ cookies?: Cookies, org?: { id: string } } | Cookies} locals - SvelteKit locals object or cookies directly
  * @returns {Promise<any>} Response data
  * @throws {Error} If request fails
  */
 export async function apiRequest(endpoint, options = {}, locals) {
-  const { method = 'GET', body, headers = {} } = options;
+  const { method = 'GET', body, headers = {}, responseType = 'json' } = options;
   const cookies = resolveCookies(locals);
+  const isFormData = typeof FormData !== 'undefined' && body instanceof FormData;
 
   /** @returns {string | undefined} */
   const readAccessToken = () =>
@@ -236,7 +237,7 @@ export async function apiRequest(endpoint, options = {}, locals) {
 
   let accessToken = readAccessToken();
   const cacheKey = apiCache.generateKey(endpoint, options, accessToken?.slice(-32));
-  const cachedData = apiCache.get(cacheKey);
+  const cachedData = !isFormData && responseType !== 'blob' ? apiCache.get(cacheKey) : undefined;
   if (cachedData) {
     console.log(`Cache hit for ${endpoint}`);
     return cachedData;
@@ -250,10 +251,9 @@ export async function apiRequest(endpoint, options = {}, locals) {
    */
   const performRequest = async (token) => {
     /** @type {Record<string, string>} */
-    const requestHeaders = {
-      'Content-Type': 'application/json',
-      ...headers
-    };
+    const requestHeaders = isFormData
+      ? { ...headers }
+      : { 'Content-Type': 'application/json', ...headers };
 
     // Organization context is embedded in the JWT, no extra header needed.
     if (token) {
@@ -262,7 +262,10 @@ export async function apiRequest(endpoint, options = {}, locals) {
 
     /** @type {RequestInit} */
     const requestOptions = { method, headers: requestHeaders };
-    if (body && method !== 'GET') {
+    if (isFormData) {
+      // Let fetch set the multipart Content-Type with the correct boundary.
+      requestOptions.body = body;
+    } else if (body && method !== 'GET') {
       requestOptions.body = JSON.stringify(body);
     }
     return fetch(url, requestOptions);
@@ -345,12 +348,25 @@ export async function apiRequest(endpoint, options = {}, locals) {
       return null;
     }
 
+    // Return binary response (e.g. file download) as base64 so it can be
+    // serialized through a SvelteKit server action.
+    if (responseType === 'blob') {
+      const buffer = Buffer.from(await response.arrayBuffer());
+      return {
+        data: buffer.toString('base64'),
+        contentType: response.headers.get('content-type') || 'application/octet-stream',
+        fileName:
+          response.headers.get('content-disposition')?.match(/filename="?([^";]+)"?/)?.[1] || ''
+      };
+    }
+
     // Return JSON response
     const data = await response.json();
 
-    // Cache GET responses under the token that actually served the request
+    // Cache GET responses under the token that actually served the request.
+    // Binary/blob responses are intentionally never cached.
     const finalCacheKey = apiCache.generateKey(endpoint, options, accessToken?.slice(-32));
-    if (finalCacheKey) {
+    if (finalCacheKey && responseType !== 'blob') {
       apiCache.set(finalCacheKey, data);
     }
 

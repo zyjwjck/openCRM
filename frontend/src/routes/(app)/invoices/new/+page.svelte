@@ -291,13 +291,13 @@
 <div class="bg-muted/30 min-h-screen">
   <!-- Header -->
   <div class="bg-background sticky top-0 z-10 border-b">
-    <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+    <div class="mx-auto flex max-w-6xl items-center justify-between py-4">
       <div class="flex items-center gap-4">
         <Button variant="ghost" size="icon" onclick={goBack}>
           <ArrowLeft class="size-5" />
         </Button>
         <div>
-          <h1 class="text-xl font-semibold">New Invoice</h1>
+          <h1 class="text-2xl font-bold tracking-tight md:text-[1.75rem]">New Invoice</h1>
           <p class="text-muted-foreground text-sm">Create a new invoice for your client</p>
         </div>
       </div>

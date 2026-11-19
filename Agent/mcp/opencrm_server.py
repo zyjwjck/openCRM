@@ -2,7 +2,7 @@ r"""
 openCRM MCP Server — v1 (Leads + 通用 CRM 模块)
 =======================================
 
-把 openCRM Django 后端 (http://127.0.0.1:8000) 的 REST API 暴露成 MCP tools,
+把 openCRM Django 后端 (http://127.0.0.1:8099) 的 REST API 暴露成 MCP tools,
 让 AI agent 可以用自然语言操作 CRM 数据。
 
 架构:  FastMCP (stdio 传输) + requests (HTTP client) + JWT 自动登录
@@ -103,9 +103,9 @@ CONFIG_PATH = MCP_DIR / "config.json"
 CONFIG_EXAMPLE_PATH = MCP_DIR / "config.example.json"
 
 # 默认值
-DEFAULT_BASE_URL = "http://127.0.0.1:8000"
+DEFAULT_BASE_URL = "http://127.0.0.1:8099"
 CONFIG_EXAMPLE = {
-    "base_url": "http://127.0.0.1:8000",
+    "base_url": "http://127.0.0.1:8099",
     "email": "admin@example.com",
     "password": "CHANGE_ME",
     "access_token": None,

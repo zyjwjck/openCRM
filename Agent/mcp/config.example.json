@@ -1,5 +1,5 @@
 {
-  "base_url": "http://127.0.0.1:8000",
+  "base_url": "http://127.0.0.1:8099",
   "email": "admin@example.com",
   "password": "CHANGE_ME",
   "access_token": null,

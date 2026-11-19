@@ -69,7 +69,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   <title>{t('invoiceReports')} | openCRM</title>
 </svelte:head>
 
-<div class="flex flex-col gap-6 p-6">
+<div class="flex flex-col gap-6">
   <!-- Header -->
   <PageHeader title={t('invoiceReports')}>
     {#snippet actions()}
@@ -304,7 +304,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 
     {#if revenue.data && revenue.data.length > 0}
       <div class="overflow-x-auto">
-        <table class="w-full text-sm">
+        <table class="w-full">
           <thead>
             <tr class="border-b border-[var(--border-default)]">
               <th class="py-2 text-left font-medium text-[var(--text-secondary)]">{t('period')}</th>

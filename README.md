@@ -17,6 +17,8 @@ A modern, **AI-agent-driven** CRM platform built with Django REST Framework and 
 
 openCRM is a full-featured Customer Relationship Management system designed for startups and small businesses, whose **defining feature is a built-in AI agent**. It combines a powerful Django REST API backend with a modern SvelteKit frontend, featuring multi-tenant architecture with PostgreSQL Row-Level Security (RLS) for enterprise-grade data isolation. The [nanobot](https://github.com/HKUDS/nanobot) agent is natively embedded into the CRM sidebar at the `/agent` route for automated workflows and intelligent decision support.
 
+**Applicable business scenarios:** openCRM is well suited to a broad range of commercial use cases — including **OPC**, **cross-border e-commerce**, **foreign trade**, **B2B**, and similar business models — where structured lead/opportunity management, multi-tenant data isolation, and AI-assisted sales workflows deliver direct value.
+
 ## Screenshots
 
 A quick look at openCRM's interface and its built-in AI agent in action:
@@ -61,7 +63,7 @@ openCRM's AI capabilities come from [nanobot](https://github.com/HKUDS/nanobot) 
 └───────────────────────────────────────────────────────────────┘
        ↕ REST API
 ┌───────────────────────────────────────────────────────────────┐
-│  openCRM Backend (Django :8000)                               │
+│  openCRM Backend (Django :8099)                               │
 │  • Multi-tenant RLS isolation • JWT auth • 7 CRM modules      │
 └───────────────────────────────────────────────────────────────┘
 ```
@@ -75,7 +77,7 @@ openCRM's AI capabilities come from [nanobot](https://github.com/HKUDS/nanobot) 
 - **Opportunities** — Track deals and sales opportunities
 - **Cases** — Customer support case management
 - **Tasks** — Task management with calendar and Kanban board views
-- **Invoices** — Create and manage invoices
+- **Products & Invoices** — Manage products, create invoices/bills, and analyze reports
 
 ### AI-Powered Features (provided by nanobot)
 - **Intelligent Lead Scoring** — AI-driven lead qualification and prioritization
@@ -227,8 +229,8 @@ nanobot gateway stop
 ### Access the Application
 - **Frontend**: http://localhost:5173
 - **AI Agent**: http://localhost:5173/agent  (embedded nanobot WebUI via iframe)
-- **API Documentation**: http://localhost:8000/swagger-ui/
-- **Admin Panel**: http://localhost:8000/admin/
+- **API Documentation**: http://localhost:8099/swagger-ui/
+- **Admin Panel**: http://localhost:8099/admin/
 - **nanobot WebUI (direct access)**: http://127.0.0.1:8765
 - **nanobot OpenAI-compatible API**: http://127.0.0.1:8765/v1/...
 

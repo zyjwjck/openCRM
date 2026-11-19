@@ -74,6 +74,9 @@ const translations = {
     // Products page
     columns: 'Columns',
     new_product: 'New Product',
+    no_commission_policy: 'No commission policy',
+    add_commission_policy_hint: 'This product is not covered by any active commission policy. Add one under Commission → Policies.',
+    creditSplitInvalid: 'Credit splits must total 100% (currently {total}%)',
     createNewProduct: 'New Product',
     create_product: 'Create Product',
     product_created: 'Product created',
@@ -82,10 +85,69 @@ const translations = {
     failed_to_create_product: 'Failed to create product',
     failed_to_update_product: 'Failed to update product',
     failed_to_delete_product: 'Failed to delete product',
+    on_shelf: 'On shelf',
+    off_shelf: 'Off shelf',
+    toggle_shelf_status: 'Click to toggle shelf status',
+    product_activated: 'Product is now on shelf',
+    product_deactivated: 'Product is now off shelf',
+    failed_to_toggle_product: 'Failed to update product shelf status',
     are_you_sure_delete_product: 'Are you sure you want to delete this product?',
     search_products: 'Search products...',
     no_products_yet: 'No products yet',
     create_first_product: 'Create your first product to use in invoices',
+    // Product attachments
+    attachments: 'Attachments',
+    upload_attachment: 'Upload File',
+    no_attachments: 'No attachments yet. Upload a file to get started.',
+    attachment_uploaded: 'Attachment uploaded successfully',
+    attachment_upload_failed: 'Failed to upload attachment',
+    attachment_deleted: 'Attachment deleted successfully',
+    attachment_delete_failed: 'Failed to delete attachment',
+    attachment_download_failed: 'Failed to download attachment',
+    are_you_sure_delete_attachment: 'Are you sure you want to delete this attachment?',
+    download: 'Download',
+    aiAssistant: 'AI Assistant',
+
+    // Commission
+    commissionPolicies: 'Commission Policies',
+    myCommission: 'My Commission',
+    newPolicy: 'New Policy',
+    editPolicy: 'Edit Policy',
+    policyName: 'Policy Name',
+    policyCode: 'Code',
+    allProducts: 'All Products',
+    baseType: 'Commission Base',
+    netExclTax: 'Net (excl. tax)',
+    grossInclTax: 'Gross (incl. tax)',
+    grossProfit: 'Gross Profit',
+    marginRate: 'Gross Margin Rate',
+    cashReceived: 'Cash Received',
+    customerScope: 'Customer Scope',
+    allCustomers: 'All Customers',
+    newCustomers: 'New Customers',
+    existingCustomers: 'Existing Customers',
+    useTiers: 'Use Tiers',
+    minAmount: 'Min Amount',
+    maxAmount: 'Max Amount',
+    capAmount: 'Cap Amount',
+    floorAmount: 'Floor Amount',
+    commissionRate: 'Rate',
+    excludeNegativeMargin: 'Exclude Negative Margin',
+    effectiveFrom: 'Effective From',
+    effectiveTo: 'Effective To',
+    tiers: 'Tiers',
+    creditRules: 'Credit Rules',
+    accountOwner: 'Account Owner',
+    leadSource: 'Lead Source',
+    sharePercent: 'Share (%)',
+    provisional: 'Provisional',
+    earned: 'Earned',
+    totalCommission: 'Total Commission',
+    attributedTo: 'Attributed To',
+    deleteConfirm: 'This action requires confirmation. Are you sure?',
+    standardCost: 'Standard Cost',
+    noPolicies: 'No commission policies yet',
+    noEntries: 'No commission records yet',
     // Reports page - invoice count suffix
     invoice_count: '{count} invoices',
     account: 'Account',
@@ -103,6 +165,18 @@ const translations = {
     first_name: 'First Name',
     last_name: 'Last Name',
     email: 'Email',
+    username: 'Username',
+    editUser: 'Edit User',
+    editUserDescription: 'Update user information, role and team assignments.',
+    team: 'Team',
+    changePassword: 'Change Password',
+    leavePasswordBlank: 'Leave blank to keep the current password (min 8 characters)',
+    newPassword: 'New Password',
+    confirmPassword: 'Confirm Password',
+    passwordsDoNotMatch: 'Passwords do not match',
+    passwordTooShort: 'Password must be at least 8 characters',
+    selectTeams: 'Select teams...',
+    noTeamsAssigned: 'No teams assigned',
     phone: 'Phone',
     company: 'Company',
     status: 'Status',
@@ -256,11 +330,11 @@ const translations = {
       overdueTasks: 'Overdue Tasks',
       tasksDueToday: 'Tasks Due Today',
       followupsToday: 'Follow-ups Today',
-      hotLeads: 'Hot Leads'
+      hotLeads: 'High Value Leads'
     },
     
     // Hot Leads Panel
-    hotLeads: 'Hot Leads',
+    hotLeads: 'High Value Leads',
     
     // Opportunities Table
     opportunities: 'Recent Opportunities',
@@ -278,8 +352,8 @@ const translations = {
     thisWeek: 'This Week',
     
     // Hot Leads panel
-    noHotLeads: 'No hot leads',
-    markLeadsAsHot: 'Mark leads as "Hot" to see them here',
+    noHotLeads: 'No high-value leads',
+    markLeadsAsHot: 'Mark leads as "A - High Value" to see them here',
     noFollowUpSet: 'No follow-up set',
     tomorrow: 'Tomorrow',
     daysOverdue: '{count}d overdue',
@@ -360,6 +434,7 @@ const translations = {
     recurring: 'Recurring',
     templates: 'Templates',
     reports: 'Reports',
+    commission: 'Commission',
     support: 'Support',
     helpDesk: 'Help Desk',
     
@@ -375,8 +450,28 @@ const translations = {
     
     // User dropdown menu
     profile: 'Profile',
+    profileInformation: 'Profile Information',
+    manageYourPersonalInformation: 'Manage your personal information',
+    unnamedUser: 'Unnamed User',
+    editProfile: 'Edit Profile',
+    updatePersonalDetails: 'Update your personal details below',
+    yourProfileDetails: 'Your personal details',
+    updateProfile: 'Update Profile',
+    fullName: 'Full Name',
+    emailAddress: 'Email Address',
+    phoneNumber: 'Phone Number',
+    lastLogin: 'Last Login',
+    profilePlaceholder: 'Enter your full name',
+    enterPhonePlaceholder: 'Enter your phone number',
+    cancel: 'Cancel',
+    submit: 'Save',
+    emailCannotChange: 'Email cannot be changed',
     usersAndTeams: 'Users & Teams',
     organizations: 'Organizations',
+    organizationsLabel: 'Organizations',
+    organizationsMemberOf: 'Organizations you are a member of',
+    memberSince: 'Member Since',
+    joined: 'Joined',
     settings: 'Settings',
     tags: 'Tags',
     tagFilterLabel: 'Tags',
@@ -445,8 +540,10 @@ const translations = {
     industryTechnology: 'Technology',
     industryTelecommunications: 'Telecommunications',
     industryTelevision: 'Television',
+    industryTransportation: 'Transportation',
     industryVentureCapital: 'Venture Capital',
     selectIndustry: 'Select industry',
+    invalidDate: 'Invalid date',
     website: 'Website',
     accountName: 'Account name',
     related: 'Related',
@@ -693,6 +790,22 @@ const translations = {
     teamDeletedSuccessfully: 'Team deleted successfully',
     userDeactivated: 'User deactivated',
     userActivated: 'User activated',
+    userUpdated: 'User updated successfully',
+    userUpdateFailed: 'Failed to update user',
+
+    // Team Form Dialog
+    editTeam: 'Edit Team',
+    createTeamTitle: 'Create Team',
+    editTeamDescription: 'Update team details and member assignments.',
+    createTeamDescription: 'Create a new team to group users for assignments.',
+    teamName: 'Team Name',
+    teamNamePlaceholder: 'e.g., Sales Team',
+    teamDescription: 'Description',
+    teamDescriptionPlaceholder: "Describe the team's purpose...",
+    assignMembers: 'Assign Members',
+    selectTeamMembers: 'Select team members...',
+    noMembersAssigned: 'No members assigned',
+    teamMembersAccessHint: 'Team members will be able to access records assigned to this team.',
     
     // Support Page
     openSourceForeverFree: 'AI • Open Source •  Free',
@@ -730,9 +843,10 @@ const translations = {
     statusConverted: 'Converted',
     statusRecycled: 'Recycled',
     statusClosed: 'Closed',
-    ratingHot: 'Hot',
-    ratingWarm: 'Warm',
-    ratingCold: 'Cold',
+    ratingA: 'A - High Value',
+    ratingB: 'B - Potential',
+    ratingC: 'C - Watching',
+    ratingD: 'D - Low Value',
     sourceCall: 'Call',
     sourceEmail: 'Email',
     sourceExistingCustomer: 'Existing Customer',
@@ -795,6 +909,16 @@ const translations = {
     leadDeleted: 'Lead deleted successfully',
     leadConverted: 'Lead converted successfully',
     failedToSubmitForm: 'Failed to submit form',
+    failedToUpdateLead: 'Failed to update lead',
+    failedToCreateLead: 'Failed to create lead',
+    failedToDeleteLead: 'Failed to delete lead',
+    failedToConvertLead: 'Failed to convert lead',
+    failedToUpdateLeadStatus: 'Failed to update lead status',
+    invalidEmailFormat: 'Invalid email format (e.g. name@example.com)',
+    invalidPhoneFormat: 'Invalid phone number (7-25 characters: digits, spaces and + - ( ) . only)',
+    leadIdRequired: 'Lead ID is required',
+    leadIdAndTitleRequired: 'Lead ID and title are required',
+    validStatusRequired: 'A valid status is required',
     operationFailed: 'Operation failed',
     unexpectedError: 'An unexpected error occurred',
     errorProcessingResponse: 'An error occurred while processing the response',
@@ -935,7 +1059,7 @@ const translations = {
     itemCount: '{count} items',
     columnAriaLabel: '{name} column with {count} items',
     failedToMoveItem: 'Failed to move item',
-    hotLeadsCount: 'Hot Leads'
+    hotLeadsCount: 'High Value Leads'
   },
   zh: {
     // Common
@@ -1009,6 +1133,9 @@ const translations = {
     // Products page
     columns: '列',
     new_product: '新建产品',
+    no_commission_policy: '尚无提成政策',
+    add_commission_policy_hint: '此产品当前没有生效的提成政策，可在「提成 → 政策」页面添加。',
+    creditSplitInvalid: '各角色分成比例合计必须为 100%（当前 {total}%）',
     createNewProduct: '新建产品',
     create_product: '创建产品',
     product_created: '产品已创建',
@@ -1017,10 +1144,69 @@ const translations = {
     failed_to_create_product: '创建产品失败',
     failed_to_update_product: '更新产品失败',
     failed_to_delete_product: '删除产品失败',
+    on_shelf: '已上架',
+    off_shelf: '已下架',
+    toggle_shelf_status: '点击切换上架状态',
+    product_activated: '产品已上架',
+    product_deactivated: '产品已下架',
+    failed_to_toggle_product: '更新产品上架状态失败',
     are_you_sure_delete_product: '确定要删除此产品吗？',
     search_products: '搜索产品...',
     no_products_yet: '暂无产品',
     create_first_product: '创建您的第一个产品以便在发票中使用',
+    // 产品附件
+    attachments: '附件',
+    upload_attachment: '上传文件',
+    no_attachments: '暂无附件，上传文件即可开始。',
+    attachment_uploaded: '附件上传成功',
+    attachment_upload_failed: '附件上传失败',
+    attachment_deleted: '附件删除成功',
+    attachment_delete_failed: '附件删除失败',
+    attachment_download_failed: '附件下载失败',
+    are_you_sure_delete_attachment: '确定要删除此附件吗？',
+    download: '下载',
+    aiAssistant: 'AI 助手',
+
+    // 提成管理
+    commissionPolicies: '提成政策',
+    myCommission: '我的提成',
+    newPolicy: '新建政策',
+    editPolicy: '编辑政策',
+    policyName: '政策名称',
+    policyCode: '编码',
+    allProducts: '所有产品',
+    baseType: '计提基数',
+    netExclTax: '不含税价',
+    grossInclTax: '含税价',
+    grossProfit: '毛利额',
+    marginRate: '毛利率',
+    cashReceived: '回款金额',
+    customerScope: '客户口径',
+    allCustomers: '全部客户',
+    newCustomers: '新客户',
+    existingCustomers: '老客户',
+    useTiers: '启用阶梯',
+    minAmount: '最小金额',
+    maxAmount: '最大金额',
+    capAmount: '提成上限',
+    floorAmount: '提成下限',
+    commissionRate: '提成率',
+    excludeNegativeMargin: '负毛利不计提',
+    effectiveFrom: '生效日期',
+    effectiveTo: '失效日期',
+    tiers: '阶梯',
+    creditRules: '归属规则',
+    accountOwner: '客户归属人',
+    leadSource: '线索来源人',
+    sharePercent: '分成比例 (%)',
+    provisional: '预估',
+    earned: '已计提',
+    totalCommission: '提成合计',
+    attributedTo: '归属人',
+    deleteConfirm: '此操作需要二次确认，确定继续吗？',
+    standardCost: '标准成本',
+    noPolicies: '暂无提成政策',
+    noEntries: '暂无提成记录',
     // Reports page - invoice count suffix
     invoice_count: '{count} 张发票',
     // Invoice Page (remaining keys)
@@ -1035,6 +1221,18 @@ const translations = {
     first_name: '名字',
     last_name: '姓氏',
     email: '邮箱',
+    username: '用户名',
+    editUser: '编辑用户',
+    editUserDescription: '更新用户信息、角色与团队归属。',
+    team: '团队',
+    changePassword: '修改密码',
+    leavePasswordBlank: '留空表示不修改密码（至少 8 位）',
+    newPassword: '新密码',
+    confirmPassword: '确认密码',
+    passwordsDoNotMatch: '两次输入的密码不一致',
+    passwordTooShort: '密码至少 8 位',
+    selectTeams: '选择团队...',
+    noTeamsAssigned: '未分配团队',
     phone: '电话',
     company: '公司',
     status: '状态',
@@ -1188,11 +1386,11 @@ const translations = {
       overdueTasks: '逾期任务',
       tasksDueToday: '今日到期任务',
       followupsToday: '今日跟进',
-      hotLeads: '热门线索'
+      hotLeads: 'A级高价值线索'
     },
     
     // Hot Leads Panel
-    hotLeads: '热门线索',
+    hotLeads: 'A级高价值线索',
     
     // Activity Feed
     activityFeed: '活动动态',
@@ -1204,8 +1402,8 @@ const translations = {
     thisWeek: '本周',
     
     // Hot Leads panel
-    noHotLeads: '暂无热门线索',
-    markLeadsAsHot: '将线索标记为"热门"即可在此显示',
+    noHotLeads: '暂无高价值线索',
+    markLeadsAsHot: '将线索标记为"A级 高价值"即可在此显示',
     noFollowUpSet: '未设置跟进',
     tomorrow: '明天',
     daysOverdue: '逾期 {count} 天',
@@ -1292,6 +1490,7 @@ const translations = {
     recurring: '循环发票',
     templates: '模板',
     reports: '报表',
+    commission: '提成',
     support: '支持',
     helpDesk: '帮助中心',
     
@@ -1306,8 +1505,28 @@ const translations = {
     
     // User dropdown menu
     profile: '个人资料',
+    profileInformation: '个人信息',
+    manageYourPersonalInformation: '管理您的个人信息',
+    unnamedUser: '未命名用户',
+    editProfile: '编辑资料',
+    updatePersonalDetails: '更新您的个人信息',
+    yourProfileDetails: '您的个人信息',
+    updateProfile: '更新资料',
+    fullName: '姓名',
+    emailAddress: '邮箱',
+    phoneNumber: '电话',
+    lastLogin: '最近登录',
+    profilePlaceholder: '请输入您的姓名',
+    enterPhonePlaceholder: '请输入您的电话号码',
+    cancel: '取消',
+    submit: '保存',
+    emailCannotChange: '邮箱地址不可更改',
     usersAndTeams: '用户和团队',
     organizations: '组织管理',
+    organizationsLabel: '组织',
+    organizationsMemberOf: '您所在的组织',
+    memberSince: '注册时间',
+    joined: '加入于',
     settings: '系统设置',
     tags: '标签管理',
     tagFilterLabel: '标签',
@@ -1378,8 +1597,10 @@ const translations = {
     industryTechnology: '科技',
     industryTelecommunications: '电信',
     industryTelevision: '电视',
+    industryTransportation: '运输',
     industryVentureCapital: '风险投资',
     selectIndustry: '选择行业',
+    invalidDate: '无效日期',
     website: '网站',
     accountName: '客户名称',
     related: '相关',
@@ -1628,6 +1849,22 @@ const translations = {
     teamDeletedSuccessfully: '团队删除成功',
     userDeactivated: '用户已停用',
     userActivated: '用户已激活',
+    userUpdated: '用户更新成功',
+    userUpdateFailed: '用户更新失败',
+
+    // Team Form Dialog
+    editTeam: '编辑团队',
+    createTeamTitle: '创建团队',
+    editTeamDescription: '更新团队详情和成员分配。',
+    createTeamDescription: '创建一个新团队以对用户进行分组分配。',
+    teamName: '团队名称',
+    teamNamePlaceholder: '例如：销售团队',
+    teamDescription: '描述',
+    teamDescriptionPlaceholder: '描述团队的用途...',
+    assignMembers: '分配成员',
+    selectTeamMembers: '选择团队成员...',
+    noMembersAssigned: '未分配成员',
+    teamMembersAccessHint: '团队成员将能够访问分配给该团队的记录。',
     
     // Support Page
     openSourceForeverFree: '智能 • 开源 • 免费',
@@ -1666,9 +1903,10 @@ const translations = {
     statusConverted: '已转化',
     statusRecycled: '已回收',
     statusClosed: '已关闭',
-    ratingHot: '热门',
-    ratingWarm: '温热',
-    ratingCold: '冷淡',
+    ratingA: 'A 高价值',
+    ratingB: 'B 潜力',
+    ratingC: 'C 观望',
+    ratingD: 'D 低价值',
     sourceCall: '电话',
     sourceEmail: '邮件',
     sourceExistingCustomer: '现有客户',
@@ -1731,6 +1969,16 @@ const translations = {
     leadDeleted: '线索删除成功',
     leadConverted: '线索转化成功',
     failedToSubmitForm: '提交表单失败',
+    failedToUpdateLead: '更新线索失败',
+    failedToCreateLead: '创建线索失败',
+    failedToDeleteLead: '删除线索失败',
+    failedToConvertLead: '线索转化失败',
+    failedToUpdateLeadStatus: '更新线索状态失败',
+    invalidEmailFormat: '邮箱格式不正确（例如 name@example.com）',
+    invalidPhoneFormat: '电话格式不正确（7-25 位，仅支持数字、空格和 + - ( ) . ）',
+    leadIdRequired: '缺少线索 ID',
+    leadIdAndTitleRequired: '线索 ID 和标题为必填项',
+    validStatusRequired: '状态值无效',
     operationFailed: '操作失败',
     unexpectedError: '发生未知错误',
     errorProcessingResponse: '处理响应时发生错误',
@@ -1871,19 +2119,32 @@ const translations = {
     itemCount: '{count} 个条目',
     columnAriaLabel: '{name} 列，共 {count} 个条目',
     failedToMoveItem: '移动条目失败',
-    hotLeadsCount: '热点线索'
+    hotLeadsCount: '高价值线索'
   }
 };
 
+// Language injected from the root layout (read from cookie on the server).
+// localStorage is unavailable during SSR, so this keeps server-rendered HTML
+// in the same language as the client and avoids a first-paint language flash.
+let initialLang = null;
+
 /**
- * Get current language from localStorage
+ * Set the SSR-initial language before any child component renders.
+ * @param {string} lang Language code ('en' or 'zh')
+ */
+export const setInitialLanguage = (lang) => {
+  initialLang = lang || null;
+};
+
+/**
+ * Get current language: localStorage on the client, SSR-injected value on the server.
  * @returns {string} Current language code (default: 'en')
  */
 export const getCurrentLanguage = () => {
   if (typeof localStorage !== 'undefined') {
-    return localStorage.getItem('language') || 'en';
+    return localStorage.getItem('language') || initialLang || 'en';
   }
-  return 'en';
+  return initialLang || 'en';
 };
 
 /**
@@ -1933,6 +2194,9 @@ export const useI18n = () => {
 export const setCurrentLanguage = (lang) => {
   if (typeof localStorage !== 'undefined') {
     localStorage.setItem('language', lang);
+  }
+  if (typeof document !== 'undefined') {
+    document.cookie = `language=${lang}; path=/; max-age=31536000; SameSite=Lax`;
   }
 };
 

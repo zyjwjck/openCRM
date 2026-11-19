@@ -17,6 +17,8 @@
 
 openCRM 是一个功能齐全的客户关系管理系统，专为初创企业和小型企业设计，**核心特色是内置 AI 智能体**。它结合了强大的 Django REST API 后端和现代化的 SvelteKit 前端，采用多租户架构和 PostgreSQL 行级安全性 (RLS) 实现企业级数据隔离，并将 [nanobot](https://github.com/HKUDS/nanobot) 智能体原生嵌入到 CRM 侧边栏的 `/agent` 路由，实现自动化工作流程和智能辅助决策。
 
+**适用商业场景：** openCRM 广泛适用于各类商业业态——包括 **OPC**、**跨境电商**、**外贸**、**B2B** 及其他类似商业模式——在需要规范的线索/商机管理、多租户数据隔离以及 AI 辅助销售流程的场景中，都能直接创造价值。
+
 ## 界面预览
 
 一睹 openCRM 的界面与其内置 AI 智能体的实际效果：
@@ -61,7 +63,7 @@ openCRM 的 AI 能力来自 [nanobot](https://github.com/HKUDS/nanobot) —— �
 └───────────────────────────────────────────────────────────────┘
        ↕ REST API
 ┌───────────────────────────────────────────────────────────────┐
-│  openCRM 后端 (Django :8000)                                  │
+│  openCRM 后端 (Django :8099)                                  │
 │  • 多租户 RLS 数据隔离   • JWT 认证   • 7 大 CRM 模块         │
 └───────────────────────────────────────────────────────────────┘
 ```
@@ -75,7 +77,7 @@ openCRM 的 AI 能力来自 [nanobot](https://github.com/HKUDS/nanobot) —— �
 - **商机管理** - 跟踪交易和销售机会
 - **客户支持** - 客户支持案例管理
 - **任务管理** - 带有日历和看板视图的任务管理
-- **发票管理** - 创建和管理发票
+- **产品与票据** - 产品管理、发票/票据开具与报表分析
 
 ### AI 驱动功能（由 nanobot 提供）
 - **智能线索评分** - AI 驱动的线索资格认证和优先级排序
@@ -226,8 +228,8 @@ nanobot gateway stop
 ### 访问应用
 - **前端**：http://localhost:5173
 - **AI 智能体**：http://localhost:5173/agent （iframe 嵌入 nanobot WebUI）
-- **API 文档**：http://localhost:8000/swagger-ui/
-- **管理面板**：http://localhost:8000/admin/
+- **API 文档**：http://localhost:8099/swagger-ui/
+- **管理面板**：http://localhost:8099/admin/
 - **nanobot WebUI（直接访问）**：http://127.0.0.1:8765
 - **nanobot OpenAI 兼容 API**：http://127.0.0.1:8765/v1/...
 

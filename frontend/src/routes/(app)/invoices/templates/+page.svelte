@@ -312,7 +312,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 </form>
 
 <!-- Page Content -->
-<div class="flex flex-col gap-4 p-6">
+<div class="flex flex-col gap-4">
   <!-- Header -->
   <PageHeader title={t('invoiceTemplates')}>
     {#snippet actions()}

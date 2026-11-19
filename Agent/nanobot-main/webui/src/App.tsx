@@ -315,6 +315,25 @@ function writeShellRoute(route: ShellRoute, replace = false): void {
   window.location.hash = nextHash;
 }
 
+// The WebUI is embedded in openCRM through an iframe. The active chat is
+// tracked solely by the URL hash (see readShellRoute/writeShellRoute), which
+// lives inside the iframe. When the host rebuilds the iframe (navigation,
+// language/theme changes) that hash is lost, so we publish it to the parent
+// window here and the host restores it into the iframe src.
+const HOST_ROUTE_MESSAGE = "nanobot-webui:route";
+
+function notifyHostRoute(): void {
+  if (typeof window === "undefined" || window.parent === window) return;
+  try {
+    window.parent.postMessage(
+      { source: "nanobot-webui", type: HOST_ROUTE_MESSAGE, hash: window.location.hash || "" },
+      "*",
+    );
+  } catch {
+    // Cross-origin postMessage can throw in restrictive environments; ignore.
+  }
+}
+
 function bootstrapTokenExpiresAt(expiresInSeconds: number): number {
   return Date.now() + Math.max(0, expiresInSeconds) * 1000;
 }
@@ -1152,8 +1171,11 @@ function Shell({
       if (route.view === "chat" && !route.activeKey) {
         setDraftWorkspaceScope(null);
       }
+      notifyHostRoute();
     };
     window.addEventListener("hashchange", applyRoute);
+    // Publish the initial hash so the host can persist the restored chat.
+    notifyHostRoute();
     return () => window.removeEventListener("hashchange", applyRoute);
   }, []);
 

@@ -3,6 +3,11 @@
   import { ChevronLeft, ChevronRight } from '@lucide/svelte';
   import { cn } from '$lib/utils.js';
   import { today, getLocalTimeZone } from '@internationalized/date';
+  import { useI18n } from '$lib/utils/i18n.svelte.js';
+
+  const { lang } = useI18n();
+  // Intl locale used for month names and weekday headers
+  const intlLocale = $derived(lang === 'zh' ? 'zh-CN' : 'en-US');
 
   /**
    * @type {{
@@ -27,25 +32,18 @@
   const currentYear = today(getLocalTimeZone()).year;
   const years = Array.from({ length: 111 }, (_, i) => currentYear - 100 + i);
 
-  const months = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December'
-  ];
+  // Localized month names, reactive to language changes
+  const months = $derived(
+    Array.from({ length: 12 }, (_, i) =>
+      new Intl.DateTimeFormat(intlLocale, { month: 'long' }).format(new Date(2026, i, 1))
+    )
+  );
 </script>
 
 <Calendar.Root
   type="single"
   weekdayFormat="short"
+  locale={intlLocale}
   fixedWeeks={true}
   bind:value
   bind:placeholder

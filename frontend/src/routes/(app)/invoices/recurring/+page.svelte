@@ -552,7 +552,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 <svelte:head>
   <title>{t('recurringInvoices')} | openCRM</title>
 </svelte:head>
-<div class="flex flex-col gap-4 p-6">
+<div class="flex flex-col gap-4">
   <!-- Header -->
   <PageHeader title={t('recurringInvoices')}>
     {#snippet actions()}

@@ -26,6 +26,11 @@ python-dotenv>=1.0.0
 drf-yasg>=1.20.0
 
 # Validation
+# pydantic-core is a compiled extension: keep pydantic and pydantic-core on a
+# matched pair built for the active Python (e.g. cp315 wheels on Python 3.15).
+# If you see "No module named pydantic_core._pydantic_core", the installed
+# pydantic-core was built for another Python; fix with:
+#   pip install --force-reinstall --no-cache-dir pydantic pydantic-core
 pydantic>=2.0.0
 
 # Utilities
@@ -43,4 +48,23 @@ flake8>=6.0.0
 
 # Other
 requests>=2.30.0
+# Pillow needs a compiled _imaging extension matching the active Python.
+# If Django reports fields.E210 (ImageField) despite Pillow being installed,
+# reinstall it with: pip install --force-reinstall --no-cache-dir Pillow
 Pillow>=10.0.0
+
+# MCP server (Agent/mcp/opencrm_server.py, shares this venv).
+# These all ship compiled wheels; make sure pip resolves the wheel for the
+# active Python rather than a stale cp312 build copied from another env.
+mcp>=1.0.0
+nanobot-ai>=0.3.0
+websockets>=15.0,<17.0
+rpds-py>=0.20.0
+charset-normalizer>=3.3.0
+cffi>=1.16.0
+brotli>=1.1.0
+multidict>=6.0.0
+propcache>=0.2.0
+yarl>=1.9.0
+jiter>=0.5.0
+msgpack>=1.0.0

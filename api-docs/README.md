@@ -95,18 +95,18 @@
 ```bash
 # 1) 确保后端在跑 (python manage.py runserver)
 # 2) 拉最新 schema
-curl http://127.0.0.1:8000/schema/ -o api_openapi.json
+curl http://127.0.0.1:8099/schema/ -o api_openapi.json
 # 3) 探测后端 + 生成 Markdown（推荐）
 python generate_api_docs.py --probe
 # 4) 跳过探测（用 _probe_data.json 缓存）
 python generate_api_docs.py
 # 覆盖后端地址 / 令牌
-# OPENCRM_BACKEND=http://192.168.1.100:8000 python generate_api_docs.py --probe
+# OPENCRM_BACKEND=http://192.168.1.100:8099 python generate_api_docs.py --probe
 ```
 
 ## 原始 OpenAPI
 
 - [`api_openapi.json`](api_openapi.json) — 完整 OpenAPI 3.0 schema（256 schema, 121 path, ~713 KB），可直接喂给 OpenAPI-to-MCP 转换器。
 - [`_probe_data.json`](_probe_data.json) — 后端探测缓存（可删，下次生成会重新探测）。
-- Django Swagger UI: http://127.0.0.1:8000/swagger-ui/
-- Django ReDoc: http://127.0.0.1:8000/api/schema/redoc/
+- Django Swagger UI: http://127.0.0.1:8099/swagger-ui/
+- Django ReDoc: http://127.0.0.1:8099/api/schema/redoc/

@@ -15,7 +15,7 @@
 </script>
 
 <AppShell user={data.user} org_name={data.org_name}>
-  <main class="flex-1 flex flex-col overflow-hidden">
+  <main class="flex-1 flex flex-col overflow-x-clip px-6 md:px-8">
     {@render children()}
   </main>
 </AppShell>
