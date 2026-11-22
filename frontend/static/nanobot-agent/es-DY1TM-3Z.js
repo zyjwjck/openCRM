@@ -1,0 +1,44 @@
+const e = "Usa nanobot desde espacios de Slack.", a = "Token de app Slack, token del bot e instalación en el espacio", o = {
+  docsLabel: "Abrir guía de Slack",
+  officialLabel: "Abrir aplicaciones de Slack",
+  tryIt: "Menciona la app de Slack o envíale un mensaje directo.",
+  summary: "Slack usa Socket Mode de forma predeterminada, por lo que necesita tokens de app y de bot.",
+  steps: [
+    "Crea una app de Slack con el manifiesto proporcionado y activa Socket Mode.",
+    "Instala la app en tu espacio y copia los tokens de app y bot.",
+    "Guarda y activa Slack; después menciona la app o envíale un mensaje directo."
+  ],
+  actions: {
+    "slack-manifest": "Copiar manifiesto"
+  },
+  fields: {
+    appToken: {
+      label: "Token de la app",
+      placeholder: "xapp-...",
+      help: "Créalo desde Socket Mode en Slack."
+    },
+    botToken: {
+      label: "Token del bot",
+      placeholder: "xoxb-...",
+      help: "Usa el token del bot después de instalar la app."
+    },
+    groupPolicy: {
+      label: "Comportamiento en grupos",
+      choices: {
+        mention: "Solo menciones",
+        open: "Todos los mensajes",
+        allowlist: "Lista permitida"
+      }
+    }
+  }
+}, n = {
+  description: e,
+  requirements: a,
+  setup: o
+};
+export {
+  n as default,
+  e as description,
+  a as requirements,
+  o as setup
+};

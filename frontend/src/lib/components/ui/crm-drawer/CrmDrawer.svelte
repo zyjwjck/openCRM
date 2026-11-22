@@ -36,6 +36,7 @@
    *   loading?: boolean,
    *   mode?: 'view' | 'create',
    *   enableProgressiveDisclosure?: boolean,
+   *   visibleAdditionalCount?: number,
    *   class?: string,
    *   activitySection?: import('svelte').Snippet,
    *   afterProperties?: import('svelte').Snippet,
@@ -57,6 +58,7 @@
     loading = false,
     mode = 'view',
     enableProgressiveDisclosure = true,
+    visibleAdditionalCount = 0,
     class: className,
     activitySection,
     afterProperties,
@@ -73,6 +75,15 @@
       return col.getValue(data);
     }
     return data[col.key] ?? '';
+  }
+
+  /**
+   * Get currency value for composite currency fields
+   * @param {any} col
+   */
+  function getCurrencyValue(col) {
+    if (!data || !col.currencyKey) return '';
+    return data[col.currencyKey] ?? '';
   }
 
   /**
@@ -153,18 +164,27 @@
     availableColumns.filter((col) => col.key !== titleKey && col.essential !== true)
   );
 
-  // Get visible additional columns based on mode
+  // Get visible additional columns based on mode.
+  // When visibleAdditionalCount > 0, field visibility/position is driven purely by the
+  // column definition order (not by whether a value exists), so every record shows
+  // fields at the same positions regardless of which fields are filled in.
   const visibleAdditionalColumns = $derived(
-    additionalColumns.filter((col) => shouldShowField(col))
+    visibleAdditionalCount > 0
+      ? showAllFields
+        ? additionalColumns
+        : additionalColumns.slice(0, visibleAdditionalCount)
+      : additionalColumns.filter((col) => shouldShowField(col))
   );
 
   // Count of hidden additional fields
   const hiddenFieldsCount = $derived(
-    mode === 'create'
-      ? showAllFields
-        ? 0
-        : additionalColumns.length
-      : additionalColumns.filter((col) => !fieldHasValue(col) && !showAllFields).length
+    visibleAdditionalCount > 0
+      ? additionalColumns.length - visibleAdditionalColumns.length
+      : mode === 'create'
+        ? showAllFields
+          ? 0
+          : additionalColumns.length
+        : additionalColumns.filter((col) => !fieldHasValue(col) && !showAllFields).length
   );
 
   // Toggle show all fields
@@ -266,7 +286,7 @@
           <div class="px-6 {afterProperties ? 'pb-4' : 'pb-8'}">
             {#if enableProgressiveDisclosure && essentialColumns.length > 0}
               <!-- Essential fields section -->
-              <div class="grid gap-1 sm:grid-cols-1 md:grid-cols-2">
+              <div class="grid gap-1 sm:grid-cols-1 md:grid-cols-4">
                 {#each essentialColumns as col (col.key)}
                   <CrmPropertyRow
                     label={col.label}
@@ -277,8 +297,13 @@
                     placeholder={col.placeholder}
                     emptyText={col.emptyText}
                     editable={col.editable !== false}
+                    class={col.class}
                     prefix={col.prefix}
+                    currencyOptions={col.currencyOptions}
+                    currencyValue={getCurrencyValue(col)}
+                    currencyPlaceholder={col.currencyPlaceholder}
                     onchange={(value) => handleFieldChange(col.key, value)}
+                    onCurrencyChange={(value) => handleFieldChange(col.currencyKey, value)}
                   />
                 {/each}
               </div>
@@ -307,7 +332,7 @@
 
               <!-- Additional fields -->
               {#if visibleAdditionalColumns.length > 0}
-                <div class="grid gap-1 sm:grid-cols-1 md:grid-cols-2">
+                <div class="grid gap-1 sm:grid-cols-1 md:grid-cols-4">
                   {#each visibleAdditionalColumns as col (col.key)}
                     <CrmPropertyRow
                       label={col.label}
@@ -319,14 +344,18 @@
                       emptyText={col.emptyText}
                       editable={col.editable !== false}
                       prefix={col.prefix}
+                      currencyOptions={col.currencyOptions}
+                      currencyValue={getCurrencyValue(col)}
+                      currencyPlaceholder={col.currencyPlaceholder}
                       onchange={(value) => handleFieldChange(col.key, value)}
+                      onCurrencyChange={(value) => handleFieldChange(col.currencyKey, value)}
                     />
                   {/each}
                 </div>
               {/if}
             {:else}
               <!-- Original behavior: show all fields when no essential fields defined -->
-              <div class="grid gap-1 sm:grid-cols-1 md:grid-cols-2">
+              <div class="grid gap-1 sm:grid-cols-1 md:grid-cols-4">
                 {#each columns as col (col.key)}
                   {#if col.key !== titleKey}
                     <CrmPropertyRow
@@ -339,7 +368,11 @@
                       emptyText={col.emptyText}
                       editable={col.editable !== false}
                       prefix={col.prefix}
+                      currencyOptions={col.currencyOptions}
+                      currencyValue={getCurrencyValue(col)}
+                      currencyPlaceholder={col.currencyPlaceholder}
                       onchange={(value) => handleFieldChange(col.key, value)}
+                      onCurrencyChange={(value) => handleFieldChange(col.currencyKey, value)}
                     />
                   {/if}
                 {/each}

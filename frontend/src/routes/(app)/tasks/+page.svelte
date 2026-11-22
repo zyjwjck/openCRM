@@ -1555,6 +1555,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 <CrmDrawer
   bind:open={sheetOpen}
   onOpenChange={(open) => !open && closeTaskSheet()}
+  class="w-[1200px] sm:max-w-[1200px]"
   data={drawerFormData}
   columns={drawerColumns}
   titleKey="subject"

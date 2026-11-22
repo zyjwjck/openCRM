@@ -1,0 +1,37 @@
+const e = "Usa nanobot desde grupos de DingTalk.", a = "Credenciales de la app de DingTalk y gateway", l = {
+  docsLabel: "Abrir guía de DingTalk",
+  officialLabel: "Abrir consola de DingTalk",
+  tryIt: "Envía un mensaje de prueba desde el grupo de DingTalk donde está instalada la app.",
+  summary: "DingTalk necesita credenciales de una app en modo Stream.",
+  steps: [
+    "Crea o elige una app de DingTalk con el modo Stream activado.",
+    "Añade el Client ID y el Client Secret.",
+    "Guarda y activa DingTalk; después envía un mensaje de prueba."
+  ],
+  fields: {
+    clientId: {
+      label: "Client ID",
+      placeholder: "Client ID de DingTalk",
+      help: "Cópialo de las credenciales de la app de DingTalk."
+    },
+    clientSecret: {
+      label: "Client Secret",
+      placeholder: "••••••",
+      help: "Cópialo de la misma página de credenciales."
+    },
+    allowFrom: {
+      label: "Usuarios permitidos",
+      placeholder: "ID de usuario separados por comas"
+    }
+  }
+}, n = {
+  description: e,
+  requirements: a,
+  setup: l
+};
+export {
+  n as default,
+  e as description,
+  a as requirements,
+  l as setup
+};

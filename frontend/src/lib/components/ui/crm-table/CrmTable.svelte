@@ -335,7 +335,7 @@
                           </button>
                         {/snippet}
                       </DropdownMenu.Trigger>
-                      <DropdownMenu.Content align="start" class="w-36">
+                      <DropdownMenu.Content align="start" class="w-48">
                         {#each column.options as option (option.value)}
                           <DropdownMenu.Item
                             onclick={() => updateSelectValue(row.id, column.key, option.value)}

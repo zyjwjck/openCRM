@@ -62,6 +62,7 @@ class ProductSerializer(serializers.ModelSerializer):
             "price",
             "standard_cost",
             "currency",
+            "cost_currency",
             "category",
             "is_active",
             "created_at",
@@ -82,6 +83,7 @@ class ProductCreateSerializer(serializers.ModelSerializer):
             "price",
             "standard_cost",
             "currency",
+            "cost_currency",
             "category",
             "is_active",
         )
@@ -93,6 +95,10 @@ class ProductCreateSerializer(serializers.ModelSerializer):
             # Default currency from org if not provided
             if not validated_data.get("currency") and request.profile.org:
                 validated_data["currency"] = getattr(
+                    request.profile.org, "default_currency", "USD"
+                )
+            if not validated_data.get("cost_currency"):
+                validated_data["cost_currency"] = validated_data.get("currency") or getattr(
                     request.profile.org, "default_currency", "USD"
                 )
         return super().create(validated_data)

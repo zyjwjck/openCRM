@@ -1,0 +1,36 @@
+const n = "Sử dụng nanobot từ các cuộc trò chuyện WhatsApp.", t = "Cài đặt kết nối WhatsApp và gateway", i = {
+  primaryAction: "Kết nối WhatsApp",
+  docsLabel: "Mở hướng dẫn WhatsApp",
+  officialLabel: "Mở trợ giúp WhatsApp",
+  tryIt: "Sau khi đăng nhập terminal, gửi tin nhắn riêng đến tài khoản đã kết nối.",
+  summary: "WhatsApp kết nối bằng cách quét mã QR từ tài khoản sẽ chạy bot.",
+  steps: [
+    "Chạy lệnh đăng nhập WhatsApp hiển thị bên dưới.",
+    "Quét mã QR trong terminal bằng WhatsApp trên điện thoại.",
+    "Sau khi đăng nhập, quay lại đây, bật WhatsApp và gửi tin nhắn riêng thử."
+  ],
+  fields: {
+    allowFrom: {
+      label: "Liên hệ được phép",
+      placeholder: "Số điện thoại hoặc ID WhatsApp"
+    },
+    groupPolicy: {
+      label: "Hành vi trong nhóm",
+      choices: {
+        mention: "Chỉ khi được nhắc",
+        open: "Mọi tin nhắn",
+        allowlist: "Danh sách cho phép"
+      }
+    }
+  }
+}, h = {
+  description: n,
+  requirements: t,
+  setup: i
+};
+export {
+  h as default,
+  n as description,
+  t as requirements,
+  i as setup
+};

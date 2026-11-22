@@ -63,11 +63,29 @@ class AccountsListView(APIView, LimitOffsetPagination):
         queryset = self.model.objects.filter(org=self.request.profile.org).order_by(
             "-id"
         )
-        if self.request.profile.role != "ADMIN" and not self.request.profile.is_admin:
-            queryset = queryset.filter(
-                Q(created_by=self.request.profile.user)
-                | Q(assigned_to=self.request.profile)
-            ).distinct()
+        # Public/private pool filter (org scoping above always applies).
+        # Private pool = records with a direct assignee; public pool = records
+        # with no direct assignee (teams alone do not make a record private).
+        is_admin = (
+            self.request.profile.role == "ADMIN" or self.request.profile.is_admin
+        )
+        profile = self.request.profile
+        pool = params.get("pool")
+        if pool not in ("private", "public", "all"):
+            pool = "all" if is_admin else "private"
+
+        if pool == "public":
+            queryset = queryset.filter(assigned_to__isnull=True)
+        elif pool == "private":
+            queryset = queryset.filter(assigned_to__isnull=False)
+            if not is_admin:
+                queryset = queryset.filter(assigned_to=profile)
+        else:  # pool == "all"
+            if not is_admin:
+                queryset = queryset.filter(
+                    Q(assigned_to=profile) | Q(assigned_to__isnull=True)
+                )
+        queryset = queryset.distinct()
 
         if params:
             if params.get("name"):

@@ -914,7 +914,7 @@ MODULE_TITLE = {
     "opportunities": "客户关系管理 — 交易（商机）",
     "cases": "客户关系管理 — 工单",
     "tasks": "客户关系管理 — 任务 & 看板",
-    "sales_invoices": "销售 — 所有发票",
+    "sales_invoices": "销售 — 发票",
     "sales_estimates": "销售 — 报价单",
     "sales_products": "销售 — 产品",
     "sales_recurring": "销售 — 循环发票",

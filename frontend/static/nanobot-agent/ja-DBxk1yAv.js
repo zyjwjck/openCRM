@@ -1,0 +1,45 @@
+const e = "Discord サーバーと DM から nanobot を利用します。", o = "Discord ボットトークン、権限、ゲートウェイ", l = {
+  docsLabel: "Discord 設定ガイドを開く",
+  officialLabel: "Discord ポータルを開く",
+  tryIt: "サーバーでボットをメンションするか、DM を送信します。",
+  summary: "有効化すると Discord 対応がオンになります。ボットトークンとサーバー権限が必要です。",
+  steps: [
+    "Discord Developer Portal でボットを作成し、トークンをコピーします。",
+    "メッセージの読み書きとスラッシュコマンド権限を付けてサーバーに招待します。",
+    "保存して Discord を有効にし、メンションまたは DM を送信します。"
+  ],
+  fields: {
+    token: {
+      label: "ボットトークン",
+      placeholder: "Discord ボットトークン",
+      help: "Discord Developer Portal の Bot ページで作成します。"
+    },
+    allowChannels: {
+      label: "許可するチャンネル",
+      placeholder: "チャンネル ID（カンマ区切り）",
+      help: "空欄の場合、ボットが読めるすべてのチャンネルを許可します。"
+    },
+    groupPolicy: {
+      label: "グループでの動作",
+      choices: {
+        mention: "メンションのみ",
+        open: "すべてのメッセージ",
+        allowlist: "許可リスト"
+      }
+    },
+    allowFrom: {
+      label: "許可するユーザー",
+      placeholder: "ユーザー ID（カンマ区切り）"
+    }
+  }
+}, s = {
+  description: e,
+  requirements: o,
+  setup: l
+};
+export {
+  s as default,
+  e as description,
+  o as requirements,
+  l as setup
+};

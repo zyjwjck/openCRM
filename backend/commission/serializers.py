@@ -20,6 +20,7 @@ class CommissionCreditRuleSerializer(serializers.ModelSerializer):
 class CommissionPolicySerializer(serializers.ModelSerializer):
     tiers = CommissionTierSerializer(many=True, read_only=True)
     credit_rules = CommissionCreditRuleSerializer(many=True, read_only=True)
+    product_name = serializers.CharField(source="product.name", read_only=True)
 
     class Meta:
         model = CommissionPolicy
@@ -29,6 +30,7 @@ class CommissionPolicySerializer(serializers.ModelSerializer):
             "code",
             "scope",
             "product",
+            "product_name",
             "category",
             "base_type",
             "customer_scope",

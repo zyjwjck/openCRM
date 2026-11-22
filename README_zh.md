@@ -39,8 +39,8 @@ openCRM 是一个功能齐全的客户关系管理系统，专为初创企业和
 
 openCRM 的 AI 能力来自 [nanobot](https://github.com/HKUDS/nanobot) —— 一个超轻量级（约 4,000 行）的个人 AI 智能体框架。集成方式极简而强大：
 
-- **原生 iframe 嵌入**：nanobot 的 React + TypeScript WebUI 运行在 `8765` 端口，直接作为 iframe 嵌入 CRM 侧边栏的 `/agent` 路由，**无需重写聊天界面**，即可获得完整智能体能力
-- **零配置接入**：首次访问 `/agent` 时通过 `bootstrapSecret` 参数完成鉴权，后续鉴权由 nanobot 自行维护
+- **原生微前端嵌入**：nanobot 的 React + TypeScript WebUI 被构建为可挂载模块，**直接运行在 CRM 页面内（无 iframe）**，位于 `/agent` 路由和线索 AI 抽屉中。网关的 HTTP/WS 流量经同源代理（`/nanobot-api`、`/nanobot-ws`）转发到 `8765` 端口的网关
+- **按用户签名鉴权**：`/agent` 从 CRM 后端获取短期签名凭证（含 `user_id` / `org_id` / 管理员标记）并以编程方式传给挂载的智能体——会话按用户与组织隔离
 - **完整能力继承**：CRM 内嵌的 nanobot 保留全部功能——会话管理、长期记忆、MCP 工具、自动化、语音转录、多渠道网关（Telegram / Discord / 飞书等）
 - **多 LLM 灵活切换**：在 nanobot 自身的设置面板中配置 OpenAI、Anthropic、Google、vLLM 等模型提供商，无需 CRM 侧重复维护
 
@@ -53,7 +53,7 @@ openCRM 的 AI 能力来自 [nanobot](https://github.com/HKUDS/nanobot) —— �
 │  ┌─────────────────────────────────────────────────────────┐  │
 │  │ /agent 路由                                               │  │
 │  │  ┌───────────────────────────────────────────────────┐   │  │
-│  │  │ iframe → http://127.0.0.1:8765 (nanobot WebUI)    │   │  │
+│  │  │ 容器内挂载 React UI（无 iframe）→ /nanobot-api/ws 代理 │  │  │
 │  │  │   ✓ 会话   ✓ 记忆   ✓ MCP 工具   ✓ 自动化          │   │  │
 │  │  │   ✓ 语音   ✓ 渠道网关 (飞书/Telegram/Discord...)  │   │  │
 │  │  └───────────────────────────────────────────────────┘   │  │
@@ -118,9 +118,9 @@ openCRM 的 AI 能力来自 [nanobot](https://github.com/HKUDS/nanobot) —— �
 
 ### AI 组件（nanobot）
 - **超轻量级 AI 框架** - 约 4,000 行代码，Python 原生
-- **原生 React + TypeScript WebUI** - 通过 iframe 嵌入 CRM，无需重写
+- **原生 React + TypeScript WebUI** - 作为微前端挂载在 CRM 页面内（无 iframe）
 - **多 LLM 支持** - OpenAI、Anthropic、Google、vLLM 等
-- **语音转录** - 剪贴板和麦克风权限由 iframe 继承
+- **语音转录** - 内嵌界面中可直接使用剪贴板和麦克风
 - **多渠道网关** - Telegram、Discord、WhatsApp、飞书等
 
 ## 快速开始
@@ -180,13 +180,13 @@ npm run dev
 
 #### 4. AI 智能体设置（nanobot）
 
-nanobot 以源码包形式位于 `Agent/nanobot-main/`，通过 iframe 嵌入到 CRM 的 `/agent` 路由。
+nanobot 以源码包形式位于 `Agent/nanobot-agent/`，作为微前端挂载到 CRM 的 `/agent` 路由（无 iframe）。其 WebUI 构建产物位于 `frontend/static/nanobot-agent/`，通过 Vite 代理 `/nanobot-api` 和 `/nanobot-ws` 访问网关。
 
 在已激活的虚拟环境中操作（可以复用后端的 `.openCRM-venv`，Python ≥ 3.11 即可）：
 
 ```bash
 # 打开新终端，从项目根目录进入
-cd Agent/nanobot-main
+cd Agent/nanobot-agent
 
 # 从源码安装 nanobot（首次构建 WebUI 需要 bun 或 npm）
 python -m pip install -e .
@@ -227,7 +227,7 @@ nanobot gateway stop
 
 ### 访问应用
 - **前端**：http://localhost:5173
-- **AI 智能体**：http://localhost:5173/agent （iframe 嵌入 nanobot WebUI）
+- **AI 智能体**：http://localhost:5173/agent （nanobot WebUI 页面内挂载，无 iframe）
 - **API 文档**：http://localhost:8099/swagger-ui/
 - **管理面板**：http://localhost:8099/admin/
 - **nanobot WebUI（直接访问）**：http://127.0.0.1:8765
@@ -235,7 +235,7 @@ nanobot gateway stop
 
 ## AI 智能体配置
 
-nanobot 默认配置和工作空间位于 `~/.nanobot/`。可通过环境变量 `NANOBOT_HOME` 和 `NANOBOT_WORKSPACE` 覆写路径，或指向 `Agent/nanobot-main/.nanobot/` 使 CRM 安装保持自包含。
+nanobot 默认配置和工作空间位于 `~/.nanobot/`。可通过环境变量 `NANOBOT_HOME` 和 `NANOBOT_WORKSPACE` 覆写路径，或指向 `Agent/nanobot-agent/.nanobot/` 使 CRM 安装保持自包含。
 
 在 nanobot home 目录创建或编辑 `config.json`：
 
@@ -280,12 +280,12 @@ openCRM/
 │   │   │   │   └── layout/      # AppSidebar 等
 │   │   │   └── utils/i18n.js    # 翻译字典与辅助函数
 │   │   └── routes/
-│   │       ├── (app)/agent/     # /agent — nanobot WebUI 的 iframe 包装页
+│   │       ├── (app)/agent/     # /agent — 挂载 nanobot 微前端（NanobotFrame.svelte）
 │   │       ├── (app)/           # 其他已认证 CRM 页面
 │   │       └── (no-layout)/     # 登录等无布局认证页面
 │   └── static/                 # 静态资源
 ├── Agent/                  # nanobot AI 智能体（源码包）
-│   └── nanobot-main/       # nanobot 源码树（Python 包 + 内置 WebUI）
+│   └── nanobot-agent/       # nanobot 源码树（Python 包 + 内置 WebUI）
 │       ├── docs/           # nanobot 上游文档
 │       ├── nanobot/        # 智能体运行时、网关、渠道、记忆、MCP
 │       ├── skills/         # 内置技能：天气、定时、记忆、GitHub…
@@ -331,7 +331,7 @@ npm run format            # 格式化代码
 
 ### AI 智能体命令
 ```bash
-cd Agent/nanobot-main
+cd Agent/nanobot-agent
 nanobot webui             # 启动网关 + WebUI
 nanobot gateway           # 仅启动网关
 nanobot onboard           # 首次交互式配置

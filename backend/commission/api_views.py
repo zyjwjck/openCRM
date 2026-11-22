@@ -95,7 +95,7 @@ class CommissionPolicyListView(APIView, LimitOffsetPagination):
 
     @extend_schema(tags=["Commission"], operation_id="commission_policies_list")
     def get(self, request):
-        queryset = CommissionPolicy.objects.filter(org=request.profile.org)
+        queryset = CommissionPolicy.objects.filter(org=request.profile.org).select_related("product")
         if request.query_params.get("is_active"):
             flag = request.query_params.get("is_active").lower() == "true"
             queryset = queryset.filter(is_active=flag)

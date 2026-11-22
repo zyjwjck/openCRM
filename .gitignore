@@ -77,11 +77,13 @@ Agent/mcp/config.json
 mcp/__pycache__/
 
 # nanobot runtime
+.nanobot
 .nanobot-workspace/
 sessions/
 cli-apps/
 Agent/nanobot-main/.nanobot-logs/
 Agent/nanobot-main/%SystemDrive%/
+Agent/nanobot-agent/%SystemDrive%/
 
 # temp probe files
 api-docs/_probe_*.json
@@ -89,3 +91,6 @@ api-docs/_probe_*.py
 
 # accidental tool-argument artifacts
 --filename=*
+
+.playwright
+openspec

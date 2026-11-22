@@ -53,9 +53,14 @@ openCRM MCP Server — v1 (Leads + 通用 CRM 模块)
 
 from __future__ import annotations
 
+import base64
+import contextvars
+import hashlib
+import hmac
 import json
 import os
 import sys
+import time
 import traceback
 from pathlib import Path
 from typing import Any
@@ -64,6 +69,11 @@ import re
 
 import requests
 from mcp.server.fastmcp import FastMCP
+
+try:  # request_ctx is where the MCP SDK exposes the current call's _meta.
+    from mcp.server.lowlevel.server import request_ctx as _mcp_request_ctx
+except ImportError:  # pragma: no cover - tolerate SDK layouts without it
+    _mcp_request_ctx = None
 
 # ============================================================
 # 1. 初始化 FastMCP
@@ -110,7 +120,107 @@ CONFIG_EXAMPLE = {
     "password": "CHANGE_ME",
     "access_token": None,
     "org_name": None,  # 可选: 指定切换到哪个组织
+    # 生产模式: 强制每个工具调用携带会话凭证, 并按调用方身份访问 CRM。
+    # 关闭时回退到上面的静态账号 (仅用于本地开发/依赖直连 8100 的脚本)。
+    "identity_enforcement": True,
 }
+
+# 与 nanobot gateway 写入的 MCP 调用凭证 _meta key 保持一致。
+# 该凭证由 gateway 从会话绑定的 CallerIdentity 铸造, 不进入模型可见的 arguments。
+MCP_CALLER_META_KEY = "nanobotCredential"
+
+# 共享密钥: 与 Django 的 NANOBOT_IDENTITY_SECRET / settings.SECRET_KEY 及 nanobot
+# channels.websocket.identitySecret 必须是同一个值, 否则凭证校验会 fail closed。
+IDENTITY_SECRET_ENV = "NANOBOT_IDENTITY_SECRET"
+
+# 本次工具调用已解析出的调用方身份 (由 _call_identity() 在请求上下文中设置)。
+# CRMClient 从这里读取真实调用方, 而不是读取 config.json 的静态账号。
+_current_identity: contextvars.ContextVar[dict | None] = contextvars.ContextVar(
+    "opencrm_mcp_current_identity", default=None
+)
+
+
+def _b64decode(text: str) -> bytes:
+    padding = "=" * (-len(text) % 4)
+    return base64.urlsafe_b64decode(text + padding)
+
+
+def _sign_credential(body: str, secret: str) -> str:
+    return hmac.new(secret.encode("utf-8"), body.encode("ascii"), hashlib.sha256).hexdigest()
+
+
+def _identity_secret() -> str | None:
+    """Return the shared signing secret, or None when identity mode is unusable."""
+    value = os.environ.get(IDENTITY_SECRET_ENV, "").strip()
+    return value or None
+
+
+def _decode_credential(credential: Any, secret: str) -> dict | None:
+    """Verify an HMAC-signed caller credential; return its payload or None.
+
+    Mirrors ``nanobot.webui.identity.decode_credential`` and the Django exchange
+    endpoint so credentials minted by the gateway are accepted here.
+    """
+    if not isinstance(credential, str) or not secret or "." not in credential:
+        return None
+    body, _, supplied_sig = credential.rpartition(".")
+    if not body or not supplied_sig or not hmac.compare_digest(
+        supplied_sig, _sign_credential(body, secret)
+    ):
+        return None
+    try:
+        payload = json.loads(_b64decode(body))
+    except (ValueError, TypeError):
+        return None
+    if not isinstance(payload, dict):
+        return None
+    now = time.time()
+    exp = payload.get("exp")
+    iat = payload.get("iat")
+    if not isinstance(exp, (int, float)) or not isinstance(iat, (int, float)):
+        return None
+    if now >= exp or iat - now > 300:
+        return None
+    if not str(payload.get("uid") or "").strip() or not str(payload.get("oid") or "").strip():
+        return None
+    return payload
+
+
+def _credential_from_request() -> str | None:
+    """Read the session-bound credential from the current MCP call's _meta."""
+    if _mcp_request_ctx is None:
+        return None
+    try:
+        ctx = _mcp_request_ctx.get()
+    except LookupError:
+        return None
+    meta = getattr(ctx, "meta", None)
+    if meta is None:
+        return None
+    if hasattr(meta, "model_dump"):
+        meta = meta.model_dump()
+    if not isinstance(meta, dict):
+        return None
+    value = meta.get(MCP_CALLER_META_KEY)
+    return value if isinstance(value, str) and value else None
+
+
+def _identity_enforcement_enabled() -> bool:
+    """Fail-closed by default: identity mode is on unless explicitly disabled.
+
+    An explicit environment variable can disable it for local development only;
+    config.json can also opt out with ``identity_enforcement: false``.
+    """
+    env = os.environ.get("NANOBOT_MCP_IDENTITY", "").strip().lower()
+    if env in {"0", "false", "no", "off"}:
+        return False
+    if env in {"1", "true", "yes", "on"}:
+        return True
+    try:
+        cfg = _load_config()
+        return bool(cfg.get("identity_enforcement", True))
+    except Exception:
+        return True
 
 
 # ============================================================
@@ -150,16 +260,30 @@ def _required_permission(method: str, path: str):
     return None
 
 
+class MCPAuthorizationError(RuntimeError):
+    """身份缺失/无法解析/权限不足时抛出，由 safe_call 转为明确的授权错误。"""
+
+    def __init__(self, message: str, status_code: int = 403):
+        super().__init__(message)
+        self.status_code = status_code
+
+
 class CRMClient:
-    """openCRM API 客户端 — 处理 JWT 认证、headers、错误格式化。"""
+    """openCRM API 客户端 — 处理 JWT 认证、headers、错误格式化。
+
+    identity 模式下 access_token 来自 Django 用会话凭证换发的 scoped token，
+    identity 携带经校验的 uid/oid；此时绝不读取 config.json 的静态账号。
+    """
 
     def __init__(self, base_url: str, email: str, password: str,
-                 access_token: str | None = None, org_name: str | None = None):
+                 access_token: str | None = None, org_name: str | None = None,
+                 identity: dict | None = None):
         self.base_url = base_url.rstrip("/")
         self.email = email
         self.password = password
         self.access_token = access_token
         self.org_name = org_name
+        self.identity = identity
         self.session = requests.Session()
         self.permissions = {"resolved": False}
         self._org = None
@@ -202,9 +326,15 @@ class CRMClient:
             if isinstance(me, dict) and not me.get("__error__"):
                 orgs = me.get("organizations") or []
                 chosen = None
-                if self.org_name:
+                expected_org_id = (self.identity or {}).get("org_id")
+                if expected_org_id is not None:
+                    # identity 模式: 只接受凭证签名的 org, 防止跨组织选择/回放。
+                    chosen = next(
+                        (o for o in orgs if str(o.get("id")) == str(expected_org_id)), None
+                    )
+                elif self.org_name:
                     chosen = next((o for o in orgs if o.get("name") == self.org_name), None)
-                if chosen is None and orgs:
+                if chosen is None and expected_org_id is None and orgs:
                     chosen = orgs[0]
                 if chosen:
                     self._org = chosen.get("id")
@@ -224,10 +354,14 @@ class CRMClient:
             self.permissions = {"resolved": False}
 
     def _check_permission(self, perm: str):
-        """返回 None 表示通过；否则返回权限不足的错误 dict（MCP 层 best-effort）。"""
+        """返回 None 表示通过；否则返回权限不足的错误 dict。
+
+        fail closed: 无法解析调用方权限时拒绝，绝不降级为放行。
+        """
         p = self.permissions
         if not p.get("resolved"):
-            return None  # 解析失败则放行，交由后端兜底鉴权
+            return {"__error__": True, "status_code": 403,
+                    "message": "授权校验失败：无法解析当前调用方的 CRM 权限，已拒绝操作（防止越权）。"}
         if perm == "active":
             if p.get("is_active") is False:
                 return {"__error__": True, "status_code": 403,
@@ -310,9 +444,60 @@ def _load_config() -> dict:
     return CONFIG_EXAMPLE.copy()
 
 
-def _get_client() -> CRMClient:
-    """懒加载 client（每个 tool 调用时都会重新获取，确保 auth 有效）。"""
+def _exchange_for_scoped_token(credential: str) -> dict:
+    """用会话凭证向 Django 换取调用方专属的短期 access token。"""
     cfg = _load_config()
+    base_url = cfg.get("base_url", DEFAULT_BASE_URL).rstrip("/")
+    try:
+        r = requests.post(
+            f"{base_url}/api/agent/mcp-token/",
+            json={"credential": credential},
+            timeout=10,
+        )
+    except requests.ConnectionError as exc:
+        raise MCPAuthorizationError(f"无法连接 CRM 后端完成身份校验: {exc}", 503)
+    if r.status_code != 200:
+        status = 401 if r.status_code == 401 else 403
+        raise MCPAuthorizationError(
+            f"身份凭证校验失败 (HTTP {r.status_code}): {r.text[:200]}", status
+        )
+    try:
+        data = r.json()
+    except ValueError:
+        raise MCPAuthorizationError("身份凭证校验失败：后端返回无效响应", 502)
+    if not data.get("access_token"):
+        raise MCPAuthorizationError("身份凭证校验失败：后端未签发 access token", 502)
+    return data
+
+
+def _get_client() -> CRMClient:
+    """懒加载 client（每个 tool 调用时都会重新获取，确保 auth 有效）。
+
+    identity 模式: 用当前工具调用已校验的身份换发 scoped token，绝不使用静态账号。
+    legacy 模式: 仅当身份强制关闭时才回退到 config.json 静态账号。
+    """
+    cfg = _load_config()
+    if _identity_enforcement_enabled():
+        identity = _current_identity.get()
+        if not identity:
+            raise MCPAuthorizationError(
+                "未检测到会话身份：本次 MCP 调用缺少有效的会话凭证，已拒绝（防止越权）。", 401
+            )
+        exchanged = _exchange_for_scoped_token(identity["credential"])
+        return CRMClient(
+            base_url=cfg.get("base_url", DEFAULT_BASE_URL),
+            email="",
+            password="",
+            access_token=exchanged["access_token"],
+            identity={
+                "user_id": str(exchanged.get("user_id") or identity.get("user_id") or ""),
+                "org_id": str(exchanged.get("org_id") or identity.get("org_id") or ""),
+                "email": identity.get("email", ""),
+                "is_admin": bool(identity.get("is_admin")),
+            },
+        )
+
+    # Legacy fallback — 仅在显式关闭 identity enforcement 时可达。
     if cfg.get("password") == "CHANGE_ME" and not cfg.get("access_token"):
         raise RuntimeError(
             f"请先在 {CONFIG_PATH} 中配置 email 和 password，"
@@ -331,11 +516,46 @@ def _get_client() -> CRMClient:
 # 3. 通用错误处理装饰器
 # ============================================================
 
+def _bind_call_identity():
+    """校验本次调用的会话凭证并设置 current identity；返回 context token。
+
+    identity enforcement 关闭时返回 None（legacy 模式）。无凭证/篡改/无密钥
+    一律 fail closed，且错误不泄露凭证内容。
+    """
+    if not _identity_enforcement_enabled():
+        return None
+    credential = _credential_from_request()
+    if not credential:
+        raise MCPAuthorizationError(
+            "未检测到会话身份：本次 MCP 调用缺少会话凭证，已拒绝。", 401
+        )
+    secret = _identity_secret()
+    if not secret:
+        raise MCPAuthorizationError(
+            f"MCP 身份校验未配置 ({IDENTITY_SECRET_ENV})，已拒绝本次调用。", 503
+        )
+    payload = _decode_credential(credential, secret)
+    if payload is None:
+        raise MCPAuthorizationError("会话凭证无效、被篡改或已过期，已拒绝本次调用。", 401)
+    identity = {
+        "user_id": str(payload["uid"]),
+        "org_id": str(payload["oid"]),
+        "email": str(payload.get("email") or ""),
+        "is_admin": bool(payload.get("adm")),
+        "credential": credential,
+    }
+    return _current_identity.set(identity)
+
+
 def safe_call(fn):
-    """捕获异常，统一返回 {'__error__': True, ...} 格式。"""
+    """校验调用方身份并捕获异常，统一返回 {'__error__': True, ...} 格式。"""
     def wrapper(*args, **kwargs):
+        identity_token = None
         try:
+            identity_token = _bind_call_identity()
             return fn(*args, **kwargs)
+        except MCPAuthorizationError as e:
+            return {"__error__": True, "status_code": e.status_code, "message": str(e)}
         except RuntimeError as e:
             return {"__error__": True, "message": str(e)}
         except Exception as e:
@@ -344,6 +564,9 @@ def safe_call(fn):
                 "message": f"{type(e).__name__}: {e}",
                 "traceback": traceback.format_exc()[:500],
             }
+        finally:
+            if identity_token is not None:
+                _current_identity.reset(identity_token)
     # 保留原函数签名给 FastMCP 解析
     wrapper.__name__ = fn.__name__
     wrapper.__qualname__ = fn.__qualname__

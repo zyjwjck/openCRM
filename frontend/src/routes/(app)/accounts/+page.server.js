@@ -21,6 +21,10 @@ export async function load({ locals, url, cookies }) {
     throw error(401, 'Organization context required');
   }
 
+  // Public/private pool filter (only accepted values are forwarded)
+  const poolParam = url.searchParams.get('pool');
+  const pool = ['public', 'private', 'all'].includes(poolParam) ? poolParam : '';
+
   // Parse filter params from URL
   const filters = {
     search: url.searchParams.get('search') || '',
@@ -48,6 +52,7 @@ export async function load({ locals, url, cookies }) {
     });
 
     // Add filter params
+    if (pool) queryParams.append('pool', pool);
     if (filters.search) queryParams.append('search', filters.search);
     if (filters.industry) queryParams.append('industry', filters.industry);
     filters.assigned_to.forEach((id) => queryParams.append('assigned_to', id));
@@ -168,7 +173,8 @@ export async function load({ locals, url, cookies }) {
         assignedToData: account.assigned_to || [],
         contactsData: account.contacts || [],
         tagsData: account.tags || [],
-        teams: account.teams || []
+        teams: (account.teams || []).map((t) => t.id),
+        teamsData: account.teams || []
       };
     });
 
@@ -190,6 +196,11 @@ export async function load({ locals, url, cookies }) {
       color: t.color || 'blue'
     }));
 
+    const allTeams = (response.teams || []).map((t) => ({
+      id: t.id,
+      name: t.name
+    }));
+
     return {
       accounts: transformedAccounts,
       pagination: {
@@ -199,10 +210,12 @@ export async function load({ locals, url, cookies }) {
         totalPages: Math.ceil(total / limit) || 1
       },
       filters,
+      isAdmin: locals.profile?.role === 'ADMIN',
       // Form options for M2M fields
       users,
       contacts: allContacts,
-      tags: allTags
+      tags: allTags,
+      teams: allTeams
     };
   } catch (err) {
     console.error('Error fetching accounts from API:', err);
@@ -234,6 +247,7 @@ export const actions = {
       const assignedToRaw = form.get('assigned_to')?.toString() || '[]';
       const contactsRaw = form.get('contacts')?.toString() || '[]';
       const tagsRaw = form.get('tags')?.toString() || '[]';
+      const teamsRaw = form.get('teams')?.toString() || '[]';
 
       /** @type {string[]} */
       let assigned_to = [];
@@ -241,11 +255,14 @@ export const actions = {
       let contacts = [];
       /** @type {string[]} */
       let tags = [];
+      /** @type {string[]} */
+      let teams = [];
 
       try {
         assigned_to = JSON.parse(assignedToRaw);
         contacts = JSON.parse(contactsRaw);
         tags = JSON.parse(tagsRaw);
+        teams = JSON.parse(teamsRaw);
       } catch (e) {
         // If parsing fails, use empty arrays
       }
@@ -271,7 +288,8 @@ export const actions = {
         number_of_employees: number_of_employees ? parseInt(number_of_employees, 10) : null,
         assigned_to,
         contacts,
-        tags
+        tags,
+        teams
       };
 
       await apiRequest(
@@ -313,6 +331,7 @@ export const actions = {
       const assignedToRaw = form.get('assigned_to')?.toString() || '[]';
       const contactsRaw = form.get('contacts')?.toString() || '[]';
       const tagsRaw = form.get('tags')?.toString() || '[]';
+      const teamsRaw = form.get('teams')?.toString() || '[]';
 
       /** @type {string[]} */
       let assigned_to = [];
@@ -320,11 +339,14 @@ export const actions = {
       let contacts = [];
       /** @type {string[]} */
       let tags = [];
+      /** @type {string[]} */
+      let teams = [];
 
       try {
         assigned_to = JSON.parse(assignedToRaw);
         contacts = JSON.parse(contactsRaw);
         tags = JSON.parse(tagsRaw);
+        teams = JSON.parse(teamsRaw);
       } catch (e) {
         // If parsing fails, use empty arrays
       }
@@ -350,7 +372,8 @@ export const actions = {
         number_of_employees: number_of_employees ? parseInt(number_of_employees, 10) : null,
         assigned_to,
         contacts,
-        tags
+        tags,
+        teams
       };
 
       await apiRequest(

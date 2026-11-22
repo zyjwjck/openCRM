@@ -1,0 +1,44 @@
+const e = "NapCat ゲートウェイ経由で nanobot を接続します。", a = "NapCat WebSocket エンドポイントと任意のアクセストークン", o = {
+  docsLabel: "NapCat 設定ガイドを開く",
+  officialLabel: "NapCat ドキュメントを開く",
+  tryIt: "NapCat 経由で QQ のテストメッセージを送信します。",
+  summary: "NapCat はローカルまたはリモートの OneBot WebSocket で nanobot を QQ に接続します。",
+  steps: [
+    "NapCat を起動し、Forward WebSocket サービスを有効にします。",
+    "WebSocket URL と任意のアクセストークンを nanobot にコピーします。",
+    "保存して NapCat を有効にし、QQ のテストメッセージを送信します。"
+  ],
+  fields: {
+    wsUrl: {
+      label: "WebSocket URL",
+      placeholder: "ws://127.0.0.1:3001",
+      help: "NapCat の Forward WebSocket URL を使います。"
+    },
+    accessToken: {
+      label: "アクセストークン",
+      placeholder: "任意のトークン"
+    },
+    groupPolicy: {
+      label: "グループでの動作",
+      choices: {
+        mention: "メンションのみ",
+        open: "すべてのメッセージ",
+        allowlist: "許可リスト"
+      }
+    },
+    allowFrom: {
+      label: "許可するユーザー",
+      placeholder: "QQ ID（カンマ区切り）"
+    }
+  }
+}, t = {
+  description: e,
+  requirements: a,
+  setup: o
+};
+export {
+  t as default,
+  e as description,
+  a as requirements,
+  o as setup
+};

@@ -575,6 +575,32 @@
   /** @type {{ data: any }} */
   let { data } = $props();
 
+  // Public/private pool tabs. Multi-select with at least one always selected.
+  // When URL has no pool param, default by role (admin: all, user: private).
+  const isAdmin = $derived(data.isAdmin === true);
+  const poolSelection = $derived.by(() => {
+    const p = $page.url.searchParams.get('pool');
+    return p === 'public' || p === 'private' || p === 'all' ? p : isAdmin ? 'all' : 'private';
+  });
+  const poolPublicSelected = $derived(poolSelection === 'public' || poolSelection === 'all');
+  const poolPrivateSelected = $derived(poolSelection === 'private' || poolSelection === 'all');
+
+  async function togglePoolTab(tab) {
+    let next;
+    if (tab === 'public') {
+      if (poolPublicSelected) next = poolPrivateSelected ? 'private' : 'public';
+      else next = 'all';
+    } else {
+      if (poolPrivateSelected) next = poolPublicSelected ? 'public' : 'private';
+      else next = 'all';
+    }
+    if (next === poolSelection && $page.url.searchParams.get('pool')) return;
+    const url = new URL($page.url);
+    url.searchParams.set('pool', next);
+    url.searchParams.set('page', '1');
+    await goto(url.toString(), { replaceState: true, noScroll: true, invalidateAll: true });
+  }
+
   // Computed values
   const leads = $derived(data.leads || []);
   const pagination = $derived(data.pagination || { page: 1, limit: 10, total: 0, totalPages: 0 });
@@ -586,58 +612,29 @@
     viewMode === 'kanban' && kanbanData ? kanbanData.total_leads : pagination.total
   );
 
-  // Lazy-loaded form options (only fetched when drawer opens)
-  let formOptions = $state(
-    /** @type {{ users: any[], teamsList: any[], contactsList: any[], tagsList: any[] }} */ ({
-      users: [],
-      teamsList: [],
-      contactsList: [],
-      tagsList: []
-    })
-  );
-  let formOptionsLoaded = $state(false);
-  let formOptionsLoading = $state(false);
-
-  /**
-   * Load form options for drawer - uses pre-loaded server data
-   */
-  function loadFormOptions() {
-    if (formOptionsLoaded || formOptionsLoading) return;
-
-    formOptionsLoading = true;
-    try {
-      // Use pre-loaded data from server (avoids client-side auth issues)
-      const serverFormOptions = data.formOptions || { users: [], teams: [], contacts: [] };
-
-      const users = serverFormOptions.users.map((/** @type {any} */ u) => ({
-        value: u.id,
-        label: u.email || u.name || 'Unknown'
-      }));
-
-      const teamsList = serverFormOptions.teams.map((/** @type {any} */ t) => ({
-        value: t.id,
-        label: t.name || 'Unknown'
-      }));
-
-      const contactsList = serverFormOptions.contacts.map((/** @type {any} */ c) => ({
-        value: c.id,
-        label: c.name || c.email || 'Unknown'
-      }));
-
-      // Tags are already loaded in the page data
-      const tagsList = (data.tags || []).map((/** @type {any} */ t) => ({
-        value: t.id,
-        label: t.name || 'Unknown'
-      }));
-
-      formOptions = { users, teamsList, contactsList, tagsList };
-      formOptionsLoaded = true;
-    } catch (err) {
-      console.error('Failed to load form options:', err);
-    } finally {
-      formOptionsLoading = false;
-    }
-  }
+  // Form options derived directly from pre-loaded server data.
+  // Deriving (instead of lazy-loading on drawer open) keeps multiselect options
+  // available no matter how the drawer is opened — row click, kanban card, URL
+  // sync, or create — matching the accounts/opportunities pages.
+  const formOptions = $derived({
+    users: (data.formOptions?.users || []).map((/** @type {any} */ u) => ({
+      value: u.id,
+      label: u.email || u.name || 'Unknown',
+      email: u.email || u.name
+    })),
+    teamsList: (data.formOptions?.teams || []).map((/** @type {any} */ t) => ({
+      value: t.id,
+      label: t.name || 'Unknown'
+    })),
+    contactsList: (data.formOptions?.contacts || []).map((/** @type {any} */ c) => ({
+      value: c.id,
+      label: c.name || c.email || 'Unknown'
+    })),
+    tagsList: (data.tags || []).map((/** @type {any} */ t) => ({
+      value: t.id,
+      label: t.name || 'Unknown'
+    }))
+  });
 
   // Drawer state (NotionDrawer for view/create)
   let drawerOpen = $state(false);
@@ -707,16 +704,12 @@
       drawerData = null;
       drawerMode = 'create';
       drawerOpen = true;
-      // Lazy load form options when drawer opens via URL
-      loadFormOptions();
     } else if (viewId && leads.length > 0) {
       const lead = leads.find((l) => l.id === viewId);
       if (lead) {
         drawerData = lead;
         drawerMode = 'view';
         drawerOpen = true;
-        // Lazy load form options when drawer opens via URL
-        loadFormOptions();
       }
     }
   });
@@ -810,8 +803,6 @@
     drawerMode = 'view';
     drawerOpen = true;
     updateUrl(lead.id, null);
-    // Load form options (uses pre-loaded server data)
-    loadFormOptions();
 
     // If from kanban, we need to fetch full lead data since kanban cards have minimal data
     if (fromKanban) {
@@ -907,8 +898,6 @@
     drawerMode = 'create';
     drawerOpen = true;
     updateUrl(null, 'create');
-    // Lazy load form options when drawer opens
-    loadFormOptions();
   }
 
   /**
@@ -1508,6 +1497,30 @@
 >
   {#snippet actions()}
     <div class="flex items-center gap-2">
+      <!-- Public/private pool tabs -->
+      <div class="flex gap-1">
+        <button
+          type="button"
+          onclick={() => togglePoolTab('public')}
+          class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-medium transition-colors {poolPublicSelected
+            ? 'bg-[var(--color-primary-default)] text-white'
+            : 'bg-[var(--surface-sunken)] text-[var(--text-secondary)] hover:bg-[var(--surface-raised)]'}"
+        >
+          {tr('publicPool')}
+        </button>
+        <button
+          type="button"
+          onclick={() => togglePoolTab('private')}
+          class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-medium transition-colors {poolPrivateSelected
+            ? 'bg-[var(--color-primary-default)] text-white'
+            : 'bg-[var(--surface-sunken)] text-[var(--text-secondary)] hover:bg-[var(--surface-raised)]'}"
+        >
+          {tr('privatePool')}
+        </button>
+      </div>
+
+      <div class="mx-1 h-6 w-px bg-[var(--border-default)]"></div>
+
       <!-- View Toggle -->
       <ViewToggle view={viewMode} onchange={setViewMode} />
 
@@ -1819,7 +1832,7 @@
         </button>
       </div>
       <div class="min-h-0 flex-1">
-        <NanobotFrame />
+        <NanobotFrame initialCrmModules={['leads']} />
       </div>
     </aside>
   {/if}
@@ -1829,8 +1842,10 @@
 <CrmDrawer
   bind:open={drawerOpen}
   onOpenChange={handleDrawerChange}
+  class="w-[1200px] sm:max-w-[1200px]"
   data={currentDrawerData}
   columns={drawerColumnsWithOptions}
+  visibleAdditionalCount={8}
   titleKey="title"
   titlePlaceholder={drawerMode === 'create' ? tr('leadTitle') : tr('untitledLead')}
   headerLabel={drawerMode === 'create' ? tr('newLead') : tr('leadLabel')}

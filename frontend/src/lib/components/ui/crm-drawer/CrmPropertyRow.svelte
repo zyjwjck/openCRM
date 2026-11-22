@@ -1,5 +1,5 @@
 <script>
-  import { Check, Calendar as CalendarIcon } from '@lucide/svelte';
+  import { Check, ChevronDown, Calendar as CalendarIcon } from '@lucide/svelte';
   import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
   import * as Popover from '$lib/components/ui/popover/index.js';
   import { Calendar } from '$lib/components/ui/calendar/index.js';
@@ -25,14 +25,18 @@
    * @type {{
    *   label: string,
    *   value?: any,
-   *   type?: 'text' | 'email' | 'number' | 'date' | 'select' | 'checkbox' | 'boolean' | 'multiselect' | 'textarea' | 'color',
+   *   type?: 'text' | 'email' | 'number' | 'currency' | 'date' | 'select' | 'checkbox' | 'boolean' | 'multiselect' | 'textarea' | 'color',
    *   icon?: import('svelte').Component,
    *   options?: any[],
+   *   currencyOptions?: any[],
+   *   currencyValue?: string,
+   *   currencyPlaceholder?: string,
    *   placeholder?: string,
    *   emptyText?: string,
    *   editable?: boolean,
    *   prefix?: string,
    *   onchange?: (value: any) => void,
+   *   onCurrencyChange?: (value: string) => void,
    *   class?: string,
    * }}
    */
@@ -42,11 +46,15 @@
     type = 'text',
     icon: Icon,
     options = [],
+    currencyOptions = [],
+    currencyValue = '',
+    currencyPlaceholder = '',
     placeholder = '',
     emptyText = '',
     editable = true,
     prefix = '',
     onchange,
+    onCurrencyChange,
     class: className
   } = $props();
 
@@ -84,6 +92,15 @@
       return `bg-${match[1]}-500`;
     }
     return 'bg-gray-400';
+  }
+
+  /**
+   * Get currency option label
+   * @param {string} val
+   */
+  function getCurrencyLabel(val) {
+    const opt = currencyOptions.find((/** @type {any} */ o) => o.value === val);
+    return opt?.label || val || currencyPlaceholder || t('select', currentLang);
   }
 
   /**
@@ -203,6 +220,7 @@
 <div
   class={cn(
     'group -mx-3 flex min-h-[44px] items-center rounded-lg px-3 transition-all duration-150 hover:bg-muted/40',
+    type === 'currency' && 'md:col-span-2',
     className
   )}
 >
@@ -240,6 +258,44 @@
           disabled={!editable}
           class="w-full rounded-lg border-0 bg-transparent px-2 py-1.5 text-sm font-medium text-foreground tabular-nums transition-all outline-none placeholder:text-muted-foreground/40 focus:bg-muted/30 focus:ring-1 focus:ring-primary/20"
         />
+      </div>
+    {:else if type === 'currency'}
+      <div class="flex w-1/2 items-center gap-2">
+        <input
+          type="number"
+          value={value || 0}
+          oninput={handleNumberInput}
+          {placeholder}
+          disabled={!editable}
+          class="w-1/2 rounded-lg border-0 bg-transparent px-2 py-1.5 text-sm font-medium text-foreground tabular-nums transition-all outline-none placeholder:text-muted-foreground/40 focus:bg-muted/30 focus:ring-1 focus:ring-primary/20"
+        />
+        <DropdownMenu.Root>
+          <DropdownMenu.Trigger disabled={!editable}>
+            {#snippet child({ props })}
+              <button
+                {...props}
+                type="button"
+                class="w-1/2 inline-flex shrink-0 items-center gap-1 rounded-lg border border-[var(--border-default)] bg-[var(--surface-default)] px-2 py-1.5 text-xs font-medium text-foreground transition-all hover:bg-muted/30"
+              >
+                {getCurrencyLabel(currencyValue)}
+                <ChevronDown class="h-3 w-3 opacity-60" />
+              </button>
+            {/snippet}
+          </DropdownMenu.Trigger>
+          <DropdownMenu.Content align="end" class="min-w-32 p-1.5">
+            {#each currencyOptions as option (option.value)}
+              <DropdownMenu.Item
+                onclick={() => onCurrencyChange?.(option.value)}
+                class="flex items-center gap-2 rounded-lg px-2.5 py-2"
+              >
+                <span class="font-medium">{option.label || option.value}</span>
+                {#if currencyValue === option.value}
+                  <Check class="ml-auto h-4 w-4 text-primary" />
+                {/if}
+              </DropdownMenu.Item>
+            {/each}
+          </DropdownMenu.Content>
+        </DropdownMenu.Root>
       </div>
     {:else if type === 'date'}
       <Popover.Root bind:open={datePopoverOpen}>

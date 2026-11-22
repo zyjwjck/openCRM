@@ -224,11 +224,11 @@
 
   const salesItems = $derived([
     { href: '/invoices', label: t('allInvoices', undefined, language), icon: FileText, type: 'link', preload: 'off' },
-    { href: '/invoices/estimates', label: t('estimates', undefined, language), icon: FileEdit, type: 'link', preload: 'off' },
-    { href: '/invoices/products', label: t('products', undefined, language), icon: Package, type: 'link', preload: 'off' },
-    { href: '/invoices/recurring', label: t('recurring', undefined, language), icon: RefreshCw, type: 'link', preload: 'off' },
-    { href: '/invoices/templates', label: t('templates', undefined, language), icon: FileCode, type: 'link', preload: 'off' },
-    { href: '/invoices/reports', label: t('reports', undefined, language), icon: BarChart3, type: 'link', preload: 'off' },
+    { href: '/estimates', label: t('estimates', undefined, language), icon: FileEdit, type: 'link', preload: 'off' },
+    { href: '/products', label: t('products', undefined, language), icon: Package, type: 'link', preload: 'off' },
+    { href: '/recurringInvoices', label: t('recurring', undefined, language), icon: RefreshCw, type: 'link', preload: 'off' },
+    { href: '/invoicesTemplates', label: t('templates', undefined, language), icon: FileCode, type: 'link', preload: 'off' },
+    { href: '/salesReports', label: t('reports', undefined, language), icon: BarChart3, type: 'link', preload: 'off' },
     { href: '/commission', label: t('commission', undefined, language), icon: Wallet, type: 'link', preload: 'off' }
   ]);
 

@@ -46,11 +46,29 @@ class LeadListView(APIView, LimitOffsetPagination):
                 "assigned_to",
             )
         ).order_by("-id")
-        if self.request.profile.role != "ADMIN" and not self.request.user.is_superuser:
-            queryset = queryset.filter(
-                Q(assigned_to__in=[self.request.profile])
-                | Q(created_by=self.request.profile.user)
-            )
+        # Public/private pool filter (org scoping above always applies).
+        # Private pool = records with a direct assignee; public pool = records
+        # with no direct assignee (teams alone do not make a record private).
+        is_admin = (
+            self.request.profile.role == "ADMIN" or self.request.user.is_superuser
+        )
+        profile = self.request.profile
+        pool = params.get("pool")
+        if pool not in ("private", "public", "all"):
+            # Default: non-admin sees only their private records, admin sees all.
+            pool = "all" if is_admin else "private"
+
+        if pool == "public":
+            queryset = queryset.filter(assigned_to__isnull=True)
+        elif pool == "private":
+            queryset = queryset.filter(assigned_to__isnull=False)
+            if not is_admin:
+                queryset = queryset.filter(assigned_to=profile)
+        else:  # pool == "all"
+            if not is_admin:
+                queryset = queryset.filter(
+                    Q(assigned_to=profile) | Q(assigned_to__isnull=True)
+                )
 
         if params:
             if params.get("name"):

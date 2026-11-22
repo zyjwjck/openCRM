@@ -155,6 +155,9 @@ class Product(BaseModel):
     currency = models.CharField(
         _("Currency"), max_length=3, choices=CURRENCY_CODES, blank=True, null=True
     )
+    cost_currency = models.CharField(
+        _("Cost Currency"), max_length=3, choices=CURRENCY_CODES, blank=True, null=True
+    )
     category = models.CharField(_("Category"), max_length=100, blank=True, null=True)
     is_active = models.BooleanField(_("Is Active"), default=True)
     org = models.ForeignKey(Org, on_delete=models.CASCADE, related_name="products")

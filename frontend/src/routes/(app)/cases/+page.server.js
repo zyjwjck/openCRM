@@ -67,8 +67,13 @@ export async function load({ url, locals, cookies }) {
     if (filters.case_type) kanbanQueryParams.append('case_type', filters.case_type);
     filters.assigned_to.forEach((id) => kanbanQueryParams.append('assigned_to', id));
 
-    // Fetch cases, kanban data, and dropdown options in parallel
-    const [casesResponse, kanbanResponse, accountsRes, usersRes, contactsRes, teamsRes, tagsRes] =
+    // Fetch cases, kanban data, and dropdown options in parallel.
+    // NOTE: /users/ and /teams/ are ADMIN-only on the backend (403 for USER role),
+    // which left the drawer's Assigned To / Teams pickers empty for non-admin users.
+    // /users/get-teams-and-users/ is available to any authenticated member and
+    // returns both `profiles` and `teams` for the current org — same source used
+    // by the opportunities page.
+    const [casesResponse, kanbanResponse, accountsRes, teamUsersRes, contactsRes, tagsRes] =
       await Promise.all([
         apiRequest(`/cases/?${queryParams.toString()}`, {}, { cookies, org }),
         viewMode === 'kanban'
@@ -79,9 +84,11 @@ export async function load({ url, locals, cookies }) {
             )
           : Promise.resolve(null),
         apiRequest('/accounts/', {}, { cookies, org }).catch(() => ({})),
-        apiRequest('/users/', {}, { cookies, org }).catch(() => ({})),
+        apiRequest('/users/get-teams-and-users/', {}, { cookies, org }).catch(() => ({
+          profiles: [],
+          teams: []
+        })),
         apiRequest('/contacts/', {}, { cookies, org }).catch(() => ({})),
-        apiRequest('/teams/', {}, { cookies, org }).catch(() => ({})),
         apiRequest('/tags/', {}, { cookies, org }).catch(() => ({}))
       ]);
 
@@ -203,14 +210,16 @@ export async function load({ url, locals, cookies }) {
     }
     const accounts = accountsList.map((a) => ({ id: a.id, name: a.name }));
 
-    // Transform users
-    const users = (usersRes.active_users?.active_users || []).map((u) => ({
-      id: u.id,
-      name:
-        u.user_details?.first_name && u.user_details?.last_name
-          ? `${u.user_details.first_name} ${u.user_details.last_name}`
-          : u.user_details?.email || u.email
-    }));
+    // Transform users (from get-teams-and-users, available to all authenticated members)
+    const users = (teamUsersRes.profiles || teamUsersRes.active_users?.active_users || []).map(
+      (u) => ({
+        id: u.id,
+        name:
+          u.user_details?.first_name && u.user_details?.last_name
+            ? `${u.user_details.first_name} ${u.user_details.last_name}`
+            : u.user_details?.email || u.email || u.name
+      })
+    );
 
     // Transform contacts
     let contactsList = [];
@@ -227,8 +236,8 @@ export async function load({ url, locals, cookies }) {
       email: c.email
     }));
 
-    // Transform teams
-    const teams = (teamsRes.teams || teamsRes.results || []).map((t) => ({
+    // Transform teams (from get-teams-and-users, available to all authenticated members)
+    const teams = (teamUsersRes.teams || []).map((t) => ({
       id: t.id,
       name: t.name
     }));

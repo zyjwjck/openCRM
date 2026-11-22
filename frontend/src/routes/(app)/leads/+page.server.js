@@ -48,6 +48,10 @@ export async function load({ url, cookies, locals }) {
   const page = parseInt(url.searchParams.get('page') || '1');
   const limit = parseInt(url.searchParams.get('limit') || '10');
 
+  // Public/private pool filter (only accepted values are forwarded)
+  const poolParam = url.searchParams.get('pool');
+  const pool = ['public', 'private', 'all'].includes(poolParam) ? poolParam : '';
+
   // Parse filter params from URL
   const filters = {
     search: url.searchParams.get('search') || '',
@@ -64,6 +68,7 @@ export async function load({ url, cookies, locals }) {
   const queryParams = new URLSearchParams();
   queryParams.append('limit', limit.toString());
   queryParams.append('offset', ((page - 1) * limit).toString());
+  if (pool) queryParams.append('pool', pool);
   if (filters.search) queryParams.append('search', filters.search);
   if (filters.status) queryParams.append('status', filters.status.toLowerCase().replace(/_/g, ' '));
   if (filters.source) queryParams.append('source', filters.source.toLowerCase());
@@ -87,8 +92,12 @@ export async function load({ url, cookies, locals }) {
     const queryString = queryParams.toString();
     const kanbanQueryString = kanbanQueryParams.toString();
 
-    // Fetch data based on view mode + form options for drawer
-    const [response, tagsResponse, kanbanResponse, usersResponse, teamsResponse, contactsResponse] =
+    // Fetch data based on view mode + form options for drawer.
+    // NOTE: /users/ and /teams/ are ADMIN-only on the backend (403 for USER role),
+    // which left the drawer's Assigned To / Teams pickers empty for non-admin users.
+    // /users/get-teams-and-users/ is available to any authenticated member and
+    // returns both `profiles` and `teams` for the current org.
+    const [response, tagsResponse, kanbanResponse, teamUsersRes, contactsResponse] =
       await Promise.all([
         apiRequest(`/leads/${queryString ? `?${queryString}` : ''}`, {}, { cookies, org }),
         apiRequest('/tags/', {}, { cookies, org }).catch(() => ({ tags: [] })),
@@ -100,10 +109,10 @@ export async function load({ url, cookies, locals }) {
             ).catch(() => null)
           : Promise.resolve(null),
         // Form options for drawer (preload server-side to avoid client-side auth issues)
-        apiRequest('/users/', {}, { cookies, org }).catch(() => ({
-          active_users: { active_users: [] }
+        apiRequest('/users/get-teams-and-users/', {}, { cookies, org }).catch(() => ({
+          profiles: [],
+          teams: []
         })),
-        apiRequest('/teams/', {}, { cookies, org }).catch(() => ({ teams: [] })),
         apiRequest('/contacts/', {}, { cookies, org }).catch(() => ({ contact_obj_list: [] }))
       ]);
 
@@ -216,9 +225,11 @@ export async function load({ url, cookies, locals }) {
       });
     }
 
-    // Extract form options from responses
-    const users = usersResponse?.active_users?.active_users || usersResponse?.users || [];
-    const teams = teamsResponse?.teams || [];
+    // Extract form options from responses.
+    // `get-teams-and-users` returns `profiles` (active org members) and `teams`,
+    // and is available to every authenticated member (unlike /users/ and /teams/).
+    const users = teamUsersRes?.profiles || teamUsersRes?.active_users?.active_users || [];
+    const teams = teamUsersRes?.teams || [];
     const contacts = contactsResponse?.contact_obj_list || contactsResponse?.results || [];
 
     // Pre-loaded form options for drawer (avoids client-side auth issues) - optimized
@@ -260,6 +271,7 @@ export async function load({ url, cookies, locals }) {
       },
       filters,
       viewMode,
+      isAdmin: locals.profile?.role === 'ADMIN',
       kanbanData: kanbanResponse,
       // `labelKey` is resolved by the client with the current i18n language;
       // `label` stays as a language-neutral English fallback.

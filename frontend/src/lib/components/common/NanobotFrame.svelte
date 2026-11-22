@@ -1,20 +1,26 @@
 <script>
   import { onMount } from 'svelte';
+  import { apiRequest } from '$lib/api.js';
   import { getCurrentLanguage } from '$lib/utils/i18n.svelte.js';
   import { cn } from '$lib/utils.js';
 
   /**
-   * Embeddable nanobot WebUI. The active chat is tracked solely by the URL
-   * hash inside the iframe, so we persist the hash it reports via postMessage
-   * and restore it whenever the iframe is (re)mounted. This keeps the same
-   * conversation across the /agent page and any drawer embedding this frame.
+   * Embeddable nanobot WebUI, mounted as a micro-frontend (no iframe).
+   * The React agent UI is dynamically imported from the CRM's static assets
+   * and mounted into this component's container. The active chat is tracked by
+   * a session hash persisted to localStorage, so the same conversation is
+   * restored across the /agent page and any drawer embedding this frame.
    */
-  let { class: className = '' } = $props();
+  let {
+    class: className = '',
+    initialCrmModules = [],
+  } = $props();
 
-  const NANOBOT_ORIGIN = 'http://127.0.0.1:8765';
   const HASH_STORAGE_KEY = 'nanobot.webui.lastHash';
-  const ROUTE_MESSAGE_SOURCE = 'nanobot-webui';
-  const ROUTE_MESSAGE_TYPE = 'nanobot-webui:route';
+  const MODULE_URL = '/nanobot-agent/agent.js?v=2';
+  // Version query busts the browser cache when the hosted CSS is rebuilt.
+  // Increment V when the WebUI CSS content changes.
+  const CSS_URL = '/nanobot-agent/style.css?v=4';
 
   /** @param {string} language */
   const toNanobotLocale = (language) => {
@@ -33,81 +39,114 @@
     return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
   }
 
-  let iframeSrc = $state('');
+  /** @returns {string} */
+  function getSavedHash() {
+    try {
+      const hash = localStorage.getItem(HASH_STORAGE_KEY) || '';
+      return hash && hash !== '#/new' && hash !== '#/' ? hash : '';
+    } catch {
+      return '';
+    }
+  }
+
+  /** Ensure the hosted WebUI stylesheet is present in the document. */
+  function ensureStylesheet() {
+    if (document.querySelector(`link[data-nanobot-agent-css]`)) return;
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = CSS_URL;
+    link.dataset.nanobotAgentCss = 'true';
+    document.head.appendChild(link);
+  }
+
+  let containerEl;
+  let errorMessage = $state('');
+  let handle = null;
+  let modulePromise = null;
+
+  /** Fetch a signed identity credential for the embedded nanobot WebUI. */
+  async function loadCredential() {
+    const data = await apiRequest('/agent/nanobot-credential/');
+    return data?.credential || '';
+  }
+
+  async function mountAgent() {
+    if (!containerEl) return;
+    errorMessage = '';
+    try {
+      ensureStylesheet();
+      const credential = await loadCredential();
+      if (!credential) throw new Error('无法获取 Agent 身份凭证，请重新登录');
+      if (!modulePromise) modulePromise = import(/* @vite-ignore */ MODULE_URL);
+      const mod = await modulePromise;
+      // Unmount any previous instance before creating a new one.
+      handle?.unmount?.();
+      handle = await mod.mountAgent(containerEl, {
+        credential,
+        language: toNanobotLocale(getCurrentLanguage()),
+        theme: getCurrentTheme(),
+        initialSessionHash: getSavedHash(),
+        initialCrmModules: Array.isArray(initialCrmModules) ? [...initialCrmModules] : [],
+        onRouteChange: (hash) => {
+          try {
+            if (hash && hash !== '#/new' && hash !== '#/') {
+              localStorage.setItem(HASH_STORAGE_KEY, hash);
+            } else {
+              localStorage.removeItem(HASH_STORAGE_KEY);
+            }
+          } catch {
+            // localStorage may be unavailable; restoring simply won't happen.
+          }
+        },
+        onError: (error) => {
+          errorMessage = error?.message || 'Agent 初始化失败';
+        },
+      });
+    } catch (err) {
+      errorMessage = err?.message || 'Agent 加载失败';
+    }
+  }
 
   onMount(() => {
-    /** @returns {string} */
-    const getSavedHash = () => {
-      try {
-        const hash = localStorage.getItem(HASH_STORAGE_KEY) || '';
-        return hash && hash !== '#/new' && hash !== '#/' ? hash : '';
-      } catch {
-        return '';
-      }
-    };
+    void mountAgent();
 
-    const buildSrc = () => {
-      const lang = toNanobotLocale(getCurrentLanguage());
-      const theme = getCurrentTheme();
-      const hash = getSavedHash();
-      return `${NANOBOT_ORIGIN}/?lang=${lang}&theme=${theme}${hash}`;
-    };
-
-    const apply = () => { iframeSrc = buildSrc(); };
-
-    apply();
-
-    const onLanguageChange = () => apply();
-    const onThemeChange = () => apply();
+    const remount = () => { void mountAgent(); };
+    const onLanguageChange = () => remount();
+    const onThemeChange = () => remount();
     const onStorage = (event) => {
-      if (event.key === 'language' || event.key === 'theme') apply();
+      if (event.key === 'language' || event.key === 'theme') remount();
     };
     const onMediaChange = () => {
-      if (localStorage.getItem('theme') === 'system') apply();
-    };
-
-    // Persist the chat hash reported by the embedded iframe. Only write to
-    // storage here — calling apply() would reload the iframe in a loop.
-    const onMessage = (event) => {
-      if (event.origin !== NANOBOT_ORIGIN) return;
-      const data = event.data;
-      if (!data || data.source !== ROUTE_MESSAGE_SOURCE || data.type !== ROUTE_MESSAGE_TYPE) return;
-      const hash = typeof data.hash === 'string' ? data.hash : '';
-      try {
-        if (hash && hash !== '#/new' && hash !== '#/') {
-          localStorage.setItem(HASH_STORAGE_KEY, hash);
-        } else {
-          localStorage.removeItem(HASH_STORAGE_KEY);
-        }
-      } catch {
-        // localStorage may be unavailable; restoring simply won't happen.
-      }
+      if (localStorage.getItem('theme') === 'system') remount();
     };
 
     window.addEventListener('languageChange', onLanguageChange);
     window.addEventListener('themeChange', onThemeChange);
     window.addEventListener('storage', onStorage);
-    window.addEventListener('message', onMessage);
     const mql = window.matchMedia('(prefers-color-scheme: dark)');
     mql.addEventListener('change', onMediaChange);
 
     return () => {
+      handle?.unmount?.();
+      handle = null;
       window.removeEventListener('languageChange', onLanguageChange);
       window.removeEventListener('themeChange', onThemeChange);
       window.removeEventListener('storage', onStorage);
-      window.removeEventListener('message', onMessage);
       mql.removeEventListener('change', onMediaChange);
     };
   });
 </script>
 
-{#if iframeSrc}
-  <iframe
-    src={iframeSrc}
-    title="Nanobot Agent"
-    class={cn('block h-full w-full border-0 bg-transparent', className)}
-    frameborder="0"
-    allow="clipboard-read; clipboard-write; microphone"
-    allowfullscreen
-  ></iframe>
-{/if}
+<div class={cn('h-full w-full', className)}>
+  {#if errorMessage}
+    <div class="flex h-full w-full flex-col items-center justify-center gap-2 p-6 text-center text-sm text-muted-foreground">
+      <span>{errorMessage}</span>
+      <button
+        type="button"
+        class="rounded-md border border-border px-3 py-1.5 text-foreground hover:bg-accent"
+        onclick={() => void mountAgent()}
+      >重试</button>
+    </div>
+  {/if}
+  <div bind:this={containerEl} class="h-full w-full"></div>
+</div>

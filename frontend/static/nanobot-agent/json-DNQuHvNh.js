@@ -1,0 +1,54 @@
+import { g as l } from "./react-vendor-ASUsaCHq.js";
+function g(e, s) {
+  for (var n = 0; n < s.length; n++) {
+    const t = s[n];
+    if (typeof t != "string" && !Array.isArray(t)) {
+      for (const r in t)
+        if (r !== "default" && !(r in e)) {
+          const o = Object.getOwnPropertyDescriptor(t, r);
+          o && Object.defineProperty(e, r, o.get ? o : {
+            enumerable: !0,
+            get: () => t[r]
+          });
+        }
+    }
+  }
+  return Object.freeze(Object.defineProperty(e, Symbol.toStringTag, { value: "Module" }));
+}
+var u = a;
+a.displayName = "json";
+a.aliases = ["webmanifest"];
+function a(e) {
+  e.languages.json = {
+    property: {
+      pattern: /(^|[^\\])"(?:\\.|[^\\"\r\n])*"(?=\s*:)/,
+      lookbehind: !0,
+      greedy: !0
+    },
+    string: {
+      pattern: /(^|[^\\])"(?:\\.|[^\\"\r\n])*"(?!\s*:)/,
+      lookbehind: !0,
+      greedy: !0
+    },
+    comment: {
+      pattern: /\/\/.*|\/\*[\s\S]*?(?:\*\/|$)/,
+      greedy: !0
+    },
+    number: /-?\b\d+(?:\.\d+)?(?:e[+-]?\d+)?\b/i,
+    punctuation: /[{}[\],]/,
+    operator: /:/,
+    boolean: /\b(?:false|true)\b/,
+    null: {
+      pattern: /\bnull\b/,
+      alias: "keyword"
+    }
+  }, e.languages.webmanifest = e.languages.json;
+}
+const i = /* @__PURE__ */ l(u), p = /* @__PURE__ */ g({
+  __proto__: null,
+  default: i
+}, [u]);
+export {
+  u as a,
+  p as j
+};

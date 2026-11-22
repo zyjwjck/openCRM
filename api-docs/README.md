@@ -49,7 +49,7 @@
 
 ### 销售
 
-- [销售 — 所有发票](sales_invoices.md) — **22** 个端点
+- [销售 — 发票](sales_invoices.md) — **22** 个端点
 - [销售 — 报价单](sales_estimates.md) — **8** 个端点
 - [销售 — 产品](sales_products.md) — **5** 个端点
 - [销售 — 循环发票](sales_recurring.md) — **6** 个端点

@@ -1,0 +1,37 @@
+import { g as l } from "./react-vendor-ASUsaCHq.js";
+function p(e, n) {
+  for (var s = 0; s < n.length; s++) {
+    const t = n[s];
+    if (typeof t != "string" && !Array.isArray(t)) {
+      for (const r in t)
+        if (r !== "default" && !(r in e)) {
+          const a = Object.getOwnPropertyDescriptor(t, r);
+          a && Object.defineProperty(e, r, a.get ? a : {
+            enumerable: !0,
+            get: () => t[r]
+          });
+        }
+    }
+  }
+  return Object.freeze(Object.defineProperty(e, Symbol.toStringTag, { value: "Module" }));
+}
+var i = o;
+o.displayName = "hsts";
+o.aliases = [];
+function o(e) {
+  e.languages.hsts = {
+    directive: {
+      pattern: /\b(?:includeSubDomains|max-age|preload)(?=[\s;=]|$)/i,
+      alias: "property"
+    },
+    operator: /=/,
+    punctuation: /;/
+  };
+}
+const u = /* @__PURE__ */ l(i), f = /* @__PURE__ */ p({
+  __proto__: null,
+  default: u
+}, [i]);
+export {
+  f as h
+};

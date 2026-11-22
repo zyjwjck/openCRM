@@ -1,0 +1,3926 @@
+{
+  "../nanobot/channels/dingtalk/webui/locales/en.json": {
+    "file": "en-QpNotOqX.js",
+    "name": "en",
+    "src": "../nanobot/channels/dingtalk/webui/locales/en.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/dingtalk/webui/locales/es.json": {
+    "file": "es-CO_ai1A9.js",
+    "name": "es",
+    "src": "../nanobot/channels/dingtalk/webui/locales/es.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/dingtalk/webui/locales/fr.json": {
+    "file": "fr-BfcnfM6e.js",
+    "name": "fr",
+    "src": "../nanobot/channels/dingtalk/webui/locales/fr.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/dingtalk/webui/locales/id.json": {
+    "file": "id-DO2tGidh.js",
+    "name": "id",
+    "src": "../nanobot/channels/dingtalk/webui/locales/id.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/dingtalk/webui/locales/ja.json": {
+    "file": "ja-DqgCKpeu.js",
+    "name": "ja",
+    "src": "../nanobot/channels/dingtalk/webui/locales/ja.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/dingtalk/webui/locales/ko.json": {
+    "file": "ko-qcO6LeMI.js",
+    "name": "ko",
+    "src": "../nanobot/channels/dingtalk/webui/locales/ko.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/dingtalk/webui/locales/pt-BR.json": {
+    "file": "pt-BR-COBEb8Oq.js",
+    "name": "pt-BR",
+    "src": "../nanobot/channels/dingtalk/webui/locales/pt-BR.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/dingtalk/webui/locales/vi.json": {
+    "file": "vi-D5lWUK0R.js",
+    "name": "vi",
+    "src": "../nanobot/channels/dingtalk/webui/locales/vi.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/dingtalk/webui/locales/zh-CN.json": {
+    "file": "zh-CN-CMCWrlAy.js",
+    "name": "zh-CN",
+    "src": "../nanobot/channels/dingtalk/webui/locales/zh-CN.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/dingtalk/webui/locales/zh-TW.json": {
+    "file": "zh-TW-Cmp4ITmQ.js",
+    "name": "zh-TW",
+    "src": "../nanobot/channels/dingtalk/webui/locales/zh-TW.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/discord/webui/locales/en.json": {
+    "file": "en-B4fju_gg.js",
+    "name": "en",
+    "src": "../nanobot/channels/discord/webui/locales/en.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/discord/webui/locales/es.json": {
+    "file": "es-CdcTZIdN.js",
+    "name": "es",
+    "src": "../nanobot/channels/discord/webui/locales/es.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/discord/webui/locales/fr.json": {
+    "file": "fr-CiO9uQFL.js",
+    "name": "fr",
+    "src": "../nanobot/channels/discord/webui/locales/fr.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/discord/webui/locales/id.json": {
+    "file": "id-D2UatyWf.js",
+    "name": "id",
+    "src": "../nanobot/channels/discord/webui/locales/id.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/discord/webui/locales/ja.json": {
+    "file": "ja-DBxk1yAv.js",
+    "name": "ja",
+    "src": "../nanobot/channels/discord/webui/locales/ja.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/discord/webui/locales/ko.json": {
+    "file": "ko-Ky-4mDnp.js",
+    "name": "ko",
+    "src": "../nanobot/channels/discord/webui/locales/ko.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/discord/webui/locales/pt-BR.json": {
+    "file": "pt-BR-DIjIrJBK.js",
+    "name": "pt-BR",
+    "src": "../nanobot/channels/discord/webui/locales/pt-BR.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/discord/webui/locales/vi.json": {
+    "file": "vi-CrUXXBIp.js",
+    "name": "vi",
+    "src": "../nanobot/channels/discord/webui/locales/vi.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/discord/webui/locales/zh-CN.json": {
+    "file": "zh-CN-Dfp2AgVW.js",
+    "name": "zh-CN",
+    "src": "../nanobot/channels/discord/webui/locales/zh-CN.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/discord/webui/locales/zh-TW.json": {
+    "file": "zh-TW-NY6aYxyG.js",
+    "name": "zh-TW",
+    "src": "../nanobot/channels/discord/webui/locales/zh-TW.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/email/webui/locales/en.json": {
+    "file": "en-CDGbJ1MU.js",
+    "name": "en",
+    "src": "../nanobot/channels/email/webui/locales/en.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/email/webui/locales/es.json": {
+    "file": "es-BmmMihCU.js",
+    "name": "es",
+    "src": "../nanobot/channels/email/webui/locales/es.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/email/webui/locales/fr.json": {
+    "file": "fr-VMKMl-j5.js",
+    "name": "fr",
+    "src": "../nanobot/channels/email/webui/locales/fr.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/email/webui/locales/id.json": {
+    "file": "id-Babaq22K.js",
+    "name": "id",
+    "src": "../nanobot/channels/email/webui/locales/id.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/email/webui/locales/ja.json": {
+    "file": "ja-BgOct6SL.js",
+    "name": "ja",
+    "src": "../nanobot/channels/email/webui/locales/ja.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/email/webui/locales/ko.json": {
+    "file": "ko-QZv_r6_m.js",
+    "name": "ko",
+    "src": "../nanobot/channels/email/webui/locales/ko.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/email/webui/locales/pt-BR.json": {
+    "file": "pt-BR-CVRoTWPE.js",
+    "name": "pt-BR",
+    "src": "../nanobot/channels/email/webui/locales/pt-BR.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/email/webui/locales/vi.json": {
+    "file": "vi-CTVe4C6p.js",
+    "name": "vi",
+    "src": "../nanobot/channels/email/webui/locales/vi.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/email/webui/locales/zh-CN.json": {
+    "file": "zh-CN-CdV1FiAN.js",
+    "name": "zh-CN",
+    "src": "../nanobot/channels/email/webui/locales/zh-CN.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/email/webui/locales/zh-TW.json": {
+    "file": "zh-TW-DNI0hmuU.js",
+    "name": "zh-TW",
+    "src": "../nanobot/channels/email/webui/locales/zh-TW.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/feishu/webui/FeishuAssistantsPanel.tsx": {
+    "file": "FeishuAssistantsPanel-Con-Pr4I.js",
+    "name": "FeishuAssistantsPanel",
+    "src": "../nanobot/channels/feishu/webui/FeishuAssistantsPanel.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_hosted-entry-Dbp-ZpRx.js",
+      "_ChannelInstancesPanel-DSJdZ6YA.js",
+      "_ChannelQrConnectFlow-DjtnbZ5C.js",
+      "_rotate-ccw-BtFYjp5j.js"
+    ]
+  },
+  "../nanobot/channels/feishu/webui/locales/en.json": {
+    "file": "en-Cl3t-0pI.js",
+    "name": "en",
+    "src": "../nanobot/channels/feishu/webui/locales/en.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/feishu/webui/locales/es.json": {
+    "file": "es-CzmY76Gb.js",
+    "name": "es",
+    "src": "../nanobot/channels/feishu/webui/locales/es.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/feishu/webui/locales/fr.json": {
+    "file": "fr-DUOgHB8L.js",
+    "name": "fr",
+    "src": "../nanobot/channels/feishu/webui/locales/fr.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/feishu/webui/locales/id.json": {
+    "file": "id-CxSPNcQU.js",
+    "name": "id",
+    "src": "../nanobot/channels/feishu/webui/locales/id.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/feishu/webui/locales/ja.json": {
+    "file": "ja-cwAbiZz_.js",
+    "name": "ja",
+    "src": "../nanobot/channels/feishu/webui/locales/ja.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/feishu/webui/locales/ko.json": {
+    "file": "ko-DHtyXuwc.js",
+    "name": "ko",
+    "src": "../nanobot/channels/feishu/webui/locales/ko.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/feishu/webui/locales/pt-BR.json": {
+    "file": "pt-BR-DasMTKS8.js",
+    "name": "pt-BR",
+    "src": "../nanobot/channels/feishu/webui/locales/pt-BR.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/feishu/webui/locales/vi.json": {
+    "file": "vi-Df7fHBO6.js",
+    "name": "vi",
+    "src": "../nanobot/channels/feishu/webui/locales/vi.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/feishu/webui/locales/zh-CN.json": {
+    "file": "zh-CN-Bw-14EV9.js",
+    "name": "zh-CN",
+    "src": "../nanobot/channels/feishu/webui/locales/zh-CN.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/feishu/webui/locales/zh-TW.json": {
+    "file": "zh-TW-BUWp08UR.js",
+    "name": "zh-TW",
+    "src": "../nanobot/channels/feishu/webui/locales/zh-TW.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/matrix/webui/locales/en.json": {
+    "file": "en-BT8hg3_B.js",
+    "name": "en",
+    "src": "../nanobot/channels/matrix/webui/locales/en.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/matrix/webui/locales/es.json": {
+    "file": "es-BSSjACVF.js",
+    "name": "es",
+    "src": "../nanobot/channels/matrix/webui/locales/es.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/matrix/webui/locales/fr.json": {
+    "file": "fr--Md2unyb.js",
+    "name": "fr",
+    "src": "../nanobot/channels/matrix/webui/locales/fr.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/matrix/webui/locales/id.json": {
+    "file": "id-DarK43Zc.js",
+    "name": "id",
+    "src": "../nanobot/channels/matrix/webui/locales/id.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/matrix/webui/locales/ja.json": {
+    "file": "ja-BECBVcJo.js",
+    "name": "ja",
+    "src": "../nanobot/channels/matrix/webui/locales/ja.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/matrix/webui/locales/ko.json": {
+    "file": "ko-CkOYFYaJ.js",
+    "name": "ko",
+    "src": "../nanobot/channels/matrix/webui/locales/ko.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/matrix/webui/locales/pt-BR.json": {
+    "file": "pt-BR-CfO0nsVx.js",
+    "name": "pt-BR",
+    "src": "../nanobot/channels/matrix/webui/locales/pt-BR.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/matrix/webui/locales/vi.json": {
+    "file": "vi-D7vTmaep.js",
+    "name": "vi",
+    "src": "../nanobot/channels/matrix/webui/locales/vi.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/matrix/webui/locales/zh-CN.json": {
+    "file": "zh-CN-CbeTbj05.js",
+    "name": "zh-CN",
+    "src": "../nanobot/channels/matrix/webui/locales/zh-CN.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/matrix/webui/locales/zh-TW.json": {
+    "file": "zh-TW-q8fHY8fp.js",
+    "name": "zh-TW",
+    "src": "../nanobot/channels/matrix/webui/locales/zh-TW.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/mattermost/webui/locales/en.json": {
+    "file": "en-DzMlINv_.js",
+    "name": "en",
+    "src": "../nanobot/channels/mattermost/webui/locales/en.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/mattermost/webui/locales/es.json": {
+    "file": "es-CWfhDtVR.js",
+    "name": "es",
+    "src": "../nanobot/channels/mattermost/webui/locales/es.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/mattermost/webui/locales/fr.json": {
+    "file": "fr-BzAsHr3u.js",
+    "name": "fr",
+    "src": "../nanobot/channels/mattermost/webui/locales/fr.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/mattermost/webui/locales/id.json": {
+    "file": "id-BqJ5idP1.js",
+    "name": "id",
+    "src": "../nanobot/channels/mattermost/webui/locales/id.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/mattermost/webui/locales/ja.json": {
+    "file": "ja-C9MOie9M.js",
+    "name": "ja",
+    "src": "../nanobot/channels/mattermost/webui/locales/ja.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/mattermost/webui/locales/ko.json": {
+    "file": "ko-BdtUUZAc.js",
+    "name": "ko",
+    "src": "../nanobot/channels/mattermost/webui/locales/ko.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/mattermost/webui/locales/pt-BR.json": {
+    "file": "pt-BR-DPqxa4Ec.js",
+    "name": "pt-BR",
+    "src": "../nanobot/channels/mattermost/webui/locales/pt-BR.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/mattermost/webui/locales/vi.json": {
+    "file": "vi-DFKfcz-R.js",
+    "name": "vi",
+    "src": "../nanobot/channels/mattermost/webui/locales/vi.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/mattermost/webui/locales/zh-CN.json": {
+    "file": "zh-CN-D5YDmCWf.js",
+    "name": "zh-CN",
+    "src": "../nanobot/channels/mattermost/webui/locales/zh-CN.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/mattermost/webui/locales/zh-TW.json": {
+    "file": "zh-TW-Cb92eXL4.js",
+    "name": "zh-TW",
+    "src": "../nanobot/channels/mattermost/webui/locales/zh-TW.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/msteams/webui/locales/en.json": {
+    "file": "en-BBkhmqlh.js",
+    "name": "en",
+    "src": "../nanobot/channels/msteams/webui/locales/en.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/msteams/webui/locales/es.json": {
+    "file": "es-b7JOILJe.js",
+    "name": "es",
+    "src": "../nanobot/channels/msteams/webui/locales/es.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/msteams/webui/locales/fr.json": {
+    "file": "fr-DW3GaTp4.js",
+    "name": "fr",
+    "src": "../nanobot/channels/msteams/webui/locales/fr.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/msteams/webui/locales/id.json": {
+    "file": "id-DRvQEfd-.js",
+    "name": "id",
+    "src": "../nanobot/channels/msteams/webui/locales/id.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/msteams/webui/locales/ja.json": {
+    "file": "ja-Bvib-Nxf.js",
+    "name": "ja",
+    "src": "../nanobot/channels/msteams/webui/locales/ja.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/msteams/webui/locales/ko.json": {
+    "file": "ko-Dq-Il5-J.js",
+    "name": "ko",
+    "src": "../nanobot/channels/msteams/webui/locales/ko.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/msteams/webui/locales/pt-BR.json": {
+    "file": "pt-BR-CTbst4i5.js",
+    "name": "pt-BR",
+    "src": "../nanobot/channels/msteams/webui/locales/pt-BR.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/msteams/webui/locales/vi.json": {
+    "file": "vi-BQKjF5Ul.js",
+    "name": "vi",
+    "src": "../nanobot/channels/msteams/webui/locales/vi.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/msteams/webui/locales/zh-CN.json": {
+    "file": "zh-CN-DMUAQYJV.js",
+    "name": "zh-CN",
+    "src": "../nanobot/channels/msteams/webui/locales/zh-CN.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/msteams/webui/locales/zh-TW.json": {
+    "file": "zh-TW-l6kE89YM.js",
+    "name": "zh-TW",
+    "src": "../nanobot/channels/msteams/webui/locales/zh-TW.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/napcat/webui/locales/en.json": {
+    "file": "en-BlgaYsf6.js",
+    "name": "en",
+    "src": "../nanobot/channels/napcat/webui/locales/en.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/napcat/webui/locales/es.json": {
+    "file": "es-CUoAjQQG.js",
+    "name": "es",
+    "src": "../nanobot/channels/napcat/webui/locales/es.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/napcat/webui/locales/fr.json": {
+    "file": "fr-Bn54z3bk.js",
+    "name": "fr",
+    "src": "../nanobot/channels/napcat/webui/locales/fr.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/napcat/webui/locales/id.json": {
+    "file": "id-z27T_SBE.js",
+    "name": "id",
+    "src": "../nanobot/channels/napcat/webui/locales/id.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/napcat/webui/locales/ja.json": {
+    "file": "ja-BE6C8H8Q.js",
+    "name": "ja",
+    "src": "../nanobot/channels/napcat/webui/locales/ja.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/napcat/webui/locales/ko.json": {
+    "file": "ko-BCzkitup.js",
+    "name": "ko",
+    "src": "../nanobot/channels/napcat/webui/locales/ko.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/napcat/webui/locales/pt-BR.json": {
+    "file": "pt-BR-C5b_Aw6n.js",
+    "name": "pt-BR",
+    "src": "../nanobot/channels/napcat/webui/locales/pt-BR.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/napcat/webui/locales/vi.json": {
+    "file": "vi-4yHNn6C0.js",
+    "name": "vi",
+    "src": "../nanobot/channels/napcat/webui/locales/vi.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/napcat/webui/locales/zh-CN.json": {
+    "file": "zh-CN-BK_vDyXr.js",
+    "name": "zh-CN",
+    "src": "../nanobot/channels/napcat/webui/locales/zh-CN.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/napcat/webui/locales/zh-TW.json": {
+    "file": "zh-TW-Drv8DDtG.js",
+    "name": "zh-TW",
+    "src": "../nanobot/channels/napcat/webui/locales/zh-TW.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/qq/webui/locales/en.json": {
+    "file": "en-daFg29Da.js",
+    "name": "en",
+    "src": "../nanobot/channels/qq/webui/locales/en.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/qq/webui/locales/es.json": {
+    "file": "es-dXgE-jne.js",
+    "name": "es",
+    "src": "../nanobot/channels/qq/webui/locales/es.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/qq/webui/locales/fr.json": {
+    "file": "fr-h9l6JEEz.js",
+    "name": "fr",
+    "src": "../nanobot/channels/qq/webui/locales/fr.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/qq/webui/locales/id.json": {
+    "file": "id-7QdlDpg2.js",
+    "name": "id",
+    "src": "../nanobot/channels/qq/webui/locales/id.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/qq/webui/locales/ja.json": {
+    "file": "ja-GrW9o1RS.js",
+    "name": "ja",
+    "src": "../nanobot/channels/qq/webui/locales/ja.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/qq/webui/locales/ko.json": {
+    "file": "ko-CP_8rvEs.js",
+    "name": "ko",
+    "src": "../nanobot/channels/qq/webui/locales/ko.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/qq/webui/locales/pt-BR.json": {
+    "file": "pt-BR-DLzgTDmq.js",
+    "name": "pt-BR",
+    "src": "../nanobot/channels/qq/webui/locales/pt-BR.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/qq/webui/locales/vi.json": {
+    "file": "vi-DlFSl45c.js",
+    "name": "vi",
+    "src": "../nanobot/channels/qq/webui/locales/vi.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/qq/webui/locales/zh-CN.json": {
+    "file": "zh-CN-CDwnG1KI.js",
+    "name": "zh-CN",
+    "src": "../nanobot/channels/qq/webui/locales/zh-CN.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/qq/webui/locales/zh-TW.json": {
+    "file": "zh-TW-BBfgvmfc.js",
+    "name": "zh-TW",
+    "src": "../nanobot/channels/qq/webui/locales/zh-TW.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/signal/webui/locales/en.json": {
+    "file": "en-DRkglGFL.js",
+    "name": "en",
+    "src": "../nanobot/channels/signal/webui/locales/en.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/signal/webui/locales/es.json": {
+    "file": "es-Jg2dencr.js",
+    "name": "es",
+    "src": "../nanobot/channels/signal/webui/locales/es.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/signal/webui/locales/fr.json": {
+    "file": "fr-C8q66n6y.js",
+    "name": "fr",
+    "src": "../nanobot/channels/signal/webui/locales/fr.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/signal/webui/locales/id.json": {
+    "file": "id-B_AXZ4uH.js",
+    "name": "id",
+    "src": "../nanobot/channels/signal/webui/locales/id.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/signal/webui/locales/ja.json": {
+    "file": "ja-bTp1YPyo.js",
+    "name": "ja",
+    "src": "../nanobot/channels/signal/webui/locales/ja.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/signal/webui/locales/ko.json": {
+    "file": "ko-C8Aq1009.js",
+    "name": "ko",
+    "src": "../nanobot/channels/signal/webui/locales/ko.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/signal/webui/locales/pt-BR.json": {
+    "file": "pt-BR-CCOAwkWd.js",
+    "name": "pt-BR",
+    "src": "../nanobot/channels/signal/webui/locales/pt-BR.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/signal/webui/locales/vi.json": {
+    "file": "vi-C6TpgQQI.js",
+    "name": "vi",
+    "src": "../nanobot/channels/signal/webui/locales/vi.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/signal/webui/locales/zh-CN.json": {
+    "file": "zh-CN-pNE7FGk-.js",
+    "name": "zh-CN",
+    "src": "../nanobot/channels/signal/webui/locales/zh-CN.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/signal/webui/locales/zh-TW.json": {
+    "file": "zh-TW-TEjOVgoM.js",
+    "name": "zh-TW",
+    "src": "../nanobot/channels/signal/webui/locales/zh-TW.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/slack/webui/locales/en.json": {
+    "file": "en-Cmy_0zeG.js",
+    "name": "en",
+    "src": "../nanobot/channels/slack/webui/locales/en.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/slack/webui/locales/es.json": {
+    "file": "es-DY1TM-3Z.js",
+    "name": "es",
+    "src": "../nanobot/channels/slack/webui/locales/es.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/slack/webui/locales/fr.json": {
+    "file": "fr-BKZS-zQ0.js",
+    "name": "fr",
+    "src": "../nanobot/channels/slack/webui/locales/fr.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/slack/webui/locales/id.json": {
+    "file": "id-DA-l0MwH.js",
+    "name": "id",
+    "src": "../nanobot/channels/slack/webui/locales/id.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/slack/webui/locales/ja.json": {
+    "file": "ja-BcUIswwy.js",
+    "name": "ja",
+    "src": "../nanobot/channels/slack/webui/locales/ja.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/slack/webui/locales/ko.json": {
+    "file": "ko-DLEs_mfo.js",
+    "name": "ko",
+    "src": "../nanobot/channels/slack/webui/locales/ko.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/slack/webui/locales/pt-BR.json": {
+    "file": "pt-BR-DsJsLSxC.js",
+    "name": "pt-BR",
+    "src": "../nanobot/channels/slack/webui/locales/pt-BR.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/slack/webui/locales/vi.json": {
+    "file": "vi-Dlf8sRG4.js",
+    "name": "vi",
+    "src": "../nanobot/channels/slack/webui/locales/vi.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/slack/webui/locales/zh-CN.json": {
+    "file": "zh-CN-D5iR-fKG.js",
+    "name": "zh-CN",
+    "src": "../nanobot/channels/slack/webui/locales/zh-CN.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/slack/webui/locales/zh-TW.json": {
+    "file": "zh-TW-Bz9JM1yw.js",
+    "name": "zh-TW",
+    "src": "../nanobot/channels/slack/webui/locales/zh-TW.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/telegram/webui/locales/en.json": {
+    "file": "en-BLCg_U4Z.js",
+    "name": "en",
+    "src": "../nanobot/channels/telegram/webui/locales/en.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/telegram/webui/locales/es.json": {
+    "file": "es-DCe7tJ9o.js",
+    "name": "es",
+    "src": "../nanobot/channels/telegram/webui/locales/es.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/telegram/webui/locales/fr.json": {
+    "file": "fr-vs7g4zK5.js",
+    "name": "fr",
+    "src": "../nanobot/channels/telegram/webui/locales/fr.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/telegram/webui/locales/id.json": {
+    "file": "id-ipBeV9Bb.js",
+    "name": "id",
+    "src": "../nanobot/channels/telegram/webui/locales/id.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/telegram/webui/locales/ja.json": {
+    "file": "ja-BzWycEb4.js",
+    "name": "ja",
+    "src": "../nanobot/channels/telegram/webui/locales/ja.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/telegram/webui/locales/ko.json": {
+    "file": "ko-BNN9OB9p.js",
+    "name": "ko",
+    "src": "../nanobot/channels/telegram/webui/locales/ko.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/telegram/webui/locales/pt-BR.json": {
+    "file": "pt-BR-Dk01s9l5.js",
+    "name": "pt-BR",
+    "src": "../nanobot/channels/telegram/webui/locales/pt-BR.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/telegram/webui/locales/vi.json": {
+    "file": "vi--lfTIk_O.js",
+    "name": "vi",
+    "src": "../nanobot/channels/telegram/webui/locales/vi.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/telegram/webui/locales/zh-CN.json": {
+    "file": "zh-CN-sbrlHAJC.js",
+    "name": "zh-CN",
+    "src": "../nanobot/channels/telegram/webui/locales/zh-CN.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/telegram/webui/locales/zh-TW.json": {
+    "file": "zh-TW-CJQQfGYO.js",
+    "name": "zh-TW",
+    "src": "../nanobot/channels/telegram/webui/locales/zh-TW.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/websocket/webui/locales/en.json": {
+    "file": "en-czuQpufb.js",
+    "name": "en",
+    "src": "../nanobot/channels/websocket/webui/locales/en.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/websocket/webui/locales/es.json": {
+    "file": "es-BJSs-HbY.js",
+    "name": "es",
+    "src": "../nanobot/channels/websocket/webui/locales/es.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/websocket/webui/locales/fr.json": {
+    "file": "fr-DMezJLo5.js",
+    "name": "fr",
+    "src": "../nanobot/channels/websocket/webui/locales/fr.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/websocket/webui/locales/id.json": {
+    "file": "id-CrDqwJFq.js",
+    "name": "id",
+    "src": "../nanobot/channels/websocket/webui/locales/id.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/websocket/webui/locales/ja.json": {
+    "file": "ja-Bq2ZtYn2.js",
+    "name": "ja",
+    "src": "../nanobot/channels/websocket/webui/locales/ja.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/websocket/webui/locales/ko.json": {
+    "file": "ko-gpgspn2o.js",
+    "name": "ko",
+    "src": "../nanobot/channels/websocket/webui/locales/ko.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/websocket/webui/locales/pt-BR.json": {
+    "file": "pt-BR-MbCtHVNN.js",
+    "name": "pt-BR",
+    "src": "../nanobot/channels/websocket/webui/locales/pt-BR.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/websocket/webui/locales/vi.json": {
+    "file": "vi-DNfXZ_HX.js",
+    "name": "vi",
+    "src": "../nanobot/channels/websocket/webui/locales/vi.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/websocket/webui/locales/zh-CN.json": {
+    "file": "zh-CN-COEKp5Ur.js",
+    "name": "zh-CN",
+    "src": "../nanobot/channels/websocket/webui/locales/zh-CN.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/websocket/webui/locales/zh-TW.json": {
+    "file": "zh-TW-9u14jahF.js",
+    "name": "zh-TW",
+    "src": "../nanobot/channels/websocket/webui/locales/zh-TW.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/wecom/webui/locales/en.json": {
+    "file": "en-BLbqrC6u.js",
+    "name": "en",
+    "src": "../nanobot/channels/wecom/webui/locales/en.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/wecom/webui/locales/es.json": {
+    "file": "es-Dp6uhSAU.js",
+    "name": "es",
+    "src": "../nanobot/channels/wecom/webui/locales/es.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/wecom/webui/locales/fr.json": {
+    "file": "fr-irNBT_yw.js",
+    "name": "fr",
+    "src": "../nanobot/channels/wecom/webui/locales/fr.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/wecom/webui/locales/id.json": {
+    "file": "id-DT1a3Bwt.js",
+    "name": "id",
+    "src": "../nanobot/channels/wecom/webui/locales/id.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/wecom/webui/locales/ja.json": {
+    "file": "ja-DPZeRQcn.js",
+    "name": "ja",
+    "src": "../nanobot/channels/wecom/webui/locales/ja.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/wecom/webui/locales/ko.json": {
+    "file": "ko-sYgnERz9.js",
+    "name": "ko",
+    "src": "../nanobot/channels/wecom/webui/locales/ko.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/wecom/webui/locales/pt-BR.json": {
+    "file": "pt-BR-BU3Zitr5.js",
+    "name": "pt-BR",
+    "src": "../nanobot/channels/wecom/webui/locales/pt-BR.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/wecom/webui/locales/vi.json": {
+    "file": "vi-8gpgpLAx.js",
+    "name": "vi",
+    "src": "../nanobot/channels/wecom/webui/locales/vi.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/wecom/webui/locales/zh-CN.json": {
+    "file": "zh-CN-DptzGoDQ.js",
+    "name": "zh-CN",
+    "src": "../nanobot/channels/wecom/webui/locales/zh-CN.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/wecom/webui/locales/zh-TW.json": {
+    "file": "zh-TW-DYp2v7PK.js",
+    "name": "zh-TW",
+    "src": "../nanobot/channels/wecom/webui/locales/zh-TW.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/weixin/webui/WeixinConnectFlow.tsx": {
+    "file": "WeixinConnectFlow-6LXPTR3i.js",
+    "name": "WeixinConnectFlow",
+    "src": "../nanobot/channels/weixin/webui/WeixinConnectFlow.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_hosted-entry-Dbp-ZpRx.js",
+      "_ChannelQrConnectFlow-DjtnbZ5C.js"
+    ]
+  },
+  "../nanobot/channels/weixin/webui/WeixinPanel.tsx": {
+    "file": "WeixinPanel-zFFTzeAi.js",
+    "name": "WeixinPanel",
+    "src": "../nanobot/channels/weixin/webui/WeixinPanel.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_hosted-entry-Dbp-ZpRx.js",
+      "_CredentialForm-BtPPyOG2.js",
+      "../nanobot/channels/weixin/webui/WeixinConnectFlow.tsx"
+    ]
+  },
+  "../nanobot/channels/weixin/webui/locales/en.json": {
+    "file": "en-DLJx34u0.js",
+    "name": "en",
+    "src": "../nanobot/channels/weixin/webui/locales/en.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/weixin/webui/locales/es.json": {
+    "file": "es-Di1tvCRs.js",
+    "name": "es",
+    "src": "../nanobot/channels/weixin/webui/locales/es.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/weixin/webui/locales/fr.json": {
+    "file": "fr-4baqu0pZ.js",
+    "name": "fr",
+    "src": "../nanobot/channels/weixin/webui/locales/fr.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/weixin/webui/locales/id.json": {
+    "file": "id-BEeNgxZp.js",
+    "name": "id",
+    "src": "../nanobot/channels/weixin/webui/locales/id.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/weixin/webui/locales/ja.json": {
+    "file": "ja-CMKtEno8.js",
+    "name": "ja",
+    "src": "../nanobot/channels/weixin/webui/locales/ja.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/weixin/webui/locales/ko.json": {
+    "file": "ko-BrPbrgrD.js",
+    "name": "ko",
+    "src": "../nanobot/channels/weixin/webui/locales/ko.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/weixin/webui/locales/pt-BR.json": {
+    "file": "pt-BR-fCl_WihI.js",
+    "name": "pt-BR",
+    "src": "../nanobot/channels/weixin/webui/locales/pt-BR.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/weixin/webui/locales/vi.json": {
+    "file": "vi-CnPk7av6.js",
+    "name": "vi",
+    "src": "../nanobot/channels/weixin/webui/locales/vi.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/weixin/webui/locales/zh-CN.json": {
+    "file": "zh-CN-ChUvebAw.js",
+    "name": "zh-CN",
+    "src": "../nanobot/channels/weixin/webui/locales/zh-CN.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/weixin/webui/locales/zh-TW.json": {
+    "file": "zh-TW-CZb-SHJf.js",
+    "name": "zh-TW",
+    "src": "../nanobot/channels/weixin/webui/locales/zh-TW.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/whatsapp/webui/locales/en.json": {
+    "file": "en-Cq6yjid3.js",
+    "name": "en",
+    "src": "../nanobot/channels/whatsapp/webui/locales/en.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/whatsapp/webui/locales/es.json": {
+    "file": "es-oF0rIFLK.js",
+    "name": "es",
+    "src": "../nanobot/channels/whatsapp/webui/locales/es.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/whatsapp/webui/locales/fr.json": {
+    "file": "fr-JMs9qfjC.js",
+    "name": "fr",
+    "src": "../nanobot/channels/whatsapp/webui/locales/fr.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/whatsapp/webui/locales/id.json": {
+    "file": "id-D4Ca91k9.js",
+    "name": "id",
+    "src": "../nanobot/channels/whatsapp/webui/locales/id.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/whatsapp/webui/locales/ja.json": {
+    "file": "ja-tcnh9NIe.js",
+    "name": "ja",
+    "src": "../nanobot/channels/whatsapp/webui/locales/ja.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/whatsapp/webui/locales/ko.json": {
+    "file": "ko-Bdvq9xCw.js",
+    "name": "ko",
+    "src": "../nanobot/channels/whatsapp/webui/locales/ko.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/whatsapp/webui/locales/pt-BR.json": {
+    "file": "pt-BR-C0pGqjsn.js",
+    "name": "pt-BR",
+    "src": "../nanobot/channels/whatsapp/webui/locales/pt-BR.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/whatsapp/webui/locales/vi.json": {
+    "file": "vi-BRp-P1_n.js",
+    "name": "vi",
+    "src": "../nanobot/channels/whatsapp/webui/locales/vi.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/whatsapp/webui/locales/zh-CN.json": {
+    "file": "zh-CN-CbUPE0jY.js",
+    "name": "zh-CN",
+    "src": "../nanobot/channels/whatsapp/webui/locales/zh-CN.json",
+    "isDynamicEntry": true
+  },
+  "../nanobot/channels/whatsapp/webui/locales/zh-TW.json": {
+    "file": "zh-TW-IG4l8Q8S.js",
+    "name": "zh-TW",
+    "src": "../nanobot/channels/whatsapp/webui/locales/zh-TW.json",
+    "isDynamicEntry": true
+  },
+  "_ChannelInstancesPanel-DSJdZ6YA.js": {
+    "file": "ChannelInstancesPanel-DSJdZ6YA.js",
+    "name": "ChannelInstancesPanel",
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_hosted-entry-Dbp-ZpRx.js",
+      "_CredentialForm-BtPPyOG2.js"
+    ]
+  },
+  "_ChannelQrConnectFlow-DjtnbZ5C.js": {
+    "file": "ChannelQrConnectFlow-DjtnbZ5C.js",
+    "name": "ChannelQrConnectFlow",
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_hosted-entry-Dbp-ZpRx.js",
+      "_rotate-ccw-BtFYjp5j.js"
+    ]
+  },
+  "_CredentialForm-BtPPyOG2.js": {
+    "file": "CredentialForm-BtPPyOG2.js",
+    "name": "CredentialForm",
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_hosted-entry-Dbp-ZpRx.js"
+    ]
+  },
+  "_abap-Dt-ZkZ8d.js": {
+    "file": "abap-Dt-ZkZ8d.js",
+    "name": "abap",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_abnf-K6bY5jh-.js": {
+    "file": "abnf-K6bY5jh-.js",
+    "name": "abnf",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_actionscript-CXv8Z1kb.js": {
+    "file": "actionscript-CXv8Z1kb.js",
+    "name": "actionscript",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_ada-Be9Sqmsn.js": {
+    "file": "ada-Be9Sqmsn.js",
+    "name": "ada",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_agda-CblUi51N.js": {
+    "file": "agda-CblUi51N.js",
+    "name": "agda",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_al-NLEefinu.js": {
+    "file": "al-NLEefinu.js",
+    "name": "al",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_alert-dialog-CfCoRZqX.js": {
+    "file": "alert-dialog-CfCoRZqX.js",
+    "name": "alert-dialog",
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_hosted-entry-Dbp-ZpRx.js"
+    ]
+  },
+  "_antlr4-QDNUPOWd.js": {
+    "file": "antlr4-QDNUPOWd.js",
+    "name": "antlr4",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_apacheconf-z5In0AnZ.js": {
+    "file": "apacheconf-z5In0AnZ.js",
+    "name": "apacheconf",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_apex-1KAMpWa2.js": {
+    "file": "apex-1KAMpWa2.js",
+    "name": "apex",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_sql-EJXNs70e.js"
+    ]
+  },
+  "_apl-DWa61v4l.js": {
+    "file": "apl-DWa61v4l.js",
+    "name": "apl",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_applescript-D-ytfI5k.js": {
+    "file": "applescript-D-ytfI5k.js",
+    "name": "applescript",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_aql-TiBvTiDG.js": {
+    "file": "aql-TiBvTiDG.js",
+    "name": "aql",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_arduino-D5E-ggGh.js": {
+    "file": "arduino-D5E-ggGh.js",
+    "name": "arduino",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_cpp-B25c52v4.js"
+    ]
+  },
+  "_arff-DHvsqel_.js": {
+    "file": "arff-DHvsqel_.js",
+    "name": "arff",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_asciidoc-NM6iEyeW.js": {
+    "file": "asciidoc-NM6iEyeW.js",
+    "name": "asciidoc",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_asm6502-CTUiWTie.js": {
+    "file": "asm6502-CTUiWTie.js",
+    "name": "asm6502",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_asmatmel-OI-0jo4G.js": {
+    "file": "asmatmel-OI-0jo4G.js",
+    "name": "asmatmel",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_aspnet-BkFd4aJE.js": {
+    "file": "aspnet-BkFd4aJE.js",
+    "name": "aspnet",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_csharp-CB0qOhc4.js"
+    ]
+  },
+  "_autohotkey-CnIyIQyn.js": {
+    "file": "autohotkey-CnIyIQyn.js",
+    "name": "autohotkey",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_autoit-C8EFeecb.js": {
+    "file": "autoit-C8EFeecb.js",
+    "name": "autoit",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_avisynth-BIsW19gH.js": {
+    "file": "avisynth-BIsW19gH.js",
+    "name": "avisynth",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_avro-idl-EDTR838I.js": {
+    "file": "avro-idl-EDTR838I.js",
+    "name": "avro-idl",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_bash-KE62vJQD.js": {
+    "file": "bash-KE62vJQD.js",
+    "name": "bash",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_basic-Cr2hjSUo.js": {
+    "file": "basic-Cr2hjSUo.js",
+    "name": "basic",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_batch-CD1DByGr.js": {
+    "file": "batch-CD1DByGr.js",
+    "name": "batch",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_bbcode-D68WBZ9p.js": {
+    "file": "bbcode-D68WBZ9p.js",
+    "name": "bbcode",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_bicep-CwEWbCcM.js": {
+    "file": "bicep-CwEWbCcM.js",
+    "name": "bicep",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_birb-FD8Sg1ds.js": {
+    "file": "birb-FD8Sg1ds.js",
+    "name": "birb",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_bison-D6JjpaUE.js": {
+    "file": "bison-D6JjpaUE.js",
+    "name": "bison",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_c-CMrkL8iu.js"
+    ]
+  },
+  "_bnf-D_CjSF1T.js": {
+    "file": "bnf-D_CjSF1T.js",
+    "name": "bnf",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_brainfuck-BCGvksXZ.js": {
+    "file": "brainfuck-BCGvksXZ.js",
+    "name": "brainfuck",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_brightscript-CtnnCzoq.js": {
+    "file": "brightscript-CtnnCzoq.js",
+    "name": "brightscript",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_bro-DByZc0ca.js": {
+    "file": "bro-DByZc0ca.js",
+    "name": "bro",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_bsl-DOE0QjNt.js": {
+    "file": "bsl-DOE0QjNt.js",
+    "name": "bsl",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_c-CMrkL8iu.js": {
+    "file": "c-CMrkL8iu.js",
+    "name": "c",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_cfscript-Eo8oJ_BK.js": {
+    "file": "cfscript-Eo8oJ_BK.js",
+    "name": "cfscript",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_chaiscript-DL5OInck.js": {
+    "file": "chaiscript-DL5OInck.js",
+    "name": "chaiscript",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_cpp-B25c52v4.js"
+    ]
+  },
+  "_cil-DNvT6QAG.js": {
+    "file": "cil-DNvT6QAG.js",
+    "name": "cil",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_clojure--HYa2OLb.js": {
+    "file": "clojure--HYa2OLb.js",
+    "name": "clojure",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_cmake-D5d3QtB8.js": {
+    "file": "cmake-D5d3QtB8.js",
+    "name": "cmake",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_cobol-Bj18w3aq.js": {
+    "file": "cobol-Bj18w3aq.js",
+    "name": "cobol",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_coffeescript-C4b7rtfn.js": {
+    "file": "coffeescript-C4b7rtfn.js",
+    "name": "coffeescript",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_concurnas-Gyd8bQzV.js": {
+    "file": "concurnas-Gyd8bQzV.js",
+    "name": "concurnas",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_coq-Cl3sSfAQ.js": {
+    "file": "coq-Cl3sSfAQ.js",
+    "name": "coq",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_cpp-B25c52v4.js": {
+    "file": "cpp-B25c52v4.js",
+    "name": "cpp",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_c-CMrkL8iu.js"
+    ]
+  },
+  "_crystal-h05TIvgC.js": {
+    "file": "crystal-h05TIvgC.js",
+    "name": "crystal",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_ruby-g5ZPYV15.js"
+    ]
+  },
+  "_csharp-CB0qOhc4.js": {
+    "file": "csharp-CB0qOhc4.js",
+    "name": "csharp",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_cshtml-Dbf9lmoL.js": {
+    "file": "cshtml-Dbf9lmoL.js",
+    "name": "cshtml",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_csharp-CB0qOhc4.js"
+    ]
+  },
+  "_csp-C0_U19IW.js": {
+    "file": "csp-C0_U19IW.js",
+    "name": "csp",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_css-extras-BnEun_l3.js": {
+    "file": "css-extras-BnEun_l3.js",
+    "name": "css-extras",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_csv-BEUS1c7D.js": {
+    "file": "csv-BEUS1c7D.js",
+    "name": "csv",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_cypher-0pFLeUax.js": {
+    "file": "cypher-0pFLeUax.js",
+    "name": "cypher",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_d-DHvNyoxm.js": {
+    "file": "d-DHvNyoxm.js",
+    "name": "d",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_dart-CPZY_k6N.js": {
+    "file": "dart-CPZY_k6N.js",
+    "name": "dart",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_dataweave-Djxu8yPz.js": {
+    "file": "dataweave-Djxu8yPz.js",
+    "name": "dataweave",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_dax-DHghljqw.js": {
+    "file": "dax-DHghljqw.js",
+    "name": "dax",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_dhall-PboMqWuD.js": {
+    "file": "dhall-PboMqWuD.js",
+    "name": "dhall",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_dialog-rx9XBEgS.js": {
+    "file": "dialog-rx9XBEgS.js",
+    "name": "dialog",
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_hosted-entry-Dbp-ZpRx.js"
+    ]
+  },
+  "_diff-CyXopcXO.js": {
+    "file": "diff-CyXopcXO.js",
+    "name": "diff",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_django-GLcK3IVY.js": {
+    "file": "django-GLcK3IVY.js",
+    "name": "django",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_markup-templating-B7dfCu7L.js"
+    ]
+  },
+  "_dns-zone-file-DSPkTOZI.js": {
+    "file": "dns-zone-file-DSPkTOZI.js",
+    "name": "dns-zone-file",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_docker-Cg37rMhS.js": {
+    "file": "docker-Cg37rMhS.js",
+    "name": "docker",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_dot-FmXiGXKA.js": {
+    "file": "dot-FmXiGXKA.js",
+    "name": "dot",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_ebnf-9CZqI_3-.js": {
+    "file": "ebnf-9CZqI_3-.js",
+    "name": "ebnf",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_editorconfig-qAATdJJ8.js": {
+    "file": "editorconfig-qAATdJJ8.js",
+    "name": "editorconfig",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_eiffel-BCzVzJJJ.js": {
+    "file": "eiffel-BCzVzJJJ.js",
+    "name": "eiffel",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_ejs-aasqnShN.js": {
+    "file": "ejs-aasqnShN.js",
+    "name": "ejs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_markup-templating-B7dfCu7L.js"
+    ]
+  },
+  "_elixir-969Blpca.js": {
+    "file": "elixir-969Blpca.js",
+    "name": "elixir",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_elm-DXMXV5Hu.js": {
+    "file": "elm-DXMXV5Hu.js",
+    "name": "elm",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_erb-12xoxBwN.js": {
+    "file": "erb-12xoxBwN.js",
+    "name": "erb",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_ruby-g5ZPYV15.js",
+      "_markup-templating-B7dfCu7L.js"
+    ]
+  },
+  "_erlang-Cj9di4pY.js": {
+    "file": "erlang-Cj9di4pY.js",
+    "name": "erlang",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_etlua-D2-8R51A.js": {
+    "file": "etlua-D2-8R51A.js",
+    "name": "etlua",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_lua-lUboL0Fh.js",
+      "_markup-templating-B7dfCu7L.js"
+    ]
+  },
+  "_excel-formula-BDS6x60G.js": {
+    "file": "excel-formula-BDS6x60G.js",
+    "name": "excel-formula",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_factor-D6S8j0bL.js": {
+    "file": "factor-D6S8j0bL.js",
+    "name": "factor",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_false-C9oBTGCj.js": {
+    "file": "false-C9oBTGCj.js",
+    "name": "false",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_firestore-security-rules-ChSBSCrS.js": {
+    "file": "firestore-security-rules-ChSBSCrS.js",
+    "name": "firestore-security-rules",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_flow-BS7lZw3n.js": {
+    "file": "flow-BS7lZw3n.js",
+    "name": "flow",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_fortran-DuQjao39.js": {
+    "file": "fortran-DuQjao39.js",
+    "name": "fortran",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_fsharp-BthJOeYS.js": {
+    "file": "fsharp-BthJOeYS.js",
+    "name": "fsharp",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_ftl-CWhImJwE.js": {
+    "file": "ftl-CWhImJwE.js",
+    "name": "ftl",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_markup-templating-B7dfCu7L.js"
+    ]
+  },
+  "_gap-CUh4CUDU.js": {
+    "file": "gap-CUh4CUDU.js",
+    "name": "gap",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_gcode-C5VUHliY.js": {
+    "file": "gcode-C5VUHliY.js",
+    "name": "gcode",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_gdscript-DJeGXzE4.js": {
+    "file": "gdscript-DJeGXzE4.js",
+    "name": "gdscript",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_gedcom-ZaZGvBeM.js": {
+    "file": "gedcom-ZaZGvBeM.js",
+    "name": "gedcom",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_gherkin-CTkjqJLI.js": {
+    "file": "gherkin-CTkjqJLI.js",
+    "name": "gherkin",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_git-CVxsvxSL.js": {
+    "file": "git-CVxsvxSL.js",
+    "name": "git",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_glsl-C2I-bDh4.js": {
+    "file": "glsl-C2I-bDh4.js",
+    "name": "glsl",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_c-CMrkL8iu.js"
+    ]
+  },
+  "_gml-D562_JNF.js": {
+    "file": "gml-D562_JNF.js",
+    "name": "gml",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_gn-CxXYr8RE.js": {
+    "file": "gn-CxXYr8RE.js",
+    "name": "gn",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_go-DAJgUbhF.js": {
+    "file": "go-DAJgUbhF.js",
+    "name": "go",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_go-module-74AdALwj.js": {
+    "file": "go-module-74AdALwj.js",
+    "name": "go-module",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_graphql-BcMs5RFA.js": {
+    "file": "graphql-BcMs5RFA.js",
+    "name": "graphql",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_groovy-DShAK9xi.js": {
+    "file": "groovy-DShAK9xi.js",
+    "name": "groovy",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_haml-fVS4Vu1o.js": {
+    "file": "haml-fVS4Vu1o.js",
+    "name": "haml",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_ruby-g5ZPYV15.js"
+    ]
+  },
+  "_handlebars-B-KqadSe.js": {
+    "file": "handlebars-B-KqadSe.js",
+    "name": "handlebars",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_markup-templating-B7dfCu7L.js"
+    ]
+  },
+  "_haskell-CavYoB0h.js": {
+    "file": "haskell-CavYoB0h.js",
+    "name": "haskell",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_haxe-CB5jtBK3.js": {
+    "file": "haxe-CB5jtBK3.js",
+    "name": "haxe",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_hcl-BJlrumHu.js": {
+    "file": "hcl-BJlrumHu.js",
+    "name": "hcl",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_hlsl-C_uW6-Uk.js": {
+    "file": "hlsl-C_uW6-Uk.js",
+    "name": "hlsl",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_c-CMrkL8iu.js"
+    ]
+  },
+  "_hoon-k1lZUz-1.js": {
+    "file": "hoon-k1lZUz-1.js",
+    "name": "hoon",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_hosted-entry-Dbp-ZpRx.js": {
+    "file": "hosted-entry-Dbp-ZpRx.js",
+    "name": "hosted-entry",
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ],
+    "dynamicImports": [
+      "../nanobot/channels/feishu/webui/FeishuAssistantsPanel.tsx",
+      "../nanobot/channels/weixin/webui/WeixinPanel.tsx",
+      "../nanobot/channels/weixin/webui/WeixinConnectFlow.tsx",
+      "../nanobot/channels/dingtalk/webui/locales/en.json",
+      "../nanobot/channels/dingtalk/webui/locales/es.json",
+      "../nanobot/channels/dingtalk/webui/locales/fr.json",
+      "../nanobot/channels/dingtalk/webui/locales/id.json",
+      "../nanobot/channels/dingtalk/webui/locales/ja.json",
+      "../nanobot/channels/dingtalk/webui/locales/ko.json",
+      "../nanobot/channels/dingtalk/webui/locales/pt-BR.json",
+      "../nanobot/channels/dingtalk/webui/locales/vi.json",
+      "../nanobot/channels/dingtalk/webui/locales/zh-CN.json",
+      "../nanobot/channels/dingtalk/webui/locales/zh-TW.json",
+      "../nanobot/channels/discord/webui/locales/en.json",
+      "../nanobot/channels/discord/webui/locales/es.json",
+      "../nanobot/channels/discord/webui/locales/fr.json",
+      "../nanobot/channels/discord/webui/locales/id.json",
+      "../nanobot/channels/discord/webui/locales/ja.json",
+      "../nanobot/channels/discord/webui/locales/ko.json",
+      "../nanobot/channels/discord/webui/locales/pt-BR.json",
+      "../nanobot/channels/discord/webui/locales/vi.json",
+      "../nanobot/channels/discord/webui/locales/zh-CN.json",
+      "../nanobot/channels/discord/webui/locales/zh-TW.json",
+      "../nanobot/channels/email/webui/locales/en.json",
+      "../nanobot/channels/email/webui/locales/es.json",
+      "../nanobot/channels/email/webui/locales/fr.json",
+      "../nanobot/channels/email/webui/locales/id.json",
+      "../nanobot/channels/email/webui/locales/ja.json",
+      "../nanobot/channels/email/webui/locales/ko.json",
+      "../nanobot/channels/email/webui/locales/pt-BR.json",
+      "../nanobot/channels/email/webui/locales/vi.json",
+      "../nanobot/channels/email/webui/locales/zh-CN.json",
+      "../nanobot/channels/email/webui/locales/zh-TW.json",
+      "../nanobot/channels/feishu/webui/locales/en.json",
+      "../nanobot/channels/feishu/webui/locales/es.json",
+      "../nanobot/channels/feishu/webui/locales/fr.json",
+      "../nanobot/channels/feishu/webui/locales/id.json",
+      "../nanobot/channels/feishu/webui/locales/ja.json",
+      "../nanobot/channels/feishu/webui/locales/ko.json",
+      "../nanobot/channels/feishu/webui/locales/pt-BR.json",
+      "../nanobot/channels/feishu/webui/locales/vi.json",
+      "../nanobot/channels/feishu/webui/locales/zh-CN.json",
+      "../nanobot/channels/feishu/webui/locales/zh-TW.json",
+      "../nanobot/channels/matrix/webui/locales/en.json",
+      "../nanobot/channels/matrix/webui/locales/es.json",
+      "../nanobot/channels/matrix/webui/locales/fr.json",
+      "../nanobot/channels/matrix/webui/locales/id.json",
+      "../nanobot/channels/matrix/webui/locales/ja.json",
+      "../nanobot/channels/matrix/webui/locales/ko.json",
+      "../nanobot/channels/matrix/webui/locales/pt-BR.json",
+      "../nanobot/channels/matrix/webui/locales/vi.json",
+      "../nanobot/channels/matrix/webui/locales/zh-CN.json",
+      "../nanobot/channels/matrix/webui/locales/zh-TW.json",
+      "../nanobot/channels/mattermost/webui/locales/en.json",
+      "../nanobot/channels/mattermost/webui/locales/es.json",
+      "../nanobot/channels/mattermost/webui/locales/fr.json",
+      "../nanobot/channels/mattermost/webui/locales/id.json",
+      "../nanobot/channels/mattermost/webui/locales/ja.json",
+      "../nanobot/channels/mattermost/webui/locales/ko.json",
+      "../nanobot/channels/mattermost/webui/locales/pt-BR.json",
+      "../nanobot/channels/mattermost/webui/locales/vi.json",
+      "../nanobot/channels/mattermost/webui/locales/zh-CN.json",
+      "../nanobot/channels/mattermost/webui/locales/zh-TW.json",
+      "../nanobot/channels/msteams/webui/locales/en.json",
+      "../nanobot/channels/msteams/webui/locales/es.json",
+      "../nanobot/channels/msteams/webui/locales/fr.json",
+      "../nanobot/channels/msteams/webui/locales/id.json",
+      "../nanobot/channels/msteams/webui/locales/ja.json",
+      "../nanobot/channels/msteams/webui/locales/ko.json",
+      "../nanobot/channels/msteams/webui/locales/pt-BR.json",
+      "../nanobot/channels/msteams/webui/locales/vi.json",
+      "../nanobot/channels/msteams/webui/locales/zh-CN.json",
+      "../nanobot/channels/msteams/webui/locales/zh-TW.json",
+      "../nanobot/channels/napcat/webui/locales/en.json",
+      "../nanobot/channels/napcat/webui/locales/es.json",
+      "../nanobot/channels/napcat/webui/locales/fr.json",
+      "../nanobot/channels/napcat/webui/locales/id.json",
+      "../nanobot/channels/napcat/webui/locales/ja.json",
+      "../nanobot/channels/napcat/webui/locales/ko.json",
+      "../nanobot/channels/napcat/webui/locales/pt-BR.json",
+      "../nanobot/channels/napcat/webui/locales/vi.json",
+      "../nanobot/channels/napcat/webui/locales/zh-CN.json",
+      "../nanobot/channels/napcat/webui/locales/zh-TW.json",
+      "../nanobot/channels/qq/webui/locales/en.json",
+      "../nanobot/channels/qq/webui/locales/es.json",
+      "../nanobot/channels/qq/webui/locales/fr.json",
+      "../nanobot/channels/qq/webui/locales/id.json",
+      "../nanobot/channels/qq/webui/locales/ja.json",
+      "../nanobot/channels/qq/webui/locales/ko.json",
+      "../nanobot/channels/qq/webui/locales/pt-BR.json",
+      "../nanobot/channels/qq/webui/locales/vi.json",
+      "../nanobot/channels/qq/webui/locales/zh-CN.json",
+      "../nanobot/channels/qq/webui/locales/zh-TW.json",
+      "../nanobot/channels/signal/webui/locales/en.json",
+      "../nanobot/channels/signal/webui/locales/es.json",
+      "../nanobot/channels/signal/webui/locales/fr.json",
+      "../nanobot/channels/signal/webui/locales/id.json",
+      "../nanobot/channels/signal/webui/locales/ja.json",
+      "../nanobot/channels/signal/webui/locales/ko.json",
+      "../nanobot/channels/signal/webui/locales/pt-BR.json",
+      "../nanobot/channels/signal/webui/locales/vi.json",
+      "../nanobot/channels/signal/webui/locales/zh-CN.json",
+      "../nanobot/channels/signal/webui/locales/zh-TW.json",
+      "../nanobot/channels/slack/webui/locales/en.json",
+      "../nanobot/channels/slack/webui/locales/es.json",
+      "../nanobot/channels/slack/webui/locales/fr.json",
+      "../nanobot/channels/slack/webui/locales/id.json",
+      "../nanobot/channels/slack/webui/locales/ja.json",
+      "../nanobot/channels/slack/webui/locales/ko.json",
+      "../nanobot/channels/slack/webui/locales/pt-BR.json",
+      "../nanobot/channels/slack/webui/locales/vi.json",
+      "../nanobot/channels/slack/webui/locales/zh-CN.json",
+      "../nanobot/channels/slack/webui/locales/zh-TW.json",
+      "../nanobot/channels/telegram/webui/locales/en.json",
+      "../nanobot/channels/telegram/webui/locales/es.json",
+      "../nanobot/channels/telegram/webui/locales/fr.json",
+      "../nanobot/channels/telegram/webui/locales/id.json",
+      "../nanobot/channels/telegram/webui/locales/ja.json",
+      "../nanobot/channels/telegram/webui/locales/ko.json",
+      "../nanobot/channels/telegram/webui/locales/pt-BR.json",
+      "../nanobot/channels/telegram/webui/locales/vi.json",
+      "../nanobot/channels/telegram/webui/locales/zh-CN.json",
+      "../nanobot/channels/telegram/webui/locales/zh-TW.json",
+      "../nanobot/channels/websocket/webui/locales/en.json",
+      "../nanobot/channels/websocket/webui/locales/es.json",
+      "../nanobot/channels/websocket/webui/locales/fr.json",
+      "../nanobot/channels/websocket/webui/locales/id.json",
+      "../nanobot/channels/websocket/webui/locales/ja.json",
+      "../nanobot/channels/websocket/webui/locales/ko.json",
+      "../nanobot/channels/websocket/webui/locales/pt-BR.json",
+      "../nanobot/channels/websocket/webui/locales/vi.json",
+      "../nanobot/channels/websocket/webui/locales/zh-CN.json",
+      "../nanobot/channels/websocket/webui/locales/zh-TW.json",
+      "../nanobot/channels/wecom/webui/locales/en.json",
+      "../nanobot/channels/wecom/webui/locales/es.json",
+      "../nanobot/channels/wecom/webui/locales/fr.json",
+      "../nanobot/channels/wecom/webui/locales/id.json",
+      "../nanobot/channels/wecom/webui/locales/ja.json",
+      "../nanobot/channels/wecom/webui/locales/ko.json",
+      "../nanobot/channels/wecom/webui/locales/pt-BR.json",
+      "../nanobot/channels/wecom/webui/locales/vi.json",
+      "../nanobot/channels/wecom/webui/locales/zh-CN.json",
+      "../nanobot/channels/wecom/webui/locales/zh-TW.json",
+      "../nanobot/channels/weixin/webui/locales/en.json",
+      "../nanobot/channels/weixin/webui/locales/es.json",
+      "../nanobot/channels/weixin/webui/locales/fr.json",
+      "../nanobot/channels/weixin/webui/locales/id.json",
+      "../nanobot/channels/weixin/webui/locales/ja.json",
+      "../nanobot/channels/weixin/webui/locales/ko.json",
+      "../nanobot/channels/weixin/webui/locales/pt-BR.json",
+      "../nanobot/channels/weixin/webui/locales/vi.json",
+      "../nanobot/channels/weixin/webui/locales/zh-CN.json",
+      "../nanobot/channels/weixin/webui/locales/zh-TW.json",
+      "../nanobot/channels/whatsapp/webui/locales/en.json",
+      "../nanobot/channels/whatsapp/webui/locales/es.json",
+      "../nanobot/channels/whatsapp/webui/locales/fr.json",
+      "../nanobot/channels/whatsapp/webui/locales/id.json",
+      "../nanobot/channels/whatsapp/webui/locales/ja.json",
+      "../nanobot/channels/whatsapp/webui/locales/ko.json",
+      "../nanobot/channels/whatsapp/webui/locales/pt-BR.json",
+      "../nanobot/channels/whatsapp/webui/locales/vi.json",
+      "../nanobot/channels/whatsapp/webui/locales/zh-CN.json",
+      "../nanobot/channels/whatsapp/webui/locales/zh-TW.json",
+      "src/i18n/locales/en/common.json",
+      "src/i18n/locales/es/common.json",
+      "src/i18n/locales/fr/common.json",
+      "src/i18n/locales/id/common.json",
+      "src/i18n/locales/ja/common.json",
+      "src/i18n/locales/ko/common.json",
+      "src/i18n/locales/pt-BR/common.json",
+      "src/i18n/locales/vi/common.json",
+      "src/i18n/locales/zh-CN/common.json",
+      "src/i18n/locales/zh-TW/common.json",
+      "_syntax-highlight-DFizKUc1.js",
+      "_syntax-highlight-DFizKUc1.js",
+      "_syntax-highlight-DFizKUc1.js",
+      "_mermaid-GHXKKRXX-rNthMGvM.js",
+      "_syntax-highlight-DFizKUc1.js",
+      "_syntax-highlight-DFizKUc1.js",
+      "_syntax-highlight-DFizKUc1.js",
+      "_syntax-highlight-DFizKUc1.js",
+      "src/components/settings/SettingsView.tsx",
+      "src/components/SessionSearchDialog.tsx",
+      "src/components/DeleteConfirm.tsx",
+      "src/components/RenameChatDialog.tsx"
+    ]
+  },
+  "_hpkp-BuoOy6dh.js": {
+    "file": "hpkp-BuoOy6dh.js",
+    "name": "hpkp",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_hsts-BWFpQ_a6.js": {
+    "file": "hsts-BWFpQ_a6.js",
+    "name": "hsts",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_http-QHFv1ahZ.js": {
+    "file": "http-QHFv1ahZ.js",
+    "name": "http",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_ichigojam-C1O4KxUt.js": {
+    "file": "ichigojam-C1O4KxUt.js",
+    "name": "ichigojam",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_icon-CAwTjV5E.js": {
+    "file": "icon-CAwTjV5E.js",
+    "name": "icon",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_icu-message-format-W5nSNBYP.js": {
+    "file": "icu-message-format-W5nSNBYP.js",
+    "name": "icu-message-format",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_idris-CcDKUzEJ.js": {
+    "file": "idris-CcDKUzEJ.js",
+    "name": "idris",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_haskell-CavYoB0h.js"
+    ]
+  },
+  "_iecst-CgwjnVKJ.js": {
+    "file": "iecst-CgwjnVKJ.js",
+    "name": "iecst",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_ignore-Deps-xK7.js": {
+    "file": "ignore-Deps-xK7.js",
+    "name": "ignore",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_inform7-BFQUR33s.js": {
+    "file": "inform7-BFQUR33s.js",
+    "name": "inform7",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_ini-Y6rAuJiy.js": {
+    "file": "ini-Y6rAuJiy.js",
+    "name": "ini",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_io-ChB4E0Pb.js": {
+    "file": "io-ChB4E0Pb.js",
+    "name": "io",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_j-DEcvJcRA.js": {
+    "file": "j-DEcvJcRA.js",
+    "name": "j",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_java-BRviipWM.js": {
+    "file": "java-BRviipWM.js",
+    "name": "java",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_javadoc-BfxNH3ni.js": {
+    "file": "javadoc-BfxNH3ni.js",
+    "name": "javadoc",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_java-BRviipWM.js",
+      "_javadoclike-Ddpgb-us.js"
+    ]
+  },
+  "_javadoclike-Ddpgb-us.js": {
+    "file": "javadoclike-Ddpgb-us.js",
+    "name": "javadoclike",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_javastacktrace-l54m3uip.js": {
+    "file": "javastacktrace-l54m3uip.js",
+    "name": "javastacktrace",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_jexl-Dn_y6-ub.js": {
+    "file": "jexl-Dn_y6-ub.js",
+    "name": "jexl",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_jolie-BAbmKC4t.js": {
+    "file": "jolie-BAbmKC4t.js",
+    "name": "jolie",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_jq-D0oo7b3r.js": {
+    "file": "jq-D0oo7b3r.js",
+    "name": "jq",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_js-extras-BmxorGff.js": {
+    "file": "js-extras-BmxorGff.js",
+    "name": "js-extras",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_js-templates-lYUmm4hN.js": {
+    "file": "js-templates-lYUmm4hN.js",
+    "name": "js-templates",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_jsdoc-Dii73kry.js": {
+    "file": "jsdoc-Dii73kry.js",
+    "name": "jsdoc",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_javadoclike-Ddpgb-us.js",
+      "_typescript-MEsZkaok.js"
+    ]
+  },
+  "_json-DNQuHvNh.js": {
+    "file": "json-DNQuHvNh.js",
+    "name": "json",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_json5-MIPq4Leb.js": {
+    "file": "json5-MIPq4Leb.js",
+    "name": "json5",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_json-DNQuHvNh.js"
+    ]
+  },
+  "_jsonp-B9fLu6Ye.js": {
+    "file": "jsonp-B9fLu6Ye.js",
+    "name": "jsonp",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_json-DNQuHvNh.js"
+    ]
+  },
+  "_jsstacktrace-CgjGOGwr.js": {
+    "file": "jsstacktrace-CgjGOGwr.js",
+    "name": "jsstacktrace",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_jsx-CkPRmoyS.js": {
+    "file": "jsx-CkPRmoyS.js",
+    "name": "jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_julia-CI3EEY0b.js": {
+    "file": "julia-CI3EEY0b.js",
+    "name": "julia",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_katex-Jmetl6nx.js": {
+    "file": "katex-Jmetl6nx.js",
+    "name": "katex"
+  },
+  "_keepalived-DAKZLHdP.js": {
+    "file": "keepalived-DAKZLHdP.js",
+    "name": "keepalived",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_keyman-CmVOKIT-.js": {
+    "file": "keyman-CmVOKIT-.js",
+    "name": "keyman",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_kotlin-Tvz4x8a1.js": {
+    "file": "kotlin-Tvz4x8a1.js",
+    "name": "kotlin",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_kumir-p4AsbwQV.js": {
+    "file": "kumir-p4AsbwQV.js",
+    "name": "kumir",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_kusto-O33is1GZ.js": {
+    "file": "kusto-O33is1GZ.js",
+    "name": "kusto",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_latex-CkBQKFFo.js": {
+    "file": "latex-CkBQKFFo.js",
+    "name": "latex",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_latte-lHlCTV36.js": {
+    "file": "latte-lHlCTV36.js",
+    "name": "latte",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_markup-templating-B7dfCu7L.js",
+      "_php-v7syz9cG.js"
+    ]
+  },
+  "_less-CFAtoEUv.js": {
+    "file": "less-CFAtoEUv.js",
+    "name": "less",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_lilypond-DrdZoj85.js": {
+    "file": "lilypond-DrdZoj85.js",
+    "name": "lilypond",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_scheme-DBOwJ0-s.js"
+    ]
+  },
+  "_liquid-C5FVoVu3.js": {
+    "file": "liquid-C5FVoVu3.js",
+    "name": "liquid",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_markup-templating-B7dfCu7L.js"
+    ]
+  },
+  "_lisp-DnsMZISD.js": {
+    "file": "lisp-DnsMZISD.js",
+    "name": "lisp",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_livescript-DDPscnzk.js": {
+    "file": "livescript-DDPscnzk.js",
+    "name": "livescript",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_llvm-B1oOl2TP.js": {
+    "file": "llvm-B1oOl2TP.js",
+    "name": "llvm",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_log-R-EISU9E.js": {
+    "file": "log-R-EISU9E.js",
+    "name": "log",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_lolcode--g5oipyb.js": {
+    "file": "lolcode--g5oipyb.js",
+    "name": "lolcode",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_lua-lUboL0Fh.js": {
+    "file": "lua-lUboL0Fh.js",
+    "name": "lua",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_magma-CqyrlvKw.js": {
+    "file": "magma-CqyrlvKw.js",
+    "name": "magma",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_makefile-BgDikbls.js": {
+    "file": "makefile-BgDikbls.js",
+    "name": "makefile",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_markdown-Dnvnr5HB.js": {
+    "file": "markdown-Dnvnr5HB.js",
+    "name": "markdown",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_markdown-vendor-CoGhf-6M.js": {
+    "file": "markdown-vendor-CoGhf-6M.js",
+    "name": "markdown-vendor",
+    "imports": [
+      "_syntax-highlight-DFizKUc1.js",
+      "_katex-Jmetl6nx.js",
+      "_react-vendor-ASUsaCHq.js"
+    ],
+    "dynamicImports": [
+      "node_modules/streamdown/dist/highlighted-body-OFNGDK62.js",
+      "_mermaid-GHXKKRXX-rNthMGvM.js"
+    ]
+  },
+  "_markup-templating-B7dfCu7L.js": {
+    "file": "markup-templating-B7dfCu7L.js",
+    "name": "markup-templating",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_matlab-BnfzKQ02.js": {
+    "file": "matlab-BnfzKQ02.js",
+    "name": "matlab",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_maxscript-wQK5YEly.js": {
+    "file": "maxscript-wQK5YEly.js",
+    "name": "maxscript",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_mel-BhC1zpEE.js": {
+    "file": "mel-BhC1zpEE.js",
+    "name": "mel",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_mermaid-CDyY-634.js": {
+    "file": "mermaid-CDyY-634.js",
+    "name": "mermaid",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_mermaid-GHXKKRXX-rNthMGvM.js": {
+    "file": "mermaid-GHXKKRXX-rNthMGvM.js",
+    "name": "mermaid-GHXKKRXX",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_markdown-vendor-CoGhf-6M.js",
+      "_hosted-entry-Dbp-ZpRx.js",
+      "_katex-Jmetl6nx.js"
+    ]
+  },
+  "_mizar-WuwUdI1K.js": {
+    "file": "mizar-WuwUdI1K.js",
+    "name": "mizar",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_mongodb-DpBpaPl4.js": {
+    "file": "mongodb-DpBpaPl4.js",
+    "name": "mongodb",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_monkey-Lt947q4m.js": {
+    "file": "monkey-Lt947q4m.js",
+    "name": "monkey",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_moonscript-CAKZChMn.js": {
+    "file": "moonscript-CAKZChMn.js",
+    "name": "moonscript",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_n1ql-BXUqBfUJ.js": {
+    "file": "n1ql-BXUqBfUJ.js",
+    "name": "n1ql",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_n4js-BIKLnkte.js": {
+    "file": "n4js-BIKLnkte.js",
+    "name": "n4js",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_nand2tetris-hdl-7GeWEmpF.js": {
+    "file": "nand2tetris-hdl-7GeWEmpF.js",
+    "name": "nand2tetris-hdl",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_naniscript-D3WIBWyG.js": {
+    "file": "naniscript-D3WIBWyG.js",
+    "name": "naniscript",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_nasm-DEo9Hsbm.js": {
+    "file": "nasm-DEo9Hsbm.js",
+    "name": "nasm",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_neon-CbtzKpXD.js": {
+    "file": "neon-CbtzKpXD.js",
+    "name": "neon",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_nevod-DrziaAbA.js": {
+    "file": "nevod-DrziaAbA.js",
+    "name": "nevod",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_nginx-UHiI6dM5.js": {
+    "file": "nginx-UHiI6dM5.js",
+    "name": "nginx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_nim-DryH7Bdm.js": {
+    "file": "nim-DryH7Bdm.js",
+    "name": "nim",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_nix-CyLDtlaR.js": {
+    "file": "nix-CyLDtlaR.js",
+    "name": "nix",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_nsis-DFmzU4ah.js": {
+    "file": "nsis-DFmzU4ah.js",
+    "name": "nsis",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_objectivec-CwOYy_4n.js": {
+    "file": "objectivec-CwOYy_4n.js",
+    "name": "objectivec",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_c-CMrkL8iu.js"
+    ]
+  },
+  "_ocaml-cENGHlpa.js": {
+    "file": "ocaml-cENGHlpa.js",
+    "name": "ocaml",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_opencl-D6YFM3Kv.js": {
+    "file": "opencl-D6YFM3Kv.js",
+    "name": "opencl",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_c-CMrkL8iu.js"
+    ]
+  },
+  "_openqasm-CGiLpj1t.js": {
+    "file": "openqasm-CGiLpj1t.js",
+    "name": "openqasm",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_oz-C_qYj3DS.js": {
+    "file": "oz-C_qYj3DS.js",
+    "name": "oz",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_parigp-CmLKIsbg.js": {
+    "file": "parigp-CmLKIsbg.js",
+    "name": "parigp",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_parser-CsSBWDF_.js": {
+    "file": "parser-CsSBWDF_.js",
+    "name": "parser",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_pascal-BNYI3qxv.js": {
+    "file": "pascal-BNYI3qxv.js",
+    "name": "pascal",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_pascaligo-Bynrh-IQ.js": {
+    "file": "pascaligo-Bynrh-IQ.js",
+    "name": "pascaligo",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_pcaxis-DyfCA_yN.js": {
+    "file": "pcaxis-DyfCA_yN.js",
+    "name": "pcaxis",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_peoplecode-DEjiv6N0.js": {
+    "file": "peoplecode-DEjiv6N0.js",
+    "name": "peoplecode",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_perl-ClOgVkkl.js": {
+    "file": "perl-ClOgVkkl.js",
+    "name": "perl",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_php-extras-B8w54jqC.js": {
+    "file": "php-extras-B8w54jqC.js",
+    "name": "php-extras",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_php-v7syz9cG.js"
+    ]
+  },
+  "_php-v7syz9cG.js": {
+    "file": "php-v7syz9cG.js",
+    "name": "php",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_markup-templating-B7dfCu7L.js"
+    ]
+  },
+  "_phpdoc-Der4E3dn.js": {
+    "file": "phpdoc-Der4E3dn.js",
+    "name": "phpdoc",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_php-v7syz9cG.js",
+      "_javadoclike-Ddpgb-us.js"
+    ]
+  },
+  "_plsql-BQSx8eWD.js": {
+    "file": "plsql-BQSx8eWD.js",
+    "name": "plsql",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_sql-EJXNs70e.js"
+    ]
+  },
+  "_powerquery-DwG-YNcL.js": {
+    "file": "powerquery-DwG-YNcL.js",
+    "name": "powerquery",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_powershell-DKfqE6Nq.js": {
+    "file": "powershell-DKfqE6Nq.js",
+    "name": "powershell",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_processing-BUmivInH.js": {
+    "file": "processing-BUmivInH.js",
+    "name": "processing",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_prolog-DFhR53IV.js": {
+    "file": "prolog-DFhR53IV.js",
+    "name": "prolog",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_promql-CS_yhHdd.js": {
+    "file": "promql-CS_yhHdd.js",
+    "name": "promql",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_properties-C5IqMRGS.js": {
+    "file": "properties-C5IqMRGS.js",
+    "name": "properties",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_protobuf-Ba8RCRVG.js": {
+    "file": "protobuf-Ba8RCRVG.js",
+    "name": "protobuf",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_psl-yrUsFU0f.js": {
+    "file": "psl-yrUsFU0f.js",
+    "name": "psl",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_pug-Ca3yJ9kw.js": {
+    "file": "pug-Ca3yJ9kw.js",
+    "name": "pug",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_puppet-CsZzNlEV.js": {
+    "file": "puppet-CsZzNlEV.js",
+    "name": "puppet",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_pure-BDjUJpff.js": {
+    "file": "pure-BDjUJpff.js",
+    "name": "pure",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_purebasic-DjC-ynNl.js": {
+    "file": "purebasic-DjC-ynNl.js",
+    "name": "purebasic",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_purescript-hvad_0CL.js": {
+    "file": "purescript-hvad_0CL.js",
+    "name": "purescript",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_haskell-CavYoB0h.js"
+    ]
+  },
+  "_python-DWicCeel.js": {
+    "file": "python-DWicCeel.js",
+    "name": "python",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_q-CNhCb0rl.js": {
+    "file": "q-CNhCb0rl.js",
+    "name": "q",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_qml-DlIASLSA.js": {
+    "file": "qml-DlIASLSA.js",
+    "name": "qml",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_qore-DdUyvSd_.js": {
+    "file": "qore-DdUyvSd_.js",
+    "name": "qore",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_qsharp-BnfjFttg.js": {
+    "file": "qsharp-BnfjFttg.js",
+    "name": "qsharp",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_r-CRHjR2sI.js": {
+    "file": "r-CRHjR2sI.js",
+    "name": "r",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_racket-CpFxCF_p.js": {
+    "file": "racket-CpFxCF_p.js",
+    "name": "racket",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_scheme-DBOwJ0-s.js"
+    ]
+  },
+  "_react-vendor-ASUsaCHq.js": {
+    "file": "react-vendor-ASUsaCHq.js",
+    "name": "react-vendor"
+  },
+  "_reason-q-odlVJk.js": {
+    "file": "reason-q-odlVJk.js",
+    "name": "reason",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_regex-CutZKiFG.js": {
+    "file": "regex-CutZKiFG.js",
+    "name": "regex",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_rego-B1Kto6Fu.js": {
+    "file": "rego-B1Kto6Fu.js",
+    "name": "rego",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_renpy-BM-UY9XX.js": {
+    "file": "renpy-BM-UY9XX.js",
+    "name": "renpy",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_rest-CLkNFpM8.js": {
+    "file": "rest-CLkNFpM8.js",
+    "name": "rest",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_rip-DTlW0tv3.js": {
+    "file": "rip-DTlW0tv3.js",
+    "name": "rip",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_roboconf-BCxvYCVS.js": {
+    "file": "roboconf-BCxvYCVS.js",
+    "name": "roboconf",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_robotframework-VAvjvc5d.js": {
+    "file": "robotframework-VAvjvc5d.js",
+    "name": "robotframework",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_rotate-ccw-BtFYjp5j.js": {
+    "file": "rotate-ccw-BtFYjp5j.js",
+    "name": "rotate-ccw",
+    "imports": [
+      "_hosted-entry-Dbp-ZpRx.js"
+    ]
+  },
+  "_ruby-g5ZPYV15.js": {
+    "file": "ruby-g5ZPYV15.js",
+    "name": "ruby",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_rust-CPziYIir.js": {
+    "file": "rust-CPziYIir.js",
+    "name": "rust",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_sas-B-xprp51.js": {
+    "file": "sas-B-xprp51.js",
+    "name": "sas",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_sass-CGGwEhKK.js": {
+    "file": "sass-CGGwEhKK.js",
+    "name": "sass",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_scala-BX7Q3DfR.js": {
+    "file": "scala-BX7Q3DfR.js",
+    "name": "scala",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_java-BRviipWM.js"
+    ]
+  },
+  "_scheme-DBOwJ0-s.js": {
+    "file": "scheme-DBOwJ0-s.js",
+    "name": "scheme",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_scss-SANDUSF8.js": {
+    "file": "scss-SANDUSF8.js",
+    "name": "scss",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_shell-session-C-abAheC.js": {
+    "file": "shell-session-C-abAheC.js",
+    "name": "shell-session",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_bash-KE62vJQD.js"
+    ]
+  },
+  "_smali-mGwQLnpS.js": {
+    "file": "smali-mGwQLnpS.js",
+    "name": "smali",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_smalltalk-CXXNrKat.js": {
+    "file": "smalltalk-CXXNrKat.js",
+    "name": "smalltalk",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_smarty-xZfdruyB.js": {
+    "file": "smarty-xZfdruyB.js",
+    "name": "smarty",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_markup-templating-B7dfCu7L.js"
+    ]
+  },
+  "_sml-BukVjeCt.js": {
+    "file": "sml-BukVjeCt.js",
+    "name": "sml",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_solidity-Tvsq2O2l.js": {
+    "file": "solidity-Tvsq2O2l.js",
+    "name": "solidity",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_solution-file-CKazTg96.js": {
+    "file": "solution-file-CKazTg96.js",
+    "name": "solution-file",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_soy-86xGqVST.js": {
+    "file": "soy-86xGqVST.js",
+    "name": "soy",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_markup-templating-B7dfCu7L.js"
+    ]
+  },
+  "_sparql-CQVq4CGc.js": {
+    "file": "sparql-CQVq4CGc.js",
+    "name": "sparql",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_turtle-BjUlWoyt.js"
+    ]
+  },
+  "_splunk-spl-C1KKQrwn.js": {
+    "file": "splunk-spl-C1KKQrwn.js",
+    "name": "splunk-spl",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_sqf-Agpwl1JM.js": {
+    "file": "sqf-Agpwl1JM.js",
+    "name": "sqf",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_sql-EJXNs70e.js": {
+    "file": "sql-EJXNs70e.js",
+    "name": "sql",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_squirrel-BDDJ925b.js": {
+    "file": "squirrel-BDDJ925b.js",
+    "name": "squirrel",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_stan-DWK-gZpX.js": {
+    "file": "stan-DWK-gZpX.js",
+    "name": "stan",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_stylus-C3eh1bQ7.js": {
+    "file": "stylus-C3eh1bQ7.js",
+    "name": "stylus",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_swift-DHZ8DPcg.js": {
+    "file": "swift-DHZ8DPcg.js",
+    "name": "swift",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_syntax-highlight-DFizKUc1.js": {
+    "file": "syntax-highlight-DFizKUc1.js",
+    "name": "syntax-highlight",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ],
+    "dynamicImports": [
+      "_abap-Dt-ZkZ8d.js",
+      "_abnf-K6bY5jh-.js",
+      "_actionscript-CXv8Z1kb.js",
+      "_ada-Be9Sqmsn.js",
+      "_agda-CblUi51N.js",
+      "_al-NLEefinu.js",
+      "_antlr4-QDNUPOWd.js",
+      "_apacheconf-z5In0AnZ.js",
+      "_apex-1KAMpWa2.js",
+      "_apl-DWa61v4l.js",
+      "_applescript-D-ytfI5k.js",
+      "_aql-TiBvTiDG.js",
+      "_arduino-D5E-ggGh.js",
+      "_arff-DHvsqel_.js",
+      "_asciidoc-NM6iEyeW.js",
+      "_asm6502-CTUiWTie.js",
+      "_asmatmel-OI-0jo4G.js",
+      "_aspnet-BkFd4aJE.js",
+      "_autohotkey-CnIyIQyn.js",
+      "_autoit-C8EFeecb.js",
+      "_avisynth-BIsW19gH.js",
+      "_avro-idl-EDTR838I.js",
+      "_bash-KE62vJQD.js",
+      "_basic-Cr2hjSUo.js",
+      "_batch-CD1DByGr.js",
+      "_bbcode-D68WBZ9p.js",
+      "_bicep-CwEWbCcM.js",
+      "_birb-FD8Sg1ds.js",
+      "_bison-D6JjpaUE.js",
+      "_bnf-D_CjSF1T.js",
+      "_brainfuck-BCGvksXZ.js",
+      "_brightscript-CtnnCzoq.js",
+      "_bro-DByZc0ca.js",
+      "_bsl-DOE0QjNt.js",
+      "_c-CMrkL8iu.js",
+      "_cfscript-Eo8oJ_BK.js",
+      "_chaiscript-DL5OInck.js",
+      "_cil-DNvT6QAG.js",
+      "_clojure--HYa2OLb.js",
+      "_cmake-D5d3QtB8.js",
+      "_cobol-Bj18w3aq.js",
+      "_coffeescript-C4b7rtfn.js",
+      "_concurnas-Gyd8bQzV.js",
+      "_coq-Cl3sSfAQ.js",
+      "_cpp-B25c52v4.js",
+      "_crystal-h05TIvgC.js",
+      "_csharp-CB0qOhc4.js",
+      "_cshtml-Dbf9lmoL.js",
+      "_csp-C0_U19IW.js",
+      "_css-extras-BnEun_l3.js",
+      "_csv-BEUS1c7D.js",
+      "_cypher-0pFLeUax.js",
+      "_d-DHvNyoxm.js",
+      "_dart-CPZY_k6N.js",
+      "_dataweave-Djxu8yPz.js",
+      "_dax-DHghljqw.js",
+      "_dhall-PboMqWuD.js",
+      "_diff-CyXopcXO.js",
+      "_django-GLcK3IVY.js",
+      "_dns-zone-file-DSPkTOZI.js",
+      "_docker-Cg37rMhS.js",
+      "_dot-FmXiGXKA.js",
+      "_ebnf-9CZqI_3-.js",
+      "_editorconfig-qAATdJJ8.js",
+      "_eiffel-BCzVzJJJ.js",
+      "_ejs-aasqnShN.js",
+      "_elixir-969Blpca.js",
+      "_elm-DXMXV5Hu.js",
+      "_erb-12xoxBwN.js",
+      "_erlang-Cj9di4pY.js",
+      "_etlua-D2-8R51A.js",
+      "_excel-formula-BDS6x60G.js",
+      "_factor-D6S8j0bL.js",
+      "_false-C9oBTGCj.js",
+      "_firestore-security-rules-ChSBSCrS.js",
+      "_flow-BS7lZw3n.js",
+      "_fortran-DuQjao39.js",
+      "_fsharp-BthJOeYS.js",
+      "_ftl-CWhImJwE.js",
+      "_gap-CUh4CUDU.js",
+      "_gcode-C5VUHliY.js",
+      "_gdscript-DJeGXzE4.js",
+      "_gedcom-ZaZGvBeM.js",
+      "_gherkin-CTkjqJLI.js",
+      "_git-CVxsvxSL.js",
+      "_glsl-C2I-bDh4.js",
+      "_gml-D562_JNF.js",
+      "_gn-CxXYr8RE.js",
+      "_go-module-74AdALwj.js",
+      "_go-DAJgUbhF.js",
+      "_graphql-BcMs5RFA.js",
+      "_groovy-DShAK9xi.js",
+      "_haml-fVS4Vu1o.js",
+      "_handlebars-B-KqadSe.js",
+      "_haskell-CavYoB0h.js",
+      "_haxe-CB5jtBK3.js",
+      "_hcl-BJlrumHu.js",
+      "_hlsl-C_uW6-Uk.js",
+      "_hoon-k1lZUz-1.js",
+      "_hpkp-BuoOy6dh.js",
+      "_hsts-BWFpQ_a6.js",
+      "_http-QHFv1ahZ.js",
+      "_ichigojam-C1O4KxUt.js",
+      "_icon-CAwTjV5E.js",
+      "_icu-message-format-W5nSNBYP.js",
+      "_idris-CcDKUzEJ.js",
+      "_iecst-CgwjnVKJ.js",
+      "_ignore-Deps-xK7.js",
+      "_inform7-BFQUR33s.js",
+      "_ini-Y6rAuJiy.js",
+      "_io-ChB4E0Pb.js",
+      "_j-DEcvJcRA.js",
+      "_java-BRviipWM.js",
+      "_javadoc-BfxNH3ni.js",
+      "_javadoclike-Ddpgb-us.js",
+      "_javastacktrace-l54m3uip.js",
+      "_jexl-Dn_y6-ub.js",
+      "_jolie-BAbmKC4t.js",
+      "_jq-D0oo7b3r.js",
+      "_js-extras-BmxorGff.js",
+      "_js-templates-lYUmm4hN.js",
+      "_jsdoc-Dii73kry.js",
+      "_json-DNQuHvNh.js",
+      "_json5-MIPq4Leb.js",
+      "_jsonp-B9fLu6Ye.js",
+      "_jsstacktrace-CgjGOGwr.js",
+      "_jsx-CkPRmoyS.js",
+      "_julia-CI3EEY0b.js",
+      "_keepalived-DAKZLHdP.js",
+      "_keyman-CmVOKIT-.js",
+      "_kotlin-Tvz4x8a1.js",
+      "_kumir-p4AsbwQV.js",
+      "_kusto-O33is1GZ.js",
+      "_latex-CkBQKFFo.js",
+      "_latte-lHlCTV36.js",
+      "_less-CFAtoEUv.js",
+      "_lilypond-DrdZoj85.js",
+      "_liquid-C5FVoVu3.js",
+      "_lisp-DnsMZISD.js",
+      "_livescript-DDPscnzk.js",
+      "_llvm-B1oOl2TP.js",
+      "_log-R-EISU9E.js",
+      "_lolcode--g5oipyb.js",
+      "_lua-lUboL0Fh.js",
+      "_magma-CqyrlvKw.js",
+      "_makefile-BgDikbls.js",
+      "_markdown-Dnvnr5HB.js",
+      "_markup-templating-B7dfCu7L.js",
+      "_matlab-BnfzKQ02.js",
+      "_maxscript-wQK5YEly.js",
+      "_mel-BhC1zpEE.js",
+      "_mermaid-CDyY-634.js",
+      "_mizar-WuwUdI1K.js",
+      "_mongodb-DpBpaPl4.js",
+      "_monkey-Lt947q4m.js",
+      "_moonscript-CAKZChMn.js",
+      "_n1ql-BXUqBfUJ.js",
+      "_n4js-BIKLnkte.js",
+      "_nand2tetris-hdl-7GeWEmpF.js",
+      "_naniscript-D3WIBWyG.js",
+      "_nasm-DEo9Hsbm.js",
+      "_neon-CbtzKpXD.js",
+      "_nevod-DrziaAbA.js",
+      "_nginx-UHiI6dM5.js",
+      "_nim-DryH7Bdm.js",
+      "_nix-CyLDtlaR.js",
+      "_nsis-DFmzU4ah.js",
+      "_objectivec-CwOYy_4n.js",
+      "_ocaml-cENGHlpa.js",
+      "_opencl-D6YFM3Kv.js",
+      "_openqasm-CGiLpj1t.js",
+      "_oz-C_qYj3DS.js",
+      "_parigp-CmLKIsbg.js",
+      "_parser-CsSBWDF_.js",
+      "_pascal-BNYI3qxv.js",
+      "_pascaligo-Bynrh-IQ.js",
+      "_pcaxis-DyfCA_yN.js",
+      "_peoplecode-DEjiv6N0.js",
+      "_perl-ClOgVkkl.js",
+      "_php-extras-B8w54jqC.js",
+      "_php-v7syz9cG.js",
+      "_phpdoc-Der4E3dn.js",
+      "_plsql-BQSx8eWD.js",
+      "_powerquery-DwG-YNcL.js",
+      "_powershell-DKfqE6Nq.js",
+      "_processing-BUmivInH.js",
+      "_prolog-DFhR53IV.js",
+      "_promql-CS_yhHdd.js",
+      "_properties-C5IqMRGS.js",
+      "_protobuf-Ba8RCRVG.js",
+      "_psl-yrUsFU0f.js",
+      "_pug-Ca3yJ9kw.js",
+      "_puppet-CsZzNlEV.js",
+      "_pure-BDjUJpff.js",
+      "_purebasic-DjC-ynNl.js",
+      "_purescript-hvad_0CL.js",
+      "_python-DWicCeel.js",
+      "_q-CNhCb0rl.js",
+      "_qml-DlIASLSA.js",
+      "_qore-DdUyvSd_.js",
+      "_qsharp-BnfjFttg.js",
+      "_r-CRHjR2sI.js",
+      "_racket-CpFxCF_p.js",
+      "_reason-q-odlVJk.js",
+      "_regex-CutZKiFG.js",
+      "_rego-B1Kto6Fu.js",
+      "_renpy-BM-UY9XX.js",
+      "_rest-CLkNFpM8.js",
+      "_rip-DTlW0tv3.js",
+      "_roboconf-BCxvYCVS.js",
+      "_robotframework-VAvjvc5d.js",
+      "_ruby-g5ZPYV15.js",
+      "_rust-CPziYIir.js",
+      "_sas-B-xprp51.js",
+      "_sass-CGGwEhKK.js",
+      "_scala-BX7Q3DfR.js",
+      "_scheme-DBOwJ0-s.js",
+      "_scss-SANDUSF8.js",
+      "_shell-session-C-abAheC.js",
+      "_smali-mGwQLnpS.js",
+      "_smalltalk-CXXNrKat.js",
+      "_smarty-xZfdruyB.js",
+      "_sml-BukVjeCt.js",
+      "_solidity-Tvsq2O2l.js",
+      "_solution-file-CKazTg96.js",
+      "_soy-86xGqVST.js",
+      "_sparql-CQVq4CGc.js",
+      "_splunk-spl-C1KKQrwn.js",
+      "_sqf-Agpwl1JM.js",
+      "_sql-EJXNs70e.js",
+      "_squirrel-BDDJ925b.js",
+      "_stan-DWK-gZpX.js",
+      "_stylus-C3eh1bQ7.js",
+      "_swift-DHZ8DPcg.js",
+      "_systemd-BVoBJK-G.js",
+      "_t4-cs-DUuxncwB.js",
+      "_t4-templating-BWx9t4fU.js",
+      "_t4-vb-Db6aHhST.js",
+      "_tap-HX-VzIPG.js",
+      "_tcl-B8ubMjK3.js",
+      "_textile-D1HBR9K7.js",
+      "_toml-7-WVK-mT.js",
+      "_tremor-rq3Qi2F1.js",
+      "_tsx-Cav34xww.js",
+      "_tt2-D1J2-d8f.js",
+      "_turtle-BjUlWoyt.js",
+      "_twig-CMYyt-0u.js",
+      "_typescript-MEsZkaok.js",
+      "_typoscript-DLOEGvmM.js",
+      "_unrealscript-DJGsvhvV.js",
+      "_uorazor-D-oPe8r4.js",
+      "_uri-BTQMpk3f.js",
+      "_v-CZckIMyU.js",
+      "_vala-BFaheK00.js",
+      "_vbnet-DN_b3rEk.js",
+      "_velocity-DZvO4pIM.js",
+      "_verilog-arpISg0i.js",
+      "_vhdl-Bbu2eMxL.js",
+      "_vim-Caml7Hnq.js",
+      "_visual-basic-PVmVDpTz.js",
+      "_warpscript-3chtMw7x.js",
+      "_wasm-BziusgJ0.js",
+      "_web-idl-BUOtkP7f.js",
+      "_wiki-09k38cb7.js",
+      "_wolfram-Bew3fW7M.js",
+      "_wren-BDQqqDO_.js",
+      "_xeora-AyRbDrdK.js",
+      "_xml-doc-1xP68u3O.js",
+      "_xojo-O2KhdvO1.js",
+      "_xquery-D783jUEc.js",
+      "_yaml-Dspj0Ccv.js",
+      "_yang-B5lF_tcx.js",
+      "_zig-DfqK4B_n.js"
+    ]
+  },
+  "_systemd-BVoBJK-G.js": {
+    "file": "systemd-BVoBJK-G.js",
+    "name": "systemd",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_t4-cs-DUuxncwB.js": {
+    "file": "t4-cs-DUuxncwB.js",
+    "name": "t4-cs",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_t4-templating-BWx9t4fU.js",
+      "_csharp-CB0qOhc4.js"
+    ]
+  },
+  "_t4-templating-BWx9t4fU.js": {
+    "file": "t4-templating-BWx9t4fU.js",
+    "name": "t4-templating",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_t4-vb-Db6aHhST.js": {
+    "file": "t4-vb-Db6aHhST.js",
+    "name": "t4-vb",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_t4-templating-BWx9t4fU.js",
+      "_vbnet-DN_b3rEk.js"
+    ]
+  },
+  "_tap-HX-VzIPG.js": {
+    "file": "tap-HX-VzIPG.js",
+    "name": "tap",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_yaml-Dspj0Ccv.js"
+    ]
+  },
+  "_tcl-B8ubMjK3.js": {
+    "file": "tcl-B8ubMjK3.js",
+    "name": "tcl",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_textile-D1HBR9K7.js": {
+    "file": "textile-D1HBR9K7.js",
+    "name": "textile",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_toml-7-WVK-mT.js": {
+    "file": "toml-7-WVK-mT.js",
+    "name": "toml",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_tremor-rq3Qi2F1.js": {
+    "file": "tremor-rq3Qi2F1.js",
+    "name": "tremor",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_tsx-Cav34xww.js": {
+    "file": "tsx-Cav34xww.js",
+    "name": "tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_jsx-CkPRmoyS.js",
+      "_typescript-MEsZkaok.js"
+    ]
+  },
+  "_tt2-D1J2-d8f.js": {
+    "file": "tt2-D1J2-d8f.js",
+    "name": "tt2",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_markup-templating-B7dfCu7L.js"
+    ]
+  },
+  "_turtle-BjUlWoyt.js": {
+    "file": "turtle-BjUlWoyt.js",
+    "name": "turtle",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_twig-CMYyt-0u.js": {
+    "file": "twig-CMYyt-0u.js",
+    "name": "twig",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_markup-templating-B7dfCu7L.js"
+    ]
+  },
+  "_typescript-MEsZkaok.js": {
+    "file": "typescript-MEsZkaok.js",
+    "name": "typescript",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_typoscript-DLOEGvmM.js": {
+    "file": "typoscript-DLOEGvmM.js",
+    "name": "typoscript",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_unrealscript-DJGsvhvV.js": {
+    "file": "unrealscript-DJGsvhvV.js",
+    "name": "unrealscript",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_uorazor-D-oPe8r4.js": {
+    "file": "uorazor-D-oPe8r4.js",
+    "name": "uorazor",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_uri-BTQMpk3f.js": {
+    "file": "uri-BTQMpk3f.js",
+    "name": "uri",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_v-CZckIMyU.js": {
+    "file": "v-CZckIMyU.js",
+    "name": "v",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_vala-BFaheK00.js": {
+    "file": "vala-BFaheK00.js",
+    "name": "vala",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_vbnet-DN_b3rEk.js": {
+    "file": "vbnet-DN_b3rEk.js",
+    "name": "vbnet",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_basic-Cr2hjSUo.js"
+    ]
+  },
+  "_velocity-DZvO4pIM.js": {
+    "file": "velocity-DZvO4pIM.js",
+    "name": "velocity",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_verilog-arpISg0i.js": {
+    "file": "verilog-arpISg0i.js",
+    "name": "verilog",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_vhdl-Bbu2eMxL.js": {
+    "file": "vhdl-Bbu2eMxL.js",
+    "name": "vhdl",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_vim-Caml7Hnq.js": {
+    "file": "vim-Caml7Hnq.js",
+    "name": "vim",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_visual-basic-PVmVDpTz.js": {
+    "file": "visual-basic-PVmVDpTz.js",
+    "name": "visual-basic",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_warpscript-3chtMw7x.js": {
+    "file": "warpscript-3chtMw7x.js",
+    "name": "warpscript",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_wasm-BziusgJ0.js": {
+    "file": "wasm-BziusgJ0.js",
+    "name": "wasm",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_web-idl-BUOtkP7f.js": {
+    "file": "web-idl-BUOtkP7f.js",
+    "name": "web-idl",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_wiki-09k38cb7.js": {
+    "file": "wiki-09k38cb7.js",
+    "name": "wiki",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_wolfram-Bew3fW7M.js": {
+    "file": "wolfram-Bew3fW7M.js",
+    "name": "wolfram",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_wren-BDQqqDO_.js": {
+    "file": "wren-BDQqqDO_.js",
+    "name": "wren",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_xeora-AyRbDrdK.js": {
+    "file": "xeora-AyRbDrdK.js",
+    "name": "xeora",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_xml-doc-1xP68u3O.js": {
+    "file": "xml-doc-1xP68u3O.js",
+    "name": "xml-doc",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_xojo-O2KhdvO1.js": {
+    "file": "xojo-O2KhdvO1.js",
+    "name": "xojo",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_xquery-D783jUEc.js": {
+    "file": "xquery-D783jUEc.js",
+    "name": "xquery",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_yaml-Dspj0Ccv.js": {
+    "file": "yaml-Dspj0Ccv.js",
+    "name": "yaml",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_yang-B5lF_tcx.js": {
+    "file": "yang-B5lF_tcx.js",
+    "name": "yang",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "_zig-DfqK4B_n.js": {
+    "file": "zig-DfqK4B_n.js",
+    "name": "zig",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "node_modules/streamdown/dist/highlighted-body-OFNGDK62.js": {
+    "file": "highlighted-body-OFNGDK62-CmPGmjPk.js",
+    "name": "highlighted-body-OFNGDK62",
+    "src": "node_modules/streamdown/dist/highlighted-body-OFNGDK62.js",
+    "isDynamicEntry": true,
+    "imports": [
+      "_markdown-vendor-CoGhf-6M.js",
+      "_react-vendor-ASUsaCHq.js"
+    ]
+  },
+  "src/components/DeleteConfirm.tsx": {
+    "file": "DeleteConfirm-CZj4Y0oD.js",
+    "name": "DeleteConfirm",
+    "src": "src/components/DeleteConfirm.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_alert-dialog-CfCoRZqX.js",
+      "_hosted-entry-Dbp-ZpRx.js"
+    ]
+  },
+  "src/components/RenameChatDialog.tsx": {
+    "file": "RenameChatDialog-gkU6qRV6.js",
+    "name": "RenameChatDialog",
+    "src": "src/components/RenameChatDialog.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_hosted-entry-Dbp-ZpRx.js",
+      "_dialog-rx9XBEgS.js"
+    ]
+  },
+  "src/components/SessionSearchDialog.tsx": {
+    "file": "SessionSearchDialog-DlIR6dXr.js",
+    "name": "SessionSearchDialog",
+    "src": "src/components/SessionSearchDialog.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_dialog-rx9XBEgS.js",
+      "_hosted-entry-Dbp-ZpRx.js"
+    ]
+  },
+  "src/components/settings/SettingsView.tsx": {
+    "file": "SettingsView-D7ZxfVne.js",
+    "name": "SettingsView",
+    "src": "src/components/settings/SettingsView.tsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_alert-dialog-CfCoRZqX.js",
+      "_hosted-entry-Dbp-ZpRx.js",
+      "_dialog-rx9XBEgS.js",
+      "_rotate-ccw-BtFYjp5j.js",
+      "_CredentialForm-BtPPyOG2.js",
+      "_ChannelInstancesPanel-DSJdZ6YA.js"
+    ]
+  },
+  "src/hosted-entry.tsx": {
+    "file": "agent.js",
+    "name": "hosted-entry",
+    "src": "src/hosted-entry.tsx",
+    "isEntry": true,
+    "imports": [
+      "_react-vendor-ASUsaCHq.js",
+      "_hosted-entry-Dbp-ZpRx.js"
+    ]
+  },
+  "src/i18n/locales/en/common.json": {
+    "file": "common-UoWjyo6C.js",
+    "name": "common",
+    "src": "src/i18n/locales/en/common.json",
+    "isDynamicEntry": true
+  },
+  "src/i18n/locales/es/common.json": {
+    "file": "common-TUCyIoPR.js",
+    "name": "common",
+    "src": "src/i18n/locales/es/common.json",
+    "isDynamicEntry": true
+  },
+  "src/i18n/locales/fr/common.json": {
+    "file": "common-DRt3Nbp6.js",
+    "name": "common",
+    "src": "src/i18n/locales/fr/common.json",
+    "isDynamicEntry": true
+  },
+  "src/i18n/locales/id/common.json": {
+    "file": "common-D9ujdQlH.js",
+    "name": "common",
+    "src": "src/i18n/locales/id/common.json",
+    "isDynamicEntry": true
+  },
+  "src/i18n/locales/ja/common.json": {
+    "file": "common-B64cfcvi.js",
+    "name": "common",
+    "src": "src/i18n/locales/ja/common.json",
+    "isDynamicEntry": true
+  },
+  "src/i18n/locales/ko/common.json": {
+    "file": "common-DAQ11K2D.js",
+    "name": "common",
+    "src": "src/i18n/locales/ko/common.json",
+    "isDynamicEntry": true
+  },
+  "src/i18n/locales/pt-BR/common.json": {
+    "file": "common-D2ANIXXw.js",
+    "name": "common",
+    "src": "src/i18n/locales/pt-BR/common.json",
+    "isDynamicEntry": true
+  },
+  "src/i18n/locales/vi/common.json": {
+    "file": "common-DUWMIDxA.js",
+    "name": "common",
+    "src": "src/i18n/locales/vi/common.json",
+    "isDynamicEntry": true
+  },
+  "src/i18n/locales/zh-CN/common.json": {
+    "file": "common-DQcDNbNR.js",
+    "name": "common",
+    "src": "src/i18n/locales/zh-CN/common.json",
+    "isDynamicEntry": true
+  },
+  "src/i18n/locales/zh-TW/common.json": {
+    "file": "common-DaxevwI5.js",
+    "name": "common",
+    "src": "src/i18n/locales/zh-TW/common.json",
+    "isDynamicEntry": true
+  },
+  "style.css": {
+    "file": "style.css",
+    "src": "style.css"
+  }
+}

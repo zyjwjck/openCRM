@@ -1043,6 +1043,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 <!-- Case Drawer -->
 <CrmDrawer
   bind:open={drawer.detailOpen}
+  class="w-[1200px] sm:max-w-[1200px]"
   onOpenChange={(open) => {
     if (!open) {
       drawer.closeAll();

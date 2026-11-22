@@ -1,0 +1,45 @@
+import { g as d } from "./react-vendor-ASUsaCHq.js";
+function s(e, c) {
+  for (var o = 0; o < c.length; o++) {
+    const t = c[o];
+    if (typeof t != "string" && !Array.isArray(t)) {
+      for (const r in t)
+        if (r !== "default" && !(r in e)) {
+          const n = Object.getOwnPropertyDescriptor(t, r);
+          n && Object.defineProperty(e, r, n.get ? n : {
+            enumerable: !0,
+            get: () => t[r]
+          });
+        }
+    }
+  }
+  return Object.freeze(Object.defineProperty(e, Symbol.toStringTag, { value: "Module" }));
+}
+var g = a;
+a.displayName = "gcode";
+a.aliases = [];
+function a(e) {
+  e.languages.gcode = {
+    comment: /;.*|\B\(.*?\)\B/,
+    string: {
+      pattern: /"(?:""|[^"])*"/,
+      greedy: !0
+    },
+    keyword: /\b[GM]\d+(?:\.\d+)?\b/,
+    property: /\b[A-Z]/,
+    checksum: {
+      pattern: /(\*)\d+/,
+      lookbehind: !0,
+      alias: "number"
+    },
+    // T0:0:0
+    punctuation: /[:*]/
+  };
+}
+const u = /* @__PURE__ */ d(g), f = /* @__PURE__ */ s({
+  __proto__: null,
+  default: u
+}, [g]);
+export {
+  f as g
+};

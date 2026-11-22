@@ -1,0 +1,111 @@
+import { j as t } from "./react-vendor-ASUsaCHq.js";
+import { A as h, a as g, b as p, c as C, d as v, e as y, f as D, g as w } from "./alert-dialog-BWW6DdC1.js";
+import { u as N, a as A, T as k, f } from "./hosted-entry-CvKOmP9q.js";
+function W({
+  open: e,
+  title: n,
+  count: r = 1,
+  automations: l = [],
+  onCancel: s,
+  onConfirm: x
+}) {
+  const { t: i } = N(), c = A(), d = l.length > 0, o = r > 1, m = l.slice(0, 4), u = Math.max(0, l.length - m.length);
+  return /* @__PURE__ */ t.jsx(h, { open: e, onOpenChange: (a) => a ? void 0 : s(), children: /* @__PURE__ */ t.jsxs(
+    g,
+    {
+      className: "w-[min(calc(100vw-2rem),24rem)] gap-0 p-5 text-center",
+      children: [
+        /* @__PURE__ */ t.jsxs(p, { className: "items-center space-y-0 text-center", children: [
+          /* @__PURE__ */ t.jsx(
+            k,
+            {
+              className: "mb-4 h-6 w-6 text-destructive",
+              strokeWidth: 1.8,
+              "aria-hidden": !0
+            }
+          ),
+          /* @__PURE__ */ t.jsx(C, { className: "text-center text-[20px] font-semibold leading-tight tracking-[-0.02em] text-foreground", children: o ? i("deleteConfirm.titleMany", {
+            defaultValue: "Delete {{count}} conversations?",
+            count: r
+          }) : i("deleteConfirm.title", { title: n }) }),
+          /* @__PURE__ */ t.jsx(v, { className: "mt-3 max-w-[17rem] text-center text-[14px] leading-6 text-muted-foreground", children: d ? o ? i("deleteConfirm.automationsDescriptionMany", {
+            defaultValue: "Linked automations will also be deleted."
+          }) : i("deleteConfirm.automationsDescription") : o ? i("deleteConfirm.descriptionMany", {
+            defaultValue: "This action cannot be undone."
+          }) : i("deleteConfirm.description") }),
+          d ? /* @__PURE__ */ t.jsxs("div", { className: "mt-4 max-h-40 w-full overflow-y-auto rounded-2xl bg-muted/55 px-3 py-2 text-left", children: [
+            m.map((a) => /* @__PURE__ */ t.jsxs("div", { className: "min-w-0 py-1.5", children: [
+              /* @__PURE__ */ t.jsx("div", { className: "truncate text-[13px] font-medium leading-5 text-foreground", children: a.name || a.id }),
+              /* @__PURE__ */ t.jsxs("div", { className: "mt-0.5 flex min-w-0 flex-wrap items-center gap-x-2 gap-y-0.5 text-[11.5px] leading-5 text-muted-foreground", children: [
+                /* @__PURE__ */ t.jsx("span", { className: "truncate", children: _(a, i, c) }),
+                /* @__PURE__ */ t.jsx("span", { "aria-hidden": !0, children: "·" }),
+                /* @__PURE__ */ t.jsx("span", { className: "truncate", children: T(a, i, c) })
+              ] })
+            ] }, a.id)),
+            u > 0 ? /* @__PURE__ */ t.jsx("div", { className: "text-[13px] leading-6 text-muted-foreground", children: i("deleteConfirm.moreAutomations", {
+              count: u
+            }) }) : null
+          ] }) : null
+        ] }),
+        /* @__PURE__ */ t.jsxs(y, { className: "mt-6 !grid grid-cols-1 gap-2 sm:grid-cols-2", children: [
+          /* @__PURE__ */ t.jsx(
+            D,
+            {
+              onClick: s,
+              className: "mt-0 w-full min-w-0",
+              children: i("deleteConfirm.cancel")
+            }
+          ),
+          /* @__PURE__ */ t.jsx(
+            w,
+            {
+              onClick: x,
+              className: "w-full min-w-0 !whitespace-normal bg-destructive text-center text-destructive-foreground hover:bg-destructive/90",
+              children: i(d ? "deleteConfirm.confirmWithAutomations" : "deleteConfirm.confirm")
+            }
+          )
+        ] })
+      ]
+    }
+  ) });
+}
+function _(e, n, r) {
+  return e.schedule.kind === "at" && e.schedule.at_ms ? n("deleteConfirm.schedule.at", { time: f(e.schedule.at_ms, r) }) : e.schedule.kind === "every" && e.schedule.every_ms ? n("deleteConfirm.schedule.every", {
+    duration: z(e.schedule.every_ms, r)
+  }) : e.schedule.kind === "cron" && e.schedule.expr ? e.schedule.tz ? n("deleteConfirm.schedule.cronWithTz", {
+    expr: e.schedule.expr,
+    tz: e.schedule.tz
+  }) : n("deleteConfirm.schedule.cron", { expr: e.schedule.expr }) : e.schedule.kind === "local" || e.payload.kind === "local_trigger" ? n("deleteConfirm.schedule.local", { defaultValue: "Local trigger" }) : n("deleteConfirm.schedule.unknown");
+}
+function T(e, n, r) {
+  if (!e.enabled) return n("deleteConfirm.next.disabled");
+  if (e.schedule.kind === "local" || e.payload.kind === "local_trigger")
+    return n("deleteConfirm.next.local", { defaultValue: "Waiting for trigger" });
+  const l = e.state.next_run_at_ms;
+  return l ? n("deleteConfirm.next.label", { time: f(l, r) }) : n("deleteConfirm.next.none");
+}
+function z(e, n) {
+  const r = [
+    ["day", 864e5],
+    ["hour", 36e5],
+    ["minute", 6e4],
+    ["second", 1e3]
+  ];
+  for (const [l, s] of r)
+    if (e >= s && e % s === 0)
+      return new Intl.NumberFormat(n, {
+        style: "unit",
+        unit: l,
+        unitDisplay: "long",
+        maximumFractionDigits: 0
+      }).format(e / s);
+  return new Intl.NumberFormat(n, {
+    style: "unit",
+    unit: "minute",
+    unitDisplay: "long",
+    maximumFractionDigits: 1
+  }).format(e / 6e4);
+}
+export {
+  W as DeleteConfirm
+};

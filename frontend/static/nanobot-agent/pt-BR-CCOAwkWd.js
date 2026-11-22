@@ -1,0 +1,44 @@
+const e = "Use o nanobot em mensagens do Signal.", o = "Daemon HTTP signal-cli, número de telefone e lista de permissão", a = {
+  docsLabel: "Abrir guia do Signal",
+  officialLabel: "Abrir guia do signal-cli",
+  tryIt: "Envie uma DM do Signal ao número vinculado.",
+  summary: "O Signal conecta por um daemon HTTP signal-cli já vinculado a um número Signal.",
+  steps: [
+    "Instale o signal-cli-rest-api e vincule ou registre um número Signal.",
+    "Informe o host, a porta e o número vinculado.",
+    "Salve e ative o Signal; depois, envie uma mensagem direta de teste."
+  ],
+  fields: {
+    phoneNumber: {
+      label: "Número de telefone",
+      placeholder: "+1234567890",
+      help: "Use o número Signal registrado no signal-cli."
+    },
+    daemonHost: {
+      label: "Host do daemon",
+      placeholder: "localhost"
+    },
+    daemonPort: {
+      label: "Porta do daemon",
+      placeholder: "8080"
+    },
+    dm_allowFrom: {
+      label: "DMs permitidas",
+      placeholder: "Números ou UUIDs"
+    },
+    group_allowFrom: {
+      label: "Grupos permitidos",
+      placeholder: "IDs de grupo"
+    }
+  }
+}, l = {
+  description: e,
+  requirements: o,
+  setup: a
+};
+export {
+  l as default,
+  e as description,
+  o as requirements,
+  a as setup
+};

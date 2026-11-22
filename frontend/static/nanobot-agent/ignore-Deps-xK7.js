@@ -1,0 +1,47 @@
+import { g as u } from "./react-vendor-ASUsaCHq.js";
+function l(n, e) {
+  for (var o = 0; o < e.length; o++) {
+    const t = e[o];
+    if (typeof t != "string" && !Array.isArray(t)) {
+      for (const r in t)
+        if (r !== "default" && !(r in n)) {
+          const g = Object.getOwnPropertyDescriptor(t, r);
+          g && Object.defineProperty(n, r, g.get ? g : {
+            enumerable: !0,
+            get: () => t[r]
+          });
+        }
+    }
+  }
+  return Object.freeze(Object.defineProperty(n, Symbol.toStringTag, { value: "Module" }));
+}
+var i = a;
+a.displayName = "ignore";
+a.aliases = ["gitignore", "hgignore", "npmignore"];
+function a(n) {
+  (function(e) {
+    e.languages.ignore = {
+      // https://git-scm.com/docs/gitignore
+      comment: /^#.*/m,
+      entry: {
+        pattern: /\S(?:.*(?:(?:\\ )|\S))?/,
+        alias: "string",
+        inside: {
+          operator: /^!|\*\*?|\?/,
+          regex: {
+            pattern: /(^|[^\\])\[[^\[\]]*\]/,
+            lookbehind: !0
+          },
+          punctuation: /\//
+        }
+      }
+    }, e.languages.gitignore = e.languages.ignore, e.languages.hgignore = e.languages.ignore, e.languages.npmignore = e.languages.ignore;
+  })(n);
+}
+const s = /* @__PURE__ */ u(i), p = /* @__PURE__ */ l({
+  __proto__: null,
+  default: s
+}, [i]);
+export {
+  p as i
+};

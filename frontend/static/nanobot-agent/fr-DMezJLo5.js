@@ -1,0 +1,21 @@
+const e = "Utilisez nanobot depuis l’espace de travail du navigateur local.", a = "Passerelle locale et jeton WebSocket", t = {
+  docsLabel: "Ouvrir le guide WebSocket",
+  officialLabel: "Ouvrir la WebUI locale",
+  tryIt: "Ouvrez la WebUI et envoyez un court message.",
+  summary: "L’espace de travail du navigateur nécessite WebSocket, préparé par la commande nanobot webui.",
+  steps: [
+    "Démarrez nanobot avec la commande webui.",
+    "Ouvrez l’URL locale affichée dans le terminal.",
+    "Gardez WebSocket activé pendant l’utilisation de l’espace de travail."
+  ]
+}, l = {
+  description: e,
+  requirements: a,
+  setup: t
+};
+export {
+  l as default,
+  e as description,
+  a as requirements,
+  t as setup
+};

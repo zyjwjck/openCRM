@@ -1,5 +1,5 @@
 <script>
-  import { cancel, enhance } from '$app/forms';
+  import { enhance } from '$app/forms';
   import { invalidateAll, goto } from '$app/navigation';
   import { tick } from 'svelte';
   import { toast } from 'svelte-sonner';
@@ -42,6 +42,12 @@
   ];
 
   const activeTab = $derived(data.tab || 'policies');
+
+  function getProductName(policy) {
+    if (policy.product_name) return policy.product_name;
+    return data.products.find((p) => p.id === policy.product)?.name || '';
+  }
+
   let drawerOpen = $state(false);
   let editing = $state(null);
   let deleting = $state(null);
@@ -186,6 +192,7 @@
             <tr>
               <th class="px-4 py-3 text-left font-medium">{tr('policyName')}</th>
               <th class="px-4 py-3 text-left font-medium">{tr('scope')}</th>
+              <th class="px-4 py-3 text-left font-medium">{tr('productName')}</th>
               <th class="px-4 py-3 text-left font-medium">{tr('baseType')}</th>
               <th class="px-4 py-3 text-left font-medium">{tr('commissionRate')}</th>
               <th class="px-4 py-3 text-left font-medium">{tr('customerScope')}</th>
@@ -195,12 +202,20 @@
           </thead>
           <tbody>
             {#each data.policies as policy (policy.id)}
+              {@const productName = getProductName(policy)}
               <tr class="border-t border-[var(--border-default)]">
                 <td class="px-4 py-3">
                   <div class="font-medium text-[var(--text-primary)]">{policy.name}</div>
                   {#if policy.code}<div class="text-xs text-[var(--text-tertiary)]">{policy.code}</div>{/if}
                 </td>
                 <td class="px-4 py-3">{SCOPES.find((x) => x.value === policy.scope)?.label() || policy.scope}</td>
+                <td class="px-4 py-3">
+                  {#if productName}
+                    <span class="text-[var(--text-primary)]">{productName}</span>
+                  {:else}
+                    <span class="text-[var(--text-tertiary)]">—</span>
+                  {/if}
+                </td>
                 <td class="px-4 py-3">{BASE_TYPES.find((x) => x.value === policy.base_type)?.label() || policy.base_type}</td>
                 <td class="px-4 py-3">
                   {policy.rate}%{#if policy.use_tiers}<span class="ml-1 text-xs text-[var(--text-tertiary)]">({tr('tiers')})</span>{/if}
@@ -314,7 +329,7 @@
         class="flex min-h-0 flex-1 flex-col"
         method="POST"
         action="?/{editing ? 'update' : 'create'}"
-        use:enhance={() => {
+        use:enhance={({ cancel }) => {
           if (creditRules.length && Math.abs(creditSplitTotal - 100) > 0.01) {
             toast.error(tr('creditSplitInvalid', { total: creditSplitTotal }));
             return cancel();

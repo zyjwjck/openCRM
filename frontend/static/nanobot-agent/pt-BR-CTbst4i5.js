@@ -1,0 +1,45 @@
+const e = "Use o nanobot em conversas do Microsoft Teams.", o = "Credenciais do app bot Azure e endpoint público de callback", a = {
+  docsLabel: "Abrir guia do Teams",
+  officialLabel: "Abrir portal de desenvolvedores do Teams",
+  tryIt: "Instale o app do Teams e envie uma mensagem de teste.",
+  summary: "O Teams recebe mensagens pela URL de callback do Bot Framework. Em produção, precisa de um endpoint HTTPS acessível.",
+  steps: [
+    "Crie um Azure Bot ou app Teams e copie o App ID e o segredo do cliente.",
+    "Exponha o caminho de callback por HTTPS e defina-o como endpoint de mensagens.",
+    "Salve e ative o Teams; depois, instale o app e envie uma mensagem de teste."
+  ],
+  fields: {
+    appId: {
+      label: "App ID",
+      placeholder: "Microsoft App ID",
+      help: "Copie do registro do Azure Bot ou do app Teams."
+    },
+    appPassword: {
+      label: "Segredo do cliente",
+      placeholder: "••••••",
+      help: "Crie um segredo do cliente para o app Microsoft."
+    },
+    tenantId: {
+      label: "ID do locatário",
+      placeholder: "ID de locatário opcional"
+    },
+    path: {
+      label: "Caminho de callback",
+      placeholder: "/api/messages"
+    },
+    allowFrom: {
+      label: "Usuários permitidos",
+      placeholder: "IDs de usuário do Teams separados por vírgulas"
+    }
+  }
+}, s = {
+  description: e,
+  requirements: o,
+  setup: a
+};
+export {
+  s as default,
+  e as description,
+  o as requirements,
+  a as setup
+};

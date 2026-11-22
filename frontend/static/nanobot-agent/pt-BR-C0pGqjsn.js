@@ -1,0 +1,36 @@
+const o = "Use o nanobot em conversas do WhatsApp.", e = "Configuração da conexão do WhatsApp e gateway", a = {
+  primaryAction: "Conectar WhatsApp",
+  docsLabel: "Abrir guia do WhatsApp",
+  officialLabel: "Abrir ajuda do WhatsApp",
+  tryIt: "Após o login no terminal, envie uma DM à conta conectada.",
+  summary: "O WhatsApp conecta ao escanear um QR code com a conta que executará o bot.",
+  steps: [
+    "Execute o comando de login do WhatsApp mostrado abaixo.",
+    "Escaneie o QR code do terminal com o WhatsApp no celular.",
+    "Volte aqui após o login, ative o WhatsApp e envie uma mensagem direta de teste."
+  ],
+  fields: {
+    allowFrom: {
+      label: "Contatos permitidos",
+      placeholder: "Números ou IDs do WhatsApp"
+    },
+    groupPolicy: {
+      label: "Comportamento em grupos",
+      choices: {
+        mention: "Somente menções",
+        open: "Todas as mensagens",
+        allowlist: "Lista de permissão"
+      }
+    }
+  }
+}, t = {
+  description: o,
+  requirements: e,
+  setup: a
+};
+export {
+  t as default,
+  o as description,
+  e as requirements,
+  a as setup
+};

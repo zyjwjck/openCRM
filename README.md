@@ -39,8 +39,8 @@ A quick look at openCRM's interface and its built-in AI agent in action:
 
 openCRM's AI capabilities come from [nanobot](https://github.com/HKUDS/nanobot) — an ultra-lightweight (~4,000 lines) personal AI agent framework. The integration is minimal yet powerful:
 
-- **Native iframe embed**: nanobot's React + TypeScript WebUI runs on port `8765` and is embedded directly as an iframe at the CRM sidebar's `/agent` route — **no chat UI to rebuild**, full agent experience out of the box
-- **Zero-config auth**: first visit to `/agent` authenticates via a `bootstrapSecret` parameter; nanobot maintains subsequent auth in its own `localStorage`
+- **Native micro-frontend embed**: nanobot's React + TypeScript WebUI is built as a mountable module and runs **inside the CRM's own page** (no iframe) at the `/agent` route and the leads AI drawer — same document, shared look and feel, full agent experience out of the box. Gateway HTTP/WS traffic goes through same-origin proxies (`/nanobot-api`, `/nanobot-ws`) to the gateway on port `8765`.
+- **Signed per-user auth**: `/agent` obtains a short-lived, signed credential from the CRM backend (carrying `user_id` / `org_id` / admin flag) and passes it to the mounted agent programmatically — sessions are isolated per user and organization.
 - **Full capability inheritance**: the embedded nanobot retains everything — sessions, long-term memory, MCP tools, automations, voice transcription, multi-channel gateways (Telegram / Discord / Feishu / ...)
 - **Flexible LLM switching**: configure OpenAI, Anthropic, Google, vLLM, and other providers inside nanobot's own Settings panel — no duplicate CRM-side config
 
@@ -53,7 +53,7 @@ openCRM's AI capabilities come from [nanobot](https://github.com/HKUDS/nanobot) 
 │  ┌─────────────────────────────────────────────────────────┐  │
 │  │ /agent route                                             │  │
 │  │  ┌───────────────────────────────────────────────────┐   │  │
-│  │  │ iframe → http://127.0.0.1:8765 (nanobot WebUI)    │   │  │
+│  │  │ mounted React UI (no iframe) → /nanobot-api/ws proxy │  │  │
 │  │  │   ✓ Sessions   ✓ Memory   ✓ MCP Tools   ✓ Automation│   │  │
 │  │  │   ✓ Voice      ✓ Channel gateways (Feishu/TG/DC..) │   │  │
 │  │  └───────────────────────────────────────────────────┘   │  │
@@ -118,9 +118,9 @@ openCRM's AI capabilities come from [nanobot](https://github.com/HKUDS/nanobot) 
 
 ### AI Component (nanobot)
 - **Ultra-lightweight AI framework** — ~4,000 lines of code, Python-native
-- **Native React + TypeScript WebUI** — embedded via iframe, no rebuild needed
+- **Native React + TypeScript WebUI** — mounted as a micro-frontend inside the CRM page (no iframe)
 - **Multi-LLM support** — OpenAI, Anthropic, Google, vLLM, etc.
-- **Voice transcription** — clipboard + microphone permissions delegated to the iframe
+- **Voice transcription** — clipboard + microphone available in the embedded UI
 - **Multi-channel gateways** — Telegram, Discord, WhatsApp, Feishu
 
 ## Quick Start
@@ -180,13 +180,13 @@ npm run dev
 
 #### 4. AI Agent Setup (nanobot)
 
-nanobot ships as a source bundle under `Agent/nanobot-main/` and is embedded into the CRM via iframe at `/agent`.
+nanobot ships as a source bundle under `Agent/nanobot-agent/` and is embedded into the CRM as a mounted micro-frontend at `/agent` (no iframe). Its WebUI build is placed in `frontend/static/nanobot-agent/` and reached through the Vite dev proxies `/nanobot-api` and `/nanobot-ws`.
 
 Run from an activated virtual environment (you can reuse the backend `.openCRM-venv` if it meets Python 3.11+):
 
 ```bash
 # In a new terminal, from the project root
-cd Agent/nanobot-main
+cd Agent/nanobot-agent
 
 # Install nanobot from source (bun or npm required the first time to build WebUI)
 python -m pip install -e .
@@ -228,7 +228,7 @@ nanobot gateway stop
 
 ### Access the Application
 - **Frontend**: http://localhost:5173
-- **AI Agent**: http://localhost:5173/agent  (embedded nanobot WebUI via iframe)
+- **AI Agent**: http://localhost:5173/agent  (nanobot WebUI mounted in-page, no iframe)
 - **API Documentation**: http://localhost:8099/swagger-ui/
 - **Admin Panel**: http://localhost:8099/admin/
 - **nanobot WebUI (direct access)**: http://127.0.0.1:8765
@@ -236,7 +236,7 @@ nanobot gateway stop
 
 ## AI Agent Configuration
 
-nanobot's default config and workspace live under `~/.nanobot/`. Override with `NANOBOT_HOME` and `NANOBOT_WORKSPACE` environment variables, or point them to `Agent/nanobot-main/.nanobot/` for a self-contained setup.
+nanobot's default config and workspace live under `~/.nanobot/`. Override with `NANOBOT_HOME` and `NANOBOT_WORKSPACE` environment variables, or point them to `Agent/nanobot-agent/.nanobot/` for a self-contained setup.
 
 Create or edit `config.json` inside the nanobot home directory:
 
@@ -281,12 +281,12 @@ openCRM/
 │   │   │   │   └── layout/      # AppSidebar, etc.
 │   │   │   └── utils/i18n.js    # Translation dictionaries + helpers
 │   │   └── routes/
-│   │       ├── (app)/agent/     # /agent — iframe wrapper for nanobot WebUI
+│   │       ├── (app)/agent/     # /agent — mounts nanobot micro-frontend (NanobotFrame.svelte)
 │   │       ├── (app)/           # Other authenticated CRM pages
 │   │       └── (no-layout)/     # Auth pages (login, etc.)
-│   └── static/            # Static assets
+│   └── static/            # Static assets (static/nanobot-agent/ = built hosted WebUI)
 ├── Agent/                  # nanobot AI agent (source bundle)
-│   └── nanobot-main/       # nanobot source tree (Python package + built-in WebUI)
+│   └── nanobot-agent/       # nanobot source tree (Python package + built-in WebUI)
 │       ├── docs/           # nanobot upstream documentation
 │       ├── nanobot/        # agent runtime, gateway, channels, memory, MCP
 │       ├── skills/         # bundled skills: weather, cron, memory, github…
@@ -332,7 +332,7 @@ npm run format            # Formatting
 
 ### AI Agent Commands
 ```bash
-cd Agent/nanobot-main
+cd Agent/nanobot-agent
 nanobot webui             # Launch gateway + WebUI
 nanobot gateway           # Gateway only (no browser open)
 nanobot onboard           # First-time interactive setup

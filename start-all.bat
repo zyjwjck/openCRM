@@ -12,6 +12,20 @@ cd /d "%~dp0"
 
 set "VENV_PYTHON=%~dp0.openCRM-venv\Scripts\python.exe"
 
+REM ---------- 0a. load shared identity secret for the MCP server ----------
+REM MCP verifies each session-bound tool credential with the same secret Django
+REM uses to sign it. Read it from backend\.env once; child processes inherit it.
+set "NANOBOT_IDENTITY_SECRET="
+if exist "%~dp0backend\.env" (
+  for /f "usebackq tokens=1,* delims==" %%A in ("%~dp0backend\.env") do (
+    if /I "%%A"=="NANOBOT_IDENTITY_SECRET" set "NANOBOT_IDENTITY_SECRET=%%B"
+  )
+)
+if not defined NANOBOT_IDENTITY_SECRET (
+  echo   WARNING: NANOBOT_IDENTITY_SECRET not found in backend\.env.
+  echo   MCP identity verification will fail closed until it is configured.
+)
+
 echo.
 echo ============================================
 echo   openCRM - Starting all services...
@@ -20,6 +34,20 @@ echo.
 
 REM ---------- 0. ensure nanobot env dir (under .nanobot) ----------
 if not exist "%~dp0.nanobot\workspace" mkdir "%~dp0.nanobot\workspace"
+
+REM ---------- 0b. build hosted nanobot WebUI if missing ----------
+REM NanobotFrame mounts this module in-page; build it once into the CRM's
+REM static directory when absent. Rebuild manually after changing the WebUI:
+REM   cd Agent\nanobot-agent\webui && npm run build:hosted
+if not exist "%~dp0frontend\static\nanobot-agent\agent.js" (
+  echo [0b] Building embedded nanobot WebUI (first run)...
+  if exist "%~dp0Agent\nanobot-agent\webui\node_modules" (
+    pushd "%~dp0Agent\nanobot-agent\webui" && call npm run build:hosted && popd
+  ) else (
+    echo   WARNING: Agent\nanobot-agent\webui\node_modules missing - AI agent UI may not load.
+    echo   Run: cd Agent\nanobot-agent\webui ^&^& npm install ^&^& npm run build:hosted
+  )
+)
 
 REM ---------- 1. Django Backend (blue window) ----------
 echo [1/4] Starting Django Backend on port 8099...
@@ -65,7 +93,7 @@ REM ---------- 4. nanobot AI Agent (purple window) ----------
 REM Uses project config .nanobot\nanobot.config.json (openCRM MCP + SSRF allowlist preset)
 REM NANOBOT_WORKSPACE is set explicitly so the workspace path is portable (no hardcoded drive).
 echo [4/4] Starting nanobot AI Agent (gateway) on port 8765...
-start "openCRM - AI Agent (nanobot :8765)" cmd /k "color 5F && set "NANOBOT_HOME=%~dp0.nanobot" && set "NANOBOT_WORKSPACE=%~dp0.nanobot\workspace" && cd /d ""%~dp0Agent\nanobot-main"" && if exist ""%~dp0.openCRM-venv\Scripts\nanobot.exe"" ( echo NANOBOT_HOME: %~dp0.nanobot & echo Config: %~dp0.nanobot\nanobot.config.json & echo openCRM MCP: http://127.0.0.1:8100/mcp & ""%~dp0.openCRM-venv\Scripts\nanobot.exe"" gateway -c ""%~dp0.nanobot\nanobot.config.json"" ) else ( echo ERROR: nanobot not installed. & echo Run: cd Agent\nanobot-main & echo Then: %~dp0.openCRM-venv\Scripts\python.exe -m pip install -e . & pause )"
+start "openCRM - AI Agent (nanobot :8765)" cmd /k "color 5F && set "NANOBOT_HOME=%~dp0.nanobot" && set "NANOBOT_WORKSPACE=%~dp0.nanobot\workspace" && cd /d ""%~dp0Agent\nanobot-agent"" && if exist ""%~dp0.openCRM-venv\Scripts\nanobot.exe"" ( echo NANOBOT_HOME: %~dp0.nanobot & echo Config: %~dp0.nanobot\nanobot.config.json & echo openCRM MCP: http://127.0.0.1:8100/mcp & ""%~dp0.openCRM-venv\Scripts\nanobot.exe"" gateway -c ""%~dp0.nanobot\nanobot.config.json"" ) else ( echo ERROR: nanobot not installed. & echo Run: cd Agent\nanobot-agent & echo Then: %~dp0.openCRM-venv\Scripts\python.exe -m pip install -e . & pause )"
 
 echo.
 echo ============================================

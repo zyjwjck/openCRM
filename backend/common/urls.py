@@ -1,6 +1,7 @@
 from django.urls import path
 from rest_framework_simplejwt import views as jwt_views
 
+from common.views.agent_views import McpTokenExchangeView, NanobotCredentialView
 from common.views.auth_views import (
     LoginView,
     MeView,
@@ -42,6 +43,8 @@ urlpatterns = [
         name="token_refresh",
     ),
     path("auth/me/", MeView.as_view(), name="me"),
+    path("agent/nanobot-credential/", NanobotCredentialView.as_view(), name="nanobot_credential"),
+    path("agent/mcp-token/", McpTokenExchangeView.as_view(), name="mcp_token_exchange"),
     path("auth/profile/", ProfileDetailView.as_view(), name="profile_detail"),
     path("auth/switch-org/", OrgSwitchView.as_view(), name="switch_org"),
 

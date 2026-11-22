@@ -1,0 +1,80 @@
+const a = "Gunakan nanobot dari chat dan grup Feishu.", e = "Kredensial Feishu, langganan event, dan gateway", n = {
+  primaryAction: "Hubungkan Feishu",
+  docsLabel: "Buka panduan Feishu",
+  officialLabel: "Buka konsol Feishu",
+  tryIt: "Kirim DM atau sebut asisten di grup.",
+  summary: "Koneksi membuat atau menautkan aplikasi Feishu lewat QR dan menyimpan kredensialnya.",
+  steps: [
+    "Klik Hubungkan dan pindai QR dengan Feishu atau Lark.",
+    "Setujui koneksi. nanobot menyimpan App ID dan Secret otomatis.",
+    "Kirim DM ke bot atau sebut di grup Feishu."
+  ],
+  fields: {
+    appId: {
+      label: "App ID",
+      placeholder: "cli_xxx"
+    },
+    appSecret: {
+      label: "App Secret",
+      placeholder: "Kosongkan untuk mempertahankan secret",
+      help: "Tempel secret baru hanya saat rotasi kredensial."
+    },
+    domain: {
+      label: "Wilayah",
+      choices: {
+        feishu: "Feishu",
+        lark: "Lark"
+      }
+    },
+    groupPolicy: {
+      label: "Perilaku grup",
+      choices: {
+        mention: "Hanya sebutan",
+        open: "Semua pesan",
+        allowlist: "Daftar izin"
+      }
+    },
+    allowFrom: {
+      label: "Pengguna yang diizinkan",
+      placeholder: "ID pengguna, dipisahkan koma"
+    },
+    topicIsolation: {
+      label: "Isolasi topik",
+      choices: {
+        true: "Sesi terpisah untuk setiap topik",
+        false: "Satu sesi bersama untuk grup"
+      }
+    }
+  }
+}, i = {
+  toggleAssistant: "Asisten {{name}}",
+  configured: "Terhubung",
+  needsSetup: "Perlu otorisasi",
+  noAppId: "Tidak ada App ID",
+  createAnother: "Buat asisten lain",
+  createHint: "Buat bot Feishu terpisah untuk tim atau alur kerja lain.",
+  createAssistant: "Buat asisten",
+  reconnect: "Hubungkan ulang",
+  countNone: "Belum ada asisten terhubung",
+  countOne: "1 asisten terhubung",
+  countMany: "{{count}} asisten terhubung",
+  qrAlt: "Kode QR koneksi Feishu",
+  scanTitle: "Pindai dengan Feishu",
+  scanDescription: "Pindai dengan Feishu atau Lark di ponsel. nanobot akan menyelesaikan setup setelah otorisasi.",
+  waiting: "Menunggu otorisasi...",
+  connected: "Feishu sudah terhubung.",
+  stopped: "Koneksi dihentikan.",
+  connecting: "Menghubungkan..."
+}, t = {
+  description: a,
+  requirements: e,
+  setup: n,
+  custom: i
+};
+export {
+  i as custom,
+  t as default,
+  a as description,
+  e as requirements,
+  n as setup
+};

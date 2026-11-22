@@ -1,0 +1,63 @@
+import { g as n } from "./react-vendor-ASUsaCHq.js";
+function l(e, i) {
+  for (var o = 0; o < i.length; o++) {
+    const t = i[o];
+    if (typeof t != "string" && !Array.isArray(t)) {
+      for (const r in t)
+        if (r !== "default" && !(r in e)) {
+          const s = Object.getOwnPropertyDescriptor(t, r);
+          s && Object.defineProperty(e, r, s.get ? s : {
+            enumerable: !0,
+            get: () => t[r]
+          });
+        }
+    }
+  }
+  return Object.freeze(Object.defineProperty(e, Symbol.toStringTag, { value: "Module" }));
+}
+var a = u;
+u.displayName = "firestoreSecurityRules";
+u.aliases = [];
+function u(e) {
+  e.languages["firestore-security-rules"] = e.languages.extend(
+    "clike",
+    {
+      comment: /\/\/.*/,
+      keyword: /\b(?:allow|function|if|match|null|return|rules_version|service)\b/,
+      operator: /&&|\|\||[<>!=]=?|[-+*/%]|\b(?:in|is)\b/
+    }
+  ), delete e.languages["firestore-security-rules"]["class-name"], e.languages.insertBefore("firestore-security-rules", "keyword", {
+    path: {
+      pattern: /(^|[\s(),])(?:\/(?:[\w\xA0-\uFFFF]+|\{[\w\xA0-\uFFFF]+(?:=\*\*)?\}|\$\([\w\xA0-\uFFFF.]+\)))+/,
+      lookbehind: !0,
+      greedy: !0,
+      inside: {
+        variable: {
+          pattern: /\{[\w\xA0-\uFFFF]+(?:=\*\*)?\}|\$\([\w\xA0-\uFFFF.]+\)/,
+          inside: {
+            operator: /=/,
+            keyword: /\*\*/,
+            punctuation: /[.$(){}]/
+          }
+        },
+        punctuation: /\//
+      }
+    },
+    method: {
+      // to make the pattern shorter, the actual method names are omitted
+      pattern: /(\ballow\s+)[a-z]+(?:\s*,\s*[a-z]+)*(?=\s*[:;])/,
+      lookbehind: !0,
+      alias: "builtin",
+      inside: {
+        punctuation: /,/
+      }
+    }
+  });
+}
+const c = /* @__PURE__ */ n(a), F = /* @__PURE__ */ l({
+  __proto__: null,
+  default: c
+}, [a]);
+export {
+  F as f
+};

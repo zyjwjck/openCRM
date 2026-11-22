@@ -66,15 +66,18 @@ export async function load({ locals, cookies, url }) {
     if (filters.due_date_gte) kanbanQueryParams.append('due_date__gte', filters.due_date_gte);
     if (filters.due_date_lte) kanbanQueryParams.append('due_date__lte', filters.due_date_lte);
 
-    // Fetch tasks (or kanban data) and dropdown options in parallel
+    // Fetch tasks (or kanban data) and dropdown options in parallel.
+    // NOTE: /users/ and /teams/ are ADMIN-only on the backend (403 for USER role),
+    // which left the drawer's Assigned To / Teams pickers empty for non-admin users.
+    // /users/get-teams-and-users/ is available to any authenticated member and
+    // returns both `profiles` and `teams` for the current org.
     const kanbanQueryString = kanbanQueryParams.toString();
     const [
       tasksResponse,
       kanbanResponse,
-      usersRes,
+      teamUsersRes,
       accountsRes,
       contactsRes,
-      teamsRes,
       opportunitiesRes,
       casesRes,
       leadsRes,
@@ -88,10 +91,12 @@ export async function load({ locals, cookies, url }) {
             { cookies, org }
           )
         : Promise.resolve(null),
-      apiRequest('/users/', {}, { cookies, org }).catch(() => ({})),
+      apiRequest('/users/get-teams-and-users/', {}, { cookies, org }).catch(() => ({
+        profiles: [],
+        teams: []
+      })),
       apiRequest('/accounts/', {}, { cookies, org }).catch(() => ({})),
       apiRequest('/contacts/', {}, { cookies, org }).catch(() => ({})),
-      apiRequest('/teams/', {}, { cookies, org }).catch(() => ({})),
       apiRequest('/opportunities/', {}, { cookies, org }).catch(() => ({})),
       apiRequest('/cases/', {}, { cookies, org }).catch(() => ({})),
       apiRequest('/leads/', {}, { cookies, org }).catch(() => ({})),
@@ -208,11 +213,13 @@ export async function load({ locals, cookies, url }) {
     // Get total count from response
     const total = tasksResponse.tasks_count || tasksResponse.count || transformedTasks.length;
 
-    // Transform dropdown options
-    const users = (usersRes.active_users?.active_users || []).map((u) => ({
-      id: u.id,
-      name: u.user_details?.email || u.email
-    }));
+    // Transform dropdown options (from get-teams-and-users, available to all members)
+    const users = (teamUsersRes.profiles || teamUsersRes.active_users?.active_users || []).map(
+      (u) => ({
+        id: u.id,
+        name: u.user_details?.email || u.email || u.name
+      })
+    );
 
     // accounts already transformed above for task account name lookup
 
@@ -229,7 +236,7 @@ export async function load({ locals, cookies, url }) {
       name: c.first_name ? `${c.first_name} ${c.last_name || ''}`.trim() : c.email || 'Unknown'
     }));
 
-    const teams = (teamsRes.teams || teamsRes.results || []).map((t) => ({
+    const teams = (teamUsersRes.teams || []).map((t) => ({
       id: t.id,
       name: t.name
     }));

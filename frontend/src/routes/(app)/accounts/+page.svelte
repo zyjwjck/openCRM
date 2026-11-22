@@ -285,6 +285,32 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   /** @type {{ data: import('./$types').PageData }} */
   let { data } = $props();
 
+  // Public/private pool tabs. Multi-select with at least one always selected.
+  // When URL has no pool param, default by role (admin: all, user: private).
+  const isAdmin = $derived(data.isAdmin === true);
+  const poolSelection = $derived.by(() => {
+    const p = $page.url.searchParams.get('pool');
+    return p === 'public' || p === 'private' || p === 'all' ? p : isAdmin ? 'all' : 'private';
+  });
+  const poolPublicSelected = $derived(poolSelection === 'public' || poolSelection === 'all');
+  const poolPrivateSelected = $derived(poolSelection === 'private' || poolSelection === 'all');
+
+  async function togglePoolTab(tab) {
+    let next;
+    if (tab === 'public') {
+      if (poolPublicSelected) next = poolPrivateSelected ? 'private' : 'public';
+      else next = 'all';
+    } else {
+      if (poolPrivateSelected) next = poolPublicSelected ? 'public' : 'private';
+      else next = 'all';
+    }
+    if (next === poolSelection && $page.url.searchParams.get('pool')) return;
+    const url = new URL($page.url);
+    url.searchParams.set('pool', next);
+    url.searchParams.set('page', '1');
+    await goto(url.toString(), { replaceState: true, noScroll: true, invalidateAll: true });
+  }
+
   // Computed values from data
   const accounts = $derived(data.accounts || []);
   const pagination = $derived(data.pagination || { page: 1, limit: 10, total: 0, totalPages: 0 });
@@ -301,6 +327,12 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
       color: t.color || 'blue'
     }))
   );
+  const teamOptions = $derived(
+    (data.teams || []).map((/** @type {any} */ t) => ({
+      value: t.id,
+      label: t.name
+    }))
+  );
 
   // Drawer columns with dynamic M2M options
   const drawerColumns = $derived([
@@ -313,6 +345,15 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
       options: userOptions,
       placeholder: 'Select users',
       emptyText: 'Not assigned'
+    },
+    {
+      key: 'teams',
+      label: 'Teams',
+      type: 'multiselect',
+      icon: Users,
+      options: teamOptions,
+      placeholder: 'Select teams',
+      emptyText: 'No teams'
     },
     {
       key: 'contacts',
@@ -360,6 +401,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
     currency: '',
     numberOfEmployees: '',
     assignedTo: [],
+    teams: [],
     contacts: [],
     tags: []
   };
@@ -617,6 +659,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
     currency: '',
     number_of_employees: '',
     assigned_to: '[]',
+    teams: '[]',
     contacts: '[]',
     tags: '[]'
   });
@@ -669,6 +712,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
       formState.currency = drawerFormData.currency || '';
       formState.number_of_employees = drawerFormData.numberOfEmployees?.toString() || '';
       formState.assigned_to = JSON.stringify(drawerFormData.assignedTo || []);
+      formState.teams = JSON.stringify(drawerFormData.teams || []);
       formState.contacts = JSON.stringify(drawerFormData.contacts || []);
       formState.tags = JSON.stringify(drawerFormData.tags || []);
 
@@ -707,6 +751,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
       formState.currency = drawerFormData.currency || '';
       formState.number_of_employees = drawerFormData.numberOfEmployees?.toString() || '';
       formState.assigned_to = JSON.stringify(drawerFormData.assignedTo || []);
+      formState.teams = JSON.stringify(drawerFormData.teams || []);
       formState.contacts = JSON.stringify(drawerFormData.contacts || []);
       formState.tags = JSON.stringify(drawerFormData.tags || []);
 
@@ -825,6 +870,30 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 >
   {#snippet actions()}
     <div class="flex items-center gap-2">
+      <!-- Public/private pool tabs -->
+      <div class="flex gap-1">
+        <button
+          type="button"
+          onclick={() => togglePoolTab('public')}
+          class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-medium transition-colors {poolPublicSelected
+            ? 'bg-[var(--color-primary-default)] text-white'
+            : 'bg-[var(--surface-sunken)] text-[var(--text-secondary)] hover:bg-[var(--surface-raised)]'}"
+        >
+          {t('publicPool')}
+        </button>
+        <button
+          type="button"
+          onclick={() => togglePoolTab('private')}
+          class="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-medium transition-colors {poolPrivateSelected
+            ? 'bg-[var(--color-primary-default)] text-white'
+            : 'bg-[var(--surface-sunken)] text-[var(--text-secondary)] hover:bg-[var(--surface-raised)]'}"
+        >
+          {t('privatePool')}
+        </button>
+      </div>
+
+      <div class="mx-1 h-6 w-px bg-[var(--border-default)]"></div>
+
       <!-- Status Filter Chips -->
       <div class="flex gap-1">
         <button
@@ -1077,6 +1146,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
 <CrmDrawer
   bind:open={drawerOpen}
   onOpenChange={handleDrawerChange}
+  class="w-[1200px] sm:max-w-[1200px]"
   data={drawerFormData}
   columns={drawerColumns}
   titleKey="name"
@@ -1279,6 +1349,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   <input type="hidden" name="currency" bind:value={formState.currency} />
   <input type="hidden" name="number_of_employees" bind:value={formState.number_of_employees} />
   <input type="hidden" name="assigned_to" bind:value={formState.assigned_to} />
+  <input type="hidden" name="teams" bind:value={formState.teams} />
   <input type="hidden" name="contacts" bind:value={formState.contacts} />
   <input type="hidden" name="tags" bind:value={formState.tags} />
 </form>
@@ -1306,6 +1377,7 @@ import AutoRefresh from '$lib/components/common/AutoRefresh.svelte';
   <input type="hidden" name="currency" bind:value={formState.currency} />
   <input type="hidden" name="number_of_employees" bind:value={formState.number_of_employees} />
   <input type="hidden" name="assigned_to" bind:value={formState.assigned_to} />
+  <input type="hidden" name="teams" bind:value={formState.teams} />
   <input type="hidden" name="contacts" bind:value={formState.contacts} />
   <input type="hidden" name="tags" bind:value={formState.tags} />
 </form>

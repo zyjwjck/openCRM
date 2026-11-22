@@ -1,0 +1,18 @@
+import { R as x, L as d, A as f } from "./markdown-vendor-CM9xd8uO.js";
+import { r, j as p } from "./react-vendor-ASUsaCHq.js";
+var R = ({ code: i, language: e, raw: a, className: u, startLine: m, lineNumbers: n, ...g }) => {
+  let { shikiTheme: l } = r.useContext(x), s = d(), [h, t] = r.useState(a);
+  return r.useEffect(() => {
+    if (!s) {
+      t(a);
+      return;
+    }
+    let o = s.highlight({ code: i, language: e, themes: l }, (c) => {
+      t(c);
+    });
+    o && t(o);
+  }, [i, e, l, s, a]), p.jsx(f, { className: u, language: e, lineNumbers: n, result: h, startLine: m, ...g });
+};
+export {
+  R as HighlightedCodeBlockBody
+};

@@ -146,6 +146,9 @@ const translations = {
     attributedTo: 'Attributed To',
     deleteConfirm: 'This action requires confirmation. Are you sure?',
     standardCost: 'Standard Cost',
+    standard_cost: 'Standard Cost',
+    publicPool: 'Public Pool',
+    privatePool: 'My Pool',
     noPolicies: 'No commission policies yet',
     noEntries: 'No commission records yet',
     // Reports page - invoice count suffix
@@ -428,7 +431,7 @@ const translations = {
     deals: 'Deals',
     tickets: 'Tickets',
     tasksMenu: 'Tasks',
-    allInvoices: 'All Invoices',
+    allInvoices: 'Invoices',
     estimates: 'Estimates',
     products: 'Products',
     recurring: 'Recurring',
@@ -437,6 +440,9 @@ const translations = {
     commission: 'Commission',
     support: 'Support',
     helpDesk: 'Help Desk',
+    collapse: 'Collapse sidebar',
+    collapseSidebar: 'Collapse sidebar',
+    expandSidebar: 'Expand sidebar',
     
     // Sidebar Groups
     aiGroup: 'AI',
@@ -580,6 +586,7 @@ const translations = {
     createOpportunity: 'Create Opportunity',
     thisWillCreateANewInvoice: 'This will create a new invoice from this opportunity with',
     product: 'product',
+    productName: 'Product',
     totaling: 'totaling',
     createInvoice: 'Create Invoice',
     // Cases Page
@@ -1205,6 +1212,9 @@ const translations = {
     attributedTo: '归属人',
     deleteConfirm: '此操作需要二次确认，确定继续吗？',
     standardCost: '标准成本',
+    standard_cost: '标准成本',
+    publicPool: '公海',
+    privatePool: '私海',
     noPolicies: '暂无提成政策',
     noEntries: '暂无提成记录',
     // Reports page - invoice count suffix
@@ -1484,7 +1494,7 @@ const translations = {
     deals: '商机',
     tickets: '工单',
     tasksMenu: '任务',
-    allInvoices: '所有发票',
+    allInvoices: '发票',
     estimates: '报价单',
     products: '产品',
     recurring: '循环发票',
@@ -1493,6 +1503,9 @@ const translations = {
     commission: '提成',
     support: '支持',
     helpDesk: '帮助中心',
+    collapse: '收起侧边栏',
+    collapseSidebar: '收起侧边栏',
+    expandSidebar: '展开侧边栏',
     
     // Sidebar groups
     aiGroup: 'AI',
@@ -1638,6 +1651,7 @@ const translations = {
     createOpportunity: '创建商机',
     thisWillCreateANewInvoice: '这将从该商机创建一个新发票，包含',
     product: '产品',
+    productName: '产品名称',
     totaling: '总计',
     createInvoice: '创建发票',
     // Cases Page
